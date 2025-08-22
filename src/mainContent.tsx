@@ -50,7 +50,6 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function MainContent({ open }: MainContentProps) {
   const apiData : ApiResponse[] | null = scheduleApi();
-  console.log(apiData)
 
   // Filter instruments by telescope number
   const keckI = apiData?.filter(item => item.TelNr === 1) || [];

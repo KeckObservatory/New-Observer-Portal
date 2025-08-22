@@ -8,14 +8,13 @@ import { PersistentSideBar } from './Sidebar';
 import MainContent from './mainContent';
 import React from 'react';
 import useApi from './api';
-
-// theme provider
-// css base line
-// compondents
+import ObjectEmbed from './frame'
 
 function App() {
   // set page to be home when opened for the first time
   const [selectedPage, setSelectedPage] = React.useState<string>('Home');
+  // url for selected webpage to open in main section
+  const [selectedUrl, setSelectedUrl] = React.useState<string | null>(null)
 
   const [open, setOpen] = useState(true);
 
@@ -42,8 +41,20 @@ function App() {
       <ThemeProvider theme={theme}>
       <CssBaseline />
       <TopBar open={open} handleDrawerOpen={handleDrawerOpen} />
-      <PersistentSideBar open={open} handleDrawerClose={handleDrawerClose} />
-      <MainContent open={open} />
+        <PersistentSideBar
+          open={open}
+          handleDrawerClose={handleDrawerClose}
+          setSelectedPage={setSelectedPage}
+          setSelectedUrl={setSelectedUrl}
+        />
+          <Box sx={{ flexGrow: 1, p: 3 }}>
+            {/* if selected page is home ... open the main content */}
+          {selectedPage === 'Home' ? (
+            <MainContent open={open} />
+          ) : (
+            selectedUrl && <ObjectEmbed url={selectedUrl} open={open} />
+          )}
+        </Box>
       </ThemeProvider>
     </Box>
   );

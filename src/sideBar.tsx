@@ -26,6 +26,12 @@ import LogoutIcon from '@mui/icons-material/Logout';
 // urls
 import urls from './urls.json'
 
+// object
+import setSelectedUrl from './App'
+import setSelectedPage from './App'
+
+
+
 const drawerWidth = 240;
 
 // top part of side bar where the button was before -> is blank now
@@ -41,7 +47,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 interface SidebarProps {
   open: boolean;
   handleDrawerClose: () => void;
-};
+  setSelectedPage: (page: string) => void;
+  setSelectedUrl: (url: string | null) => void;
+}
 
 // type for menu items in the side bar (so they have a name, icon, and optional sub-items)
 interface MenuItem {
@@ -61,7 +69,7 @@ const handleSubItemClick = (subItem: SubItem) => {
 
 
 // ----- Component -----
-export function PersistentSideBar({ open, handleDrawerClose }: SidebarProps) {
+export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, setSelectedUrl }: SidebarProps) {
   const theme = useTheme();
 
   // Track open submenu by key: 'top-0', 'bottom-1', etc.
@@ -122,6 +130,16 @@ export function PersistentSideBar({ open, handleDrawerClose }: SidebarProps) {
     { text: 'Logout', icon: <LogoutIcon /> },
   ];
 
+  const handleMenuClick = (item: MenuItem) => {
+    setSelectedPage(item.text)
+    setSelectedUrl(null)
+  }
+
+  const handleSubItemClick = (subItem: SubItem) => {
+    setSelectedPage(subItem.text)
+    setSelectedUrl(subItem.url)
+  }
+
   // render top and bottom the same -> function to render given the menu and type
   const renderMenuList = (menu: MenuItem[], menuType: 'top' | 'bottom') => (
     <List>
@@ -132,12 +150,19 @@ export function PersistentSideBar({ open, handleDrawerClose }: SidebarProps) {
         return (
           <React.Fragment key={item.text}>
             <ListItem disablePadding>
-              <ListItemButton onClick={() => item.subItems ? handleClick(key) : undefined}>
+              <ListItemButton
+                onClick={() =>
+                  item.subItems
+                    ? handleClick(key)
+                    : handleMenuClick(item)
+                }
+              >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
                 {item.subItems ? (isOpen ? <ExpandLess /> : <ExpandMore />) : null}
               </ListItemButton>
             </ListItem>
+
 
             {item.subItems && (
               <Collapse in={isOpen} timeout="auto" unmountOnExit>
