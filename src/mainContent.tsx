@@ -14,8 +14,7 @@ import { TableContainer } from '@mui/material';
 import { TableHead, TableRow } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 // new
-import { Stack, Box, Typography, Divider, Chip, Tooltip, CircularProgress } from '@mui/material';
-import WbTwilightIcon from '@mui/icons-material/WbTwilight';
+import { Stack, Box, Typography} from '@mui/material';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import Brightness2Icon from '@mui/icons-material/Brightness2';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';

@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { useMemo, useRef} from 'react'
+import { useMemo} from 'react'
 import { Box } from '@mui/material';
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { handleTheme } from './theme'
-import TopBar from './TopBar';
-import { PersistentSideBar } from './Sidebar';
+import TopBar from './topBar';
+import { PersistentSideBar } from './sidebar';
 import MainContent from './mainContent';
 import React from 'react';
 import ObjectEmbed from './frame'
@@ -29,11 +29,11 @@ function App() {
   }, [darkMode])
 
 
-  const testUser = {
-    first_name: 'Ava',
-    last_name: 'DeLaGarza',
-    email: 'adelagarza@keck.hawaii.edu',
-  };
+  // const testUser = {
+  //   first_name: 'Ava',
+  //   last_name: 'DeLaGarza',
+  //   email: 'adelagarza@keck.hawaii.edu',
+  // };
 
   return (
     <Box sx={{ display: 'flex' }}>

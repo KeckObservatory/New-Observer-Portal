@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import urls from './urls.json';
 
 // type to send to main content, not what is recieved from api

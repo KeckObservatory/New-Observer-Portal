@@ -26,11 +26,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 // urls
 import urls from './urls.json'
 
-// object
-import setSelectedUrl from './App'
-import setSelectedPage from './App'
-
-
 
 const drawerWidth = 240;
 
@@ -64,9 +59,9 @@ interface SubItem {
   newtab: boolean; // embed => false, open new tab => true
 }
 
-const handleSubItemClick = (subItem: SubItem) => {
-  window.location.href = subItem.url;
-};
+// const handleSubItemClick = (subItem: SubItem) => {
+//   window.location.href = subItem.url;
+// };
 
 
 // ----- Component -----
