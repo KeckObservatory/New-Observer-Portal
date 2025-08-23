@@ -61,6 +61,7 @@ interface MenuItem {
 interface SubItem {
   text: string;
   url: string; 
+  newtab: boolean; // embed => false, open new tab => true
 }
 
 const handleSubItemClick = (subItem: SubItem) => {
@@ -85,37 +86,40 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     { text: 'Home', icon: <HomeIcon /> },
     { text: 'Pre-Observing', icon: <AssignmentIcon />, 
         subItems: [
-          { text: 'Observing Definition Tool', url: urls.ODT}, // urls.ODT
-          { text: 'Telescope Time Application', url: ''}, // pointing to Lucases personal sandbox
-          { text: 'Cover Sheet', url: urls.PILOGIN + urls.COVSHEET}, 
-          { text: 'Remote Observing Request', url: urls.PILOGIN + urls.REMOTE_OBS_SRC}, 
-          { text: 'LRIS Configuration', url: urls.LRIS_CONFIG_SRC } ,
-          { text: 'DEIMOS Configuration', url: urls.DEIMOS_CONFIG_SRC},
-          { text: 'ToO Request', url: urls.PILOGIN + urls.TOO_REQUEST_SRC},
-          { text: 'Target List', url: urls.TARGET_LIST_SRC},
-          { text: 'Vaccine File', url: urls.VACCINE_SRC}, // do we want to keep this?
-          { text: 'VSQ Reservations', url: urls.VSQ_SRC}
+          { text: 'Telescope Time Application', url: '', newtab: false},
+          { text: 'Cover Sheet', url: urls.PILOGIN + urls.COVSHEET, newtab: true}, 
+          { text: 'Remote Observing Request', url: urls.PILOGIN + urls.REMOTE_OBS_SRC, newtab: false}, 
+          { text: 'KPF Community Cadence', url: urls.KPF_CC, newtab: true},
+          { text: 'Planning Tool', url: urls.PLANNING_TOOL, newtab: true},
+          { text: 'LRIS Configuration', url: urls.LRIS_CONFIG_SRC, newtab: false } ,
+          { text: 'DEIMOS Configuration', url: urls.DEIMOS_CONFIG_SRC, newtab: false},
+          { text: 'Slit Mask Tool', url: urls.SLITMASK_TOOL, newtab: false},
+          { text: 'ToO Request', url: urls.PILOGIN + urls.TOO_REQUEST_SRC, newtab: false},
+          { text: 'Target List', url: urls.TARGET_LIST_SRC, newtab: false},
+          { text: 'VSQ Reservations', url: urls.VSQ_SRC, newtab: false}
         ]
     },
     { text: 'Observing', icon: <StarBorderIcon />,
         subItems: [
-          { text: 'Instrument Status (SIAS)', url: urls.SIAS_SRC},
-          { text: 'My Observing Schedule', url: '' },
-          { text: 'My Observation Logs', url: ''}  
+          { text: 'Instrument Status (SIAS)', url: urls.SIAS_SRC, newtab: false},
+          { text: 'My Observing Schedule', url: '', newtab: false },
+          { text: 'My Observation Logs', url: '', newtab: false},
+          { text: 'Observers\' Data Access Portal', url: urls.ODAP, newtab: true}
         ]
     },
     { text: 'Post-Observing', icon: <CloudDownloadIcon />,
         subItems: [
-          { text: 'Post Observing Comments', url: urls.PILOGIN + urls.POC_SRC },
-          { text: 'ToO Report', url: urls.PILOGIN + urls.TOO_REPORT_SRC}
+          { text: 'Post Observing Comments', url: urls.PILOGIN + urls.POC_SRC, newtab: false },
+          { text: 'ToO Report', url: urls.PILOGIN + urls.TOO_REPORT_SRC, newtab: false}
         ]
      },
     { text: 'Resources', icon: <FolderSpecialIcon />,
         subItems: [
-          { text: 'Full Telescope Schedule', url: urls.TELSCHED_SRC },
-          { text: 'KOA', url: urls.KOA_SRC},
-          { text: 'Instrument Info', url: urls.INST_SRC},
-          { text: 'Maunakea Weather Center (MKWC)', url: urls.MKWC_SRC}
+          { text: 'Full Telescope Schedule', url: urls.TELSCHED_SRC, newtab: false },
+          { text: 'KOA', url: urls.KOA_SRC, newtab: true},
+          { text: 'Instrument Info', url: urls.INST_SRC, newtab: false},
+          { text: 'Maunakea Weather Center (MKWC)', url: urls.MKWC_SRC, newtab: true},
+          { text: 'Keck Publications', url: urls.KPUB, newtab: true}
         ]
      },
   ];
@@ -123,8 +127,8 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
   const bottomMenu: MenuItem[] = [
     { text: 'Settings', icon: <SettingsIcon />,
         subItems: [
-          { text: 'Update Information', url: urls.PILOGIN + urls.UPDATE_INFO_SRC},
-          { text: 'Update SSH Key', url: urls.PILOGIN + urls.SSH_SRC}
+          { text: 'Update Information', url: urls.PILOGIN + urls.UPDATE_INFO_SRC, newtab: false},
+          { text: 'Update SSH Key', url: urls.PILOGIN + urls.SSH_SRC, newtab: false}
         ]
      },
     { text: 'Logout', icon: <LogoutIcon /> },
@@ -135,10 +139,22 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     setSelectedUrl(null)
   }
 
-  const handleSubItemClick = (subItem: SubItem) => {
+  const handleSubItemClickEmbed = (subItem: SubItem) => {
     setSelectedPage(subItem.text)
     setSelectedUrl(subItem.url)
   }
+
+  const handleSubItemClickNewTab = (subItem: SubItem) => {
+  window.location.href = subItem.url;
+};
+
+const handleUrlClick = (subItem: SubItem) => {
+  if (subItem.newtab) {
+    handleSubItemClickNewTab(subItem); // create new tab
+  } else {
+    handleSubItemClickEmbed(subItem); // enmbed in main area
+  }
+};
 
   // render top and bottom the same -> function to render given the menu and type
   const renderMenuList = (menu: MenuItem[], menuType: 'top' | 'bottom') => (
@@ -169,7 +185,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
                 <List component="div" disablePadding>
                   {item.subItems.map((subItem) => (
                     <ListItem key={subItem.text} disablePadding sx={{ pl: 4 }}>
-                      <ListItemButton onClick={() => handleSubItemClick(subItem)}>
+                      <ListItemButton onClick={() => handleUrlClick(subItem)}>
                         <ListItemText primary={subItem.text} />
                       </ListItemButton>
                     </ListItem>

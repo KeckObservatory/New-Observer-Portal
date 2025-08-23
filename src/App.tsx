@@ -7,7 +7,6 @@ import TopBar from './TopBar';
 import { PersistentSideBar } from './Sidebar';
 import MainContent from './mainContent';
 import React from 'react';
-import useApi from './api';
 import ObjectEmbed from './frame'
 
 function App() {
@@ -52,6 +51,7 @@ function App() {
           {selectedPage === 'Home' ? (
             <MainContent open={open} />
           ) : (
+            // otherwise use the other url
             selectedUrl && <ObjectEmbed url={selectedUrl} open={open} />
           )}
         </Box>

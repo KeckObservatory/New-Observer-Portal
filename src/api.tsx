@@ -10,7 +10,54 @@ export interface ApiResponse {
   State?: string; // added property for ready state
 }
 
-export default function scheduleApi() {
+export interface metricsApiResponse {
+  udate: string;
+  dusk_12deg: string;
+  dusk_18deg: string;
+  dawn_18deg: string;
+  dawn_12deg: string;
+  dark: string;
+  sunset: string;
+  sunrise: string;
+  moonRADEC: string;
+  moonrise: string;
+  moonset: string;
+  moonillumination: string;
+  moonphase: string;
+  moonbrightness: string;
+  length: string;
+  midpoint: string;
+}
+
+export function metricsApi() {
+  const [data, setData] = useState<metricsApiResponse[] | null>(null);
+
+useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // get current date
+        const today = new Date();
+        const formattedDate = today.toISOString().split('T')[0]; //TODO: ut or HST date?
+
+        // fetch instrument list
+        const timeList = await fetch(urls.TIME_METRICS_API + `date=${formattedDate}&column=COLUMN&output=OUTPUT`);
+        console.log('date:',formattedDate)
+        const timeMetrics: metricsApiResponse[] = await timeList.json();
+
+        console.log(timeMetrics)
+
+      setData(timeMetrics);
+    } catch (err) {
+      console.error("Error fetching time metrics:", err);
+    }
+  };
+
+  fetchData();
+}, []);
+  // CANNOT FORGET THIS LINE !!!!!!!!! RETURN AT END 
+  return data;}
+
+export function scheduleApi() {
   const [data, setData] = useState<ApiResponse[] | null>(null);
 
   useEffect(() => {
@@ -52,7 +99,7 @@ export default function scheduleApi() {
       });
 
       setData(instrumentsWithState);
-      console.log("Final combined data:", instrumentsWithState);
+      //console.log("Final combined data:", instrumentsWithState);
     } catch (err) {
       console.error("Error fetching instruments:", err);
     }
