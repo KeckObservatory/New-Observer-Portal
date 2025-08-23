@@ -4,7 +4,7 @@ import { Box } from '@mui/material';
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { handleTheme } from './theme'
 import TopBar from './topBar';
-import { PersistentSideBar } from './sidebar';
+import { PersistentSideBar } from './sideBar';
 import MainContent from './mainContent';
 import React from 'react';
 import ObjectEmbed from './frame'
