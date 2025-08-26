@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 
 import { scheduleApi } from './api';
 import { metricsApi } from './api';
@@ -8,6 +7,8 @@ import type { metricsApiResponse } from './api';
 
 import { NightMetricsStrip } from './metrics';
 import TelStatus from './telStatus';
+
+import { ObserverInfo } from './observerInfo';
 
 // import Divider from '@mui/material/Divider';
 import { Box } from '@mui/material';
@@ -49,10 +50,11 @@ export default function MainContent({ open }: MainContentProps) {
 
   return (
     <Main open={open}>
-      <h1>Welcome to the Observer Portal!</h1>
       <TelStatus keckI={keckI} keckII={keckII} />
        <Box sx={{ height: 24 }} /> 
         <NightMetricsStrip data={metricsData?.[0]} />
+        <Box sx={{ height: 24 }} /> 
+        <ObserverInfo />
     </Main>
   );
 }
