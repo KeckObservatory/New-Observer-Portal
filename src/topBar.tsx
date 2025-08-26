@@ -5,8 +5,23 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { styled } from '@mui/material/styles';
 import MuiAppBar from '@mui/material/AppBar';
 import type { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import { useEffect, useState } from "react";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import {  Box } from "@mui/material";
+
 
 const drawerWidth = 240;
+
+// updating clock
+function useClock() {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  return now;
+}
+
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -35,6 +50,10 @@ interface TopBarProps  {
 };
 
 export default function TopBar({ open, handleDrawerOpen }: TopBarProps) {
+  const now = useClock();
+  const ut = now.toISOString().slice(11, 19); // ut time
+  const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
+  const hst = hstDate.toISOString().slice(11, 19); //hst time
 
   return (
     <StyledAppBar position="fixed" open={open}>
@@ -53,7 +72,17 @@ export default function TopBar({ open, handleDrawerOpen }: TopBarProps) {
           <Typography variant="h6" noWrap component="div">
             Observer Portal
           </Typography>
-        </Toolbar>
+
+          {/* Clock section on the right */}
+          <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
+            <AccessTimeIcon fontSize="large" sx={{ mr: 3 }} />
+            <Box sx={{ textAlign: "left" }}>
+              <Typography variant="h6">UT: {ut}</Typography>
+              <Typography variant="h6">HST: {hst}</Typography>
+            </Box>
+          </Box>
+        </Toolbar>  
+
       </StyledAppBar>
   );
 }

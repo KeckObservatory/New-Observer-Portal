@@ -2,8 +2,7 @@ import { Stack, Box, Typography} from '@mui/material';
 import NightsStayIcon from '@mui/icons-material/NightsStay';
 import Brightness2Icon from '@mui/icons-material/Brightness2';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { useEffect, useState } from "react";
+
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -20,15 +19,7 @@ const StatPaper = styled(Paper)(({ theme }) => ({
   minHeight: 120,
 }));
 
-// updating clock
-function useClock() {
-  const [now, setNow] = useState(new Date());
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(id);
-  }, []);
-  return now;
-}
+
 
 function MetricItem({
   icon,
@@ -50,23 +41,18 @@ function MetricItem({
   );
 }
 export function NightMetricsStrip({ data }: { data?: metricsApiResponse }) {
-  const now = useClock();
-
-  const ut = now.toISOString().slice(11, 19); // ut time
-  const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
-  const hst = hstDate.toISOString().slice(11, 19); //hst time
 
   if (!data) return null;
 
   return (
     <StatPaper elevation={3}>
-      {/* Big clock section */}
+      {/* Big clock section
       <Stack alignItems="center">
         <AccessTimeIcon fontSize="large" />
         <Typography variant="h4">{ut}</Typography>
         <Typography variant="body2">UT</Typography>
         <Typography variant="body2">HST: {hst}</Typography>
-      </Stack>
+      </Stack> */}
 
       {/* Metrics row */}
       <Stack direction="row" spacing={4} flexWrap="wrap" justifyContent="center">

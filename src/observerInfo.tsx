@@ -1,4 +1,8 @@
 import { Paper, Stack, Box, Typography } from "@mui/material";
+// import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+// import type { observerApiResponse } from "./api";
+
+
 
 export function ObserverInfo() {
   return (
@@ -9,10 +13,10 @@ export function ObserverInfo() {
           <Typography>My Observing Schedule:</Typography>
         </Box>
 
-        {/* Second row */}
+        {/* Second row
         <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
           <Typography>My Observing Logs:</Typography>
-        </Box>
+        </Box> */}
 
         {/* Third row */}
         <Box sx={{ p: 2 }}>
@@ -22,3 +26,29 @@ export function ObserverInfo() {
     </Paper>
   );
 }
+
+// export function ObserverTable(observer: observerApiResponse[]) {
+//   return (
+//     <TableContainer component={Paper}>
+//       <Table size="small">
+//         <TableHead>
+//           <TableRow>
+//             <TableCell>Instrument</TableCell>
+//             <TableCell>State</TableCell>
+//             <TableCell>Ready</TableCell>
+//           </TableRow>
+//         </TableHead>
+//         <TableBody>
+
+//               <TableRow
+
+//                 <TableCell>{inst.Instrument}</TableCell>
+//                 <TableCell>{inst.State || "Unknown"}</TableCell>
+//               </TableRow>
+//             );
+//           })}
+//         </TableBody>
+//       </Table>
+//     </TableContainer>
+//   );
+// }

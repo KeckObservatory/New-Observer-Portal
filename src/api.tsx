@@ -109,3 +109,14 @@ export function scheduleApi() {
 }, []);
   // CANNOT FORGET THIS LINE !!!!!!!!! RETURN AT END 
   return data;}
+
+export interface observerApiResponse {
+  Affiliation: string;
+  AllocInst: string;
+  Email: string;
+  Firstname: string;
+  Id: string;
+  LastName: string;
+  Phone: string;
+  username: string;
+}
