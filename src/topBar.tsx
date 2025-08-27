@@ -76,10 +76,11 @@ export default function TopBar({ open, handleDrawerOpen }: TopBarProps) {
           {/* Clock section on the right */}
           <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
             <AccessTimeIcon fontSize="large" sx={{ mr: 3 }} />
-            <Box sx={{ textAlign: "left" }}>
-              <Typography variant="h6">UT: {ut}</Typography>
-              <Typography variant="h6">HST: {hst}</Typography>
+            <Box display="flex" gap={4}>
+              <Typography variant="h5">UT: {ut}</Typography>
+              <Typography variant="h5">HST: {hst}</Typography>
             </Box>
+
           </Box>
         </Toolbar>  
 

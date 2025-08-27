@@ -5,7 +5,7 @@ import { metricsApi } from './api';
 import type { ApiResponse } from './api';
 import type { metricsApiResponse } from './api';
 
-import { NightMetricsStrip } from './metrics';
+import { OrderedNightMetricsStrip } from './metrics';
 import TelStatus from './telStatus';
 
 import { ObserverInfo } from './observerInfo';
@@ -52,7 +52,7 @@ export default function MainContent({ open }: MainContentProps) {
     <Main open={open}>
       <TelStatus keckI={keckI} keckII={keckII} />
        <Box sx={{ height: 24 }} /> 
-        <NightMetricsStrip data={metricsData?.[0]} />
+        <OrderedNightMetricsStrip data={metricsData?.[0]} />
         <Box sx={{ height: 24 }} /> 
         <ObserverInfo />
     </Main>

@@ -1,13 +1,12 @@
-import { Stack, Box, Typography} from '@mui/material';
-import NightsStayIcon from '@mui/icons-material/NightsStay';
-import Brightness2Icon from '@mui/icons-material/Brightness2';
-import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import { Stack, Box, Typography } from "@mui/material";
+import NightsStayIcon from "@mui/icons-material/NightsStay";
+import Brightness2Icon from "@mui/icons-material/Brightness2";
+import WbSunnyIcon from "@mui/icons-material/WbSunny";
 
-import React from 'react';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
-import type { metricsApiResponse } from './api';
-
+import React from "react";
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+import type { metricsApiResponse } from "./api";
 
 const StatPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -19,8 +18,6 @@ const StatPaper = styled(Paper)(({ theme }) => ({
   minHeight: 120,
 }));
 
-
-
 function MetricItem({
   icon,
   label,
@@ -28,46 +25,77 @@ function MetricItem({
 }: {
   icon: React.ReactNode;
   label: string;
-  value: string;
+  value: React.ReactNode;
 }) {
   return (
     <Stack spacing={0.5} alignItems="center" sx={{ minWidth: 90 }}>
       <Box>{icon}</Box>
-      <Typography variant="caption">{label}</Typography>
-      <Typography variant="body2" fontWeight="bold">
+      <Typography variant="subtitle1">{label}</Typography>
+      <Typography variant="body1" fontWeight="bold">
         {value}
       </Typography>
     </Stack>
   );
 }
-export function NightMetricsStrip({ data }: { data?: metricsApiResponse }) {
 
+export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }) {
   if (!data) return null;
 
   return (
     <StatPaper elevation={3}>
-      {/* Big clock section
-      <Stack alignItems="center">
-        <AccessTimeIcon fontSize="large" />
-        <Typography variant="h4">{ut}</Typography>
-        <Typography variant="body2">UT</Typography>
-        <Typography variant="body2">HST: {hst}</Typography>
-      </Stack> */}
-
-      {/* Metrics row */}
-      <Stack direction="row" spacing={4} flexWrap="wrap" justifyContent="center">
-        <MetricItem icon={<WbSunnyIcon />} label="Sunset" value={data.sunset} />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-evenly", // evenly spread across the paper
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+      {/* Dawn 18° + 12° */}
+        <MetricItem
+          icon={<NightsStayIcon />}
+          label="Dawn"
+          value={
+            <>
+              <Typography variant="body1" fontWeight="bold">{`18°: ${data.dawn_18deg}`}</Typography>
+              <Typography variant="body1" fontWeight="bold">{`12°: ${data.dawn_12deg}`}</Typography>
+            </>
+          }
+        />
+        {/* Sunrise */}
         <MetricItem icon={<WbSunnyIcon />} label="Sunrise" value={data.sunrise} />
-        <MetricItem icon={<NightsStayIcon />} label="Dusk 12°" value={data.dusk_12deg} />
-        <MetricItem icon={<NightsStayIcon />} label="Dawn 12°" value={data.dawn_12deg} />
-        <MetricItem icon={<NightsStayIcon />} label="Dusk 18°" value={data.dusk_18deg} />
-        <MetricItem icon={<NightsStayIcon />} label="Dawn 18°" value={data.dawn_18deg} />
-        <MetricItem icon={<NightsStayIcon />} label="Midpoint" value={data.midpoint} />
+
+        {/* Midpoint */}
+        <MetricItem icon={<NightsStayIcon />} label="Midpoint" value={data.midpoint}  />
+
+        {/* Sunset */}
+        <MetricItem icon={<WbSunnyIcon />} label="Sunset" value={data.sunset} />
+
+        {/* Dusk 12° + 18° */}
+        <MetricItem
+          icon={<NightsStayIcon />}
+          label="Dusk"
+          value={
+            <>
+              <Typography variant="body1" fontWeight="bold">{`12°: ${data.dusk_12deg}`}</Typography>
+              <Typography variant="body1" fontWeight="bold">{`18°: ${data.dusk_18deg}`}</Typography>
+            </>
+          }
+        />
+
+        {/* Moonrise */}
         <MetricItem icon={<Brightness2Icon />} label="Moonrise" value={data.moonrise} />
+
+        {/* Moonset */}
         <MetricItem icon={<Brightness2Icon />} label="Moonset" value={data.moonset} />
-        <MetricItem icon={<Brightness2Icon />} label="Illumination" value={(data.moonillumination)} />
-        {/* moon illumination needs to be a percentage */}
-      </Stack>
+
+        {/* Illumination */}
+        <MetricItem
+          icon={<Brightness2Icon />}
+          label="Illumination"
+          value={`${data.moonillumination}%`}
+        />
+      </Box>
     </StatPaper>
   );
 }
