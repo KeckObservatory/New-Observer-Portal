@@ -1,21 +1,16 @@
-import { styled } from '@mui/material/styles';
+//import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
+//import Grid from '@mui/material/Grid';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import type { ApiResponse } from './api';
 
-interface TelStatusProps {
-  keckI: ApiResponse[];
-  keckII: ApiResponse[];
-}
+// interface TelStatusProps {
+//   keckI: ApiResponse[];
+//   keckII: ApiResponse[];
+// }
 
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: '100%',
-}));
+
 
 export function renderTable(instruments: ApiResponse[]) {
   return (

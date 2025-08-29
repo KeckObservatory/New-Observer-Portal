@@ -1,9 +1,9 @@
 import { Paper, Stack, Box, Typography } from "@mui/material";
 import type { userInfoApiResponse } from "./api";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
+//import { styled } from '@mui/material/styles';
 //import Grid from "@mui/material";
-import Grid from '@mui/material/Grid';
+//import Grid from '@mui/material/Grid';
 
 
 
@@ -35,13 +35,6 @@ export function ObserverInfo() {
  interface ObserverInfoProps {
   users: userInfoApiResponse[];
 }
-
-const Item = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: '100%',
-}));
 
 export default function UserTable({ users }: ObserverInfoProps) {
   return (
