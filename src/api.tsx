@@ -110,13 +110,43 @@ export function scheduleApi() {
   // CANNOT FORGET THIS LINE !!!!!!!!! RETURN AT END 
   return data;}
 
-export interface observerApiResponse {
-  Affiliation: string;
-  AllocInst: string;
-  Email: string;
-  Firstname: string;
+export interface userInfoApiResponse {
   Id: string;
+  Title: string;
+  FirstName: string;
+  MiddleName: string;
   LastName: string;
+  Email: string;
+  Affiliation: string;
+  WorkArea: string;
+  Interests: string;
+  Street: string;
+  City: string;
+  State: string;
+  Country: string;
+  Zip: string;
   Phone: string;
-  username: string;
+  URL: string;
 }
+
+export function userInfoApi() {
+  const [data, setData] = useState<userInfoApiResponse[] | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userInfo = await fetch(urls.USER_INFO_API)
+        console.log(userInfo)
+        const user = await userInfo.json();
+        // const statesMa[0]
+
+      setData(user);
+    } catch (err) {
+      console.error("Error fetching instruments:", err);
+    }
+  };
+
+  fetchData();
+}, []);
+  // CANNOT FORGET THIS LINE !!!!!!!!! RETURN AT END 
+  return data;}

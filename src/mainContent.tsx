@@ -1,17 +1,22 @@
 import { styled } from '@mui/material/styles';
 
-import { scheduleApi } from './api';
+import { scheduleApi, userInfoApi } from './api';
 import { metricsApi } from './api';
-import type { ApiResponse } from './api';
+import type { ApiResponse, userInfoApiResponse } from './api';
 import type { metricsApiResponse } from './api';
+import Paper from '@mui/material/Paper';
 
 import { OrderedNightMetricsStrip } from './metrics';
-import TelStatus from './telStatus';
+import UserTable from './observerInfo';
 
 import { ObserverInfo } from './observerInfo';
 
 // import Divider from '@mui/material/Divider';
 import { Box } from '@mui/material';
+
+import { renderTable } from './telStatus';
+import Grid from '@mui/material/Grid';
+
 
 const drawerWidth = 240;
 
@@ -39,10 +44,17 @@ interface MainContentProps  {
   open: boolean;
 };
 
+const Item = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  height: '100%',
+}));
 
 export default function MainContent({ open }: MainContentProps) {
   const apiData : ApiResponse[] | null = scheduleApi();
   const metricsData : metricsApiResponse[] | null = metricsApi();
+  const userData : userInfoApiResponse[] | null = userInfoApi();
 
   // Filter instruments by telescope number
   const keckI = apiData?.filter(item => item.TelNr === 1) || [];
@@ -50,7 +62,26 @@ export default function MainContent({ open }: MainContentProps) {
 
   return (
     <Main open={open}>
-      <TelStatus keckI={keckI} keckII={keckII} />
+      <Grid container spacing={2} sx={{ height: "85%" }}>
+        <Grid size={4} sx={{ height: "100%"}}>
+          <Item>
+            <h2>Keck I</h2>
+            {renderTable(keckI)}
+          </Item>
+        </Grid>
+        <Grid size={4} sx={{ height: "100%"}}>
+          <Item>
+            <h2>Keck II</h2>
+            {renderTable(keckII)}
+          </Item>
+        </Grid>
+        <Grid size={4} sx={{ height: "100%"}}>
+          <Item>
+            <h2>Your Information</h2>
+            <UserTable users={userData ?? []} />
+          </Item>
+        </Grid>
+      </Grid>
        <Box sx={{ height: 24 }} /> 
         <OrderedNightMetricsStrip data={metricsData?.[0]} />
         <Box sx={{ height: 24 }} /> 

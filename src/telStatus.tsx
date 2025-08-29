@@ -17,7 +17,7 @@ const Item = styled(Paper)(({ theme }) => ({
   height: '100%',
 }));
 
-function renderTable(instruments: ApiResponse[]) {
+export function renderTable(instruments: ApiResponse[]) {
   return (
     <TableContainer component={Paper}>
       <Table size="small">
@@ -51,22 +51,3 @@ function renderTable(instruments: ApiResponse[]) {
     </TableContainer>
   );
 }
-
-const TelStatus: React.FC<TelStatusProps> = ({ keckI, keckII }) => (
-  <Grid container spacing={2} sx={{ height: "85%" }}>
-    <Grid size={6} sx={{ height: "100%"}}>
-      <Item>
-        <h2>Keck I</h2>
-        {renderTable(keckI)}
-      </Item>
-    </Grid>
-    <Grid size={6} sx={{ height: "100%"}}>
-      <Item>
-        <h2>Keck II</h2>
-        {renderTable(keckII)}
-      </Item>
-    </Grid>
-  </Grid>
-);
-
-export default TelStatus;

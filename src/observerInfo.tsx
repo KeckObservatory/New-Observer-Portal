@@ -1,6 +1,11 @@
 import { Paper, Stack, Box, Typography } from "@mui/material";
-// import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-// import type { observerApiResponse } from "./api";
+import type { userInfoApiResponse } from "./api";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { styled } from '@mui/material/styles';
+//import Grid from "@mui/material";
+import Grid from '@mui/material/Grid';
+
+
 
 
 
@@ -13,10 +18,10 @@ export function ObserverInfo() {
           <Typography>My Observing Schedule:</Typography>
         </Box>
 
-        {/* Second row
+        {/* Second row */}
         <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
           <Typography>My Observing Logs:</Typography>
-        </Box> */}
+        </Box>
 
         {/* Third row */}
         <Box sx={{ p: 2 }}>
@@ -27,28 +32,73 @@ export function ObserverInfo() {
   );
 }
 
-// export function ObserverTable(observer: observerApiResponse[]) {
-//   return (
-//     <TableContainer component={Paper}>
-//       <Table size="small">
-//         <TableHead>
-//           <TableRow>
-//             <TableCell>Instrument</TableCell>
-//             <TableCell>State</TableCell>
-//             <TableCell>Ready</TableCell>
-//           </TableRow>
-//         </TableHead>
-//         <TableBody>
+ interface ObserverInfoProps {
+  users: userInfoApiResponse[];
+}
 
-//               <TableRow
+const Item = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(2),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+  height: '100%',
+}));
 
-//                 <TableCell>{inst.Instrument}</TableCell>
-//                 <TableCell>{inst.State || "Unknown"}</TableCell>
-//               </TableRow>
-//             );
-//           })}
-//         </TableBody>
-//       </Table>
-//     </TableContainer>
-//   );
-// }
+export default function UserTable({ users }: ObserverInfoProps) {
+  return (
+    <>
+      {users.map((user) => {
+        const fullName = [user.FirstName, user.MiddleName, user.LastName]
+          .filter(Boolean)
+          .join(" ");
+        const fullAddress = [user.Street, user.City, user.State, user.Zip, user.Country]
+          .filter(Boolean)
+          .join(", ");
+
+        return (
+          <TableContainer component={Paper} key={user.Id} sx={{ mb: 2 }}>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell><b>Name</b></TableCell>
+                  <TableCell>{fullName}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Email</b></TableCell>
+                  <TableCell>{user.Email}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Affiliation</b></TableCell>
+                  <TableCell>{user.Affiliation}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Work Area</b></TableCell>
+                  <TableCell>{user.WorkArea}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Interests</b></TableCell>
+                  <TableCell>{user.Interests}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Address</b></TableCell>
+                  <TableCell>{fullAddress}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Phone</b></TableCell>
+                  <TableCell>{user.Phone}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>URL</b></TableCell>
+                  <TableCell>
+                    <a href={user.URL} target="_blank" rel="noopener noreferrer">
+                      {user.URL}
+                    </a>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        );
+      })}
+    </>
+  );
+}
