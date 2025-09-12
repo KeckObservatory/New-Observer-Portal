@@ -83,21 +83,21 @@ export default function MainContent({ open }: MainContentProps) {
   return (
     <Main open={open}>
       <Grid container spacing={2} sx={{ height: "85%" }}>
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} sx={{ height: "100%" }}>
+        <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>
             <h2>Keck I</h2>
             {keckI.length > 0 ? renderTable(keckI) : <div>Loading Keck I...</div>}
           </Item>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} sx={{ height: "100%" }}>
+        <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>
             <h2>Keck II</h2>
             {keckII.length > 0 ? renderTable(keckII) : <div>Loading Keck II...</div>}
           </Item>
         </Grid>
 
-        <Grid size={{ xs: 12, sm: 6, md: 4 }} sx={{ height: "100%" }}>
+        <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>
             <h2>Your Information</h2>
             {placeholderUser ? (

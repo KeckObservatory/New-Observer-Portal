@@ -8,6 +8,7 @@ import type { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { useEffect, useState } from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {  Box } from "@mui/material";
+import { Avatar} from "@mui/material";
 
 
 const drawerWidth = 240;
@@ -54,6 +55,25 @@ export default function TopBar({ open, handleDrawerOpen }: TopBarProps) {
   const ut = now.toISOString().slice(11, 19); // ut time
   const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
   const hst = hstDate.toISOString().slice(11, 19); //hst time
+  const placeholderUser = {
+    Id: "6679",
+    FirstName: "Jane",
+    MiddleName: "",
+    LastName: "Doe",
+    Title: "Astronomer",
+    Email: "jane.doe@example.com",
+    Affiliation: "Keck Observatory",
+    WorkArea: "Instrumentation",
+    Interests: "Exoplanets, Spectroscopy",
+    Street: "123 Observatory Rd",
+    City: "Waimea",
+    State: "HI",
+    Zip: "96743",
+    Country: "USA",
+    Phone: "(808) 555-1234",
+    URL: "https://www.example.com",
+    ProfilePictureURL: "", // Add a URL to test with an actual image
+    };
 
   return (
     <StyledAppBar position="fixed" open={open}>
@@ -73,15 +93,28 @@ export default function TopBar({ open, handleDrawerOpen }: TopBarProps) {
             Observer Portal
           </Typography>
 
-          {/* Clock section on the right */}
           <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
-            <AccessTimeIcon fontSize="large" sx={{ mr: 3 }} />
-            <Box display="flex" gap={4}>
-              <Typography variant="h5">UT: {ut}</Typography>
-              <Typography variant="h5">HST: {hst}</Typography>
+            {/* Clock section */}
+            <Box sx={{ display: "flex", alignItems: "center", mr: 4 }}>
+              <AccessTimeIcon fontSize="large" sx={{ mr: 2 }} />
+              <Box display="flex" gap={4}>
+                <Typography variant="h5">UT: {ut}</Typography>
+                <Typography variant="h5">HST: {hst}</Typography>
+              </Box>
             </Box>
 
+            {/* Profile avatar bubble */}
+            <IconButton sx={{ p: 0 }}>
+              <Avatar
+                alt={placeholderUser?.FirstName ?? "User"}
+                src={placeholderUser?.ProfilePictureURL || undefined}
+                sx={{ width: 40, height: 40 }}
+              >
+                {(placeholderUser?.FirstName?.[0] ?? "U").toUpperCase()}
+              </Avatar>
+            </IconButton>
           </Box>
+
         </Toolbar>  
 
       </StyledAppBar>
