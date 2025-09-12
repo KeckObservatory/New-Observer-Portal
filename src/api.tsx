@@ -135,14 +135,15 @@ export function userInfoApi() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userInfo = await fetch(urls.USER_INFO_API)
+        const userInfo = await fetch(urls.USER_INFO_API_DEV)
         console.log(userInfo)
         const user = await userInfo.json();
+        console.log(user)
         // const statesMa[0]
 
       setData(user);
     } catch (err) {
-      console.error("Error fetching instruments:", err);
+      console.error("Error fetching user:", err);
     }
   };
 
