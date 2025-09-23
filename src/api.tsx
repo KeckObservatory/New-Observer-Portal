@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import urls from './urls.json';
 
 // type to send to main content, not what is recieved from api
-export interface ApiResponse {
+export interface telescopeSchedApiResponse {
   Instrument: string;
   ScienceLocation: string;
   StorageLocation: string;
@@ -82,7 +82,7 @@ useEffect(() => {
   return data;}
 
 export function scheduleApi() {
-  const [data, setData] = useState<ApiResponse[] | null>(null);
+  const [data, setData] = useState<telescopeSchedApiResponse[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,7 +92,7 @@ export function scheduleApi() {
 
         // fetch instrument list
         const instrumentList = await fetch(urls.SCHEDULE_API + "/getActiveInstruments");
-        const instruments: ApiResponse[] = await instrumentList.json();
+        const instruments: telescopeSchedApiResponse[] = await instrumentList.json();
 
         // fetch state of each instrument (just one call now)
         const instrumentState = await fetch(urls.SCHEDULE_API + `/getInstrumentStatus?date=${formattedDate}&numdays=1`)
@@ -172,3 +172,22 @@ export function userInfoApi() {
   fetchData();
 }, []);
   return data;}
+
+export const placeholderUser = {
+  Id: "6679",
+  FirstName: "Jane",
+  MiddleName: "",
+  LastName: "Doe",
+  Title: "Astronomer",
+  Email: "jane.doe@example.com",
+  Affiliation: "Keck Observatory",
+  WorkArea: "Instrumentation",
+  Interests: "Exoplanets, Spectroscopy",
+  Street: "123 Observatory Rd",
+  City: "Waimea",
+  State: "HI",
+  Zip: "96743",
+  Country: "USA",
+  Phone: "(808) 555-1234",
+  URL: "https://www.example.com",
+  };

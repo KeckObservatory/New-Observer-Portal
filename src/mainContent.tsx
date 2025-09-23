@@ -9,13 +9,15 @@ import Paper from '@mui/material/Paper';
 import { OrderedNightMetricsStrip } from './metrics';
 import UserTable from './observerInfo';
 
-import { ObserverInfo } from './observerInfo';
+//import { ObserverInfo } from './observerInfo';
 
 // import Divider from '@mui/material/Divider';
 import { Box } from '@mui/material';
 
 import { renderTable } from './telStatus';
 import Grid from '@mui/material/Grid';
+
+import { placeholderUser } from './api'
 
 
 
@@ -53,32 +55,15 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function MainContent({ open }: MainContentProps) {
-  const apiData = scheduleApi();           // ApiResponse[] | null
+  const telescopeSchedData = scheduleApi();           // ApiResponse[] | null
   const metricsData = metricsApi();        // metricsApiResponse[] | null
   //const userData = userInfoApi();          // userInfoApiResponse | null
 
-  const placeholderUser = {
-  Id: "6679",
-  FirstName: "Jane",
-  MiddleName: "",
-  LastName: "Doe",
-  Title: "Astronomer",
-  Email: "jane.doe@example.com",
-  Affiliation: "Keck Observatory",
-  WorkArea: "Instrumentation",
-  Interests: "Exoplanets, Spectroscopy",
-  Street: "123 Observatory Rd",
-  City: "Waimea",
-  State: "HI",
-  Zip: "96743",
-  Country: "USA",
-  Phone: "(808) 555-1234",
-  URL: "https://www.example.com",
-  };
+
 
   // Filter instruments by telescope number (empty array if null)
-  const keckI = apiData?.filter(item => item.TelNr === 1) || [];
-  const keckII = apiData?.filter(item => item.TelNr === 2) || [];
+  const keckI = telescopeSchedData?.filter(item => item.TelNr === 1) || [];
+  const keckII = telescopeSchedData?.filter(item => item.TelNr === 2) || [];
 
   return (
     <Main open={open}>
@@ -116,7 +101,6 @@ export default function MainContent({ open }: MainContentProps) {
         <div>Loading metrics...</div>
       )}
       <Box sx={{ height: 24 }} /> 
-      <ObserverInfo />
     </Main>
   );
 }

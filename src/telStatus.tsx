@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 //import Grid from '@mui/material/Grid';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
-import type { ApiResponse } from './api';
+import type { telescopeSchedApiResponse } from './api';
 
 // interface TelStatusProps {
 //   keckI: ApiResponse[];
@@ -12,7 +12,7 @@ import type { ApiResponse } from './api';
 
 
 
-export function renderTable(instruments: ApiResponse[]) {
+export function renderTable(instruments: telescopeSchedApiResponse[]) {
   return (
     <TableContainer component={Paper}>
       <Table size="small">

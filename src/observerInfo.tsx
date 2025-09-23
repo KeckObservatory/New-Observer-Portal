@@ -1,4 +1,4 @@
-import { Paper, Stack, Box, Typography } from "@mui/material";
+import { Paper } from "@mui/material";
 import type { userInfoApiResponse } from "./api";
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 //import { styled } from '@mui/material/styles';
@@ -9,28 +9,28 @@ import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/mate
 
 
 
-export function ObserverInfo() {
-  return (
-    <Paper elevation={3} sx={{ width: "100%", p: 2 }}>
-      <Stack spacing={2}>
-        {/* First row */}
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
-          <Typography>My Observing Schedule:</Typography>
-        </Box>
+// export function ObserverInfo() {
+//   return (
+//     <Paper elevation={3} sx={{ width: "100%", p: 2 }}>
+//       <Stack spacing={2}>
+//         {/* First row */}
+//         <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
+//           <Typography>My Observing Schedule:</Typography>
+//         </Box>
 
-        {/* Second row */}
-        <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
-          <Typography>My Observing Logs:</Typography>
-        </Box>
+//         {/* Second row */}
+//         <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
+//           <Typography>My Observing Logs:</Typography>
+//         </Box>
 
-        {/* Third row */}
-        <Box sx={{ p: 2 }}>
-          <Typography>My Proposals:</Typography>
-        </Box>
-      </Stack>
-    </Paper>
-  );
-}
+//         {/* Third row */}
+//         <Box sx={{ p: 2 }}>
+//           <Typography>My Proposals:</Typography>
+//         </Box>
+//       </Stack>
+//     </Paper>
+//   );
+// }
 
  interface ObserverInfoProps {
   user: userInfoApiResponse;
