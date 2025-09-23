@@ -46,7 +46,14 @@ export default function UserTable({ user }: ObserverInfoProps) {
     .join(", ");
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper}
+    sx={{
+    //height: 350, // Set your desired fixed height (px, e.g. 300)
+    maxHeight: 331, // set max height, so when new items are added it will scroll
+    //minHeight: 300,
+    }}
+    >
+      <Table size="small" stickyHeader></Table>
       <Table size="small">
         <TableBody>
           <TableRow>

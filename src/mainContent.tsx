@@ -18,6 +18,8 @@ import { renderTable } from './telStatus';
 import Grid from '@mui/material/Grid';
 
 import { placeholderUser } from './api'
+import Typography from '@mui/material/Typography';
+
 
 
 
@@ -70,21 +72,27 @@ export default function MainContent({ open }: MainContentProps) {
       <Grid container spacing={2} sx={{ height: "85%" }}>
         <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>
-            <h2>Keck I</h2>
+          <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
+            Keck I
+          </Typography>
             {keckI.length > 0 ? renderTable(keckI) : <div>Loading Keck I...</div>}
           </Item>
         </Grid>
 
         <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>
-            <h2>Keck II</h2>
+          <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
+            Keck II
+          </Typography>
             {keckII.length > 0 ? renderTable(keckII) : <div>Loading Keck II...</div>}
           </Item>
         </Grid>
 
         <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>
-            <h2>Your Information</h2>
+          <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
+            Your Information
+          </Typography>
             {placeholderUser ? (
               <UserTable user={placeholderUser} />
             ) : (

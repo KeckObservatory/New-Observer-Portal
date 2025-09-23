@@ -14,8 +14,15 @@ import type { telescopeSchedApiResponse } from './api';
 
 export function renderTable(instruments: telescopeSchedApiResponse[]) {
   return (
-    <TableContainer component={Paper}>
-      <Table size="small">
+    <TableContainer
+      component={Paper}
+      sx={{
+        //height: 350, // Set your desired fixed height (px, e.g. 300)
+        maxHeight: 331, // set max height, so when new items are added it will scroll
+        //minHeight: 300,
+      }}
+    >
+      <Table size="small" stickyHeader>
         <TableHead>
           <TableRow>
             <TableCell>Instrument</TableCell>
