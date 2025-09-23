@@ -1,3 +1,5 @@
+// File to handle all api calls and export the data 
+
 import { useEffect, useState } from "react";
 import urls from './urls.json';
 
@@ -29,17 +31,40 @@ export interface metricsApiResponse {
   midpoint: string;
 }
 
+// Function to get current shifted date
+// if before 8am HST (18:00 UTC) return yesterday's date
+// if not, return today's date
+function getShiftedDate() {
+  const now = new Date();
+
+  // Hawaii is UTC-10, so 8:00 AM HST = 18:00 UTC
+  const hawaiiDayBoundaryUTC = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+    18, 0, 0 // 18:00 UTC
+  ));
+
+  // If the current time is before 18:00 UTC, use yesterday’s date
+  if (now < hawaiiDayBoundaryUTC) {
+    hawaiiDayBoundaryUTC.setUTCDate(hawaiiDayBoundaryUTC.getUTCDate() - 1);
+  }
+
+  // Format as YYYY-MM-DD in UTC
+  return hawaiiDayBoundaryUTC.toISOString().split("T")[0];
+}
+
+
 export function metricsApi() {
   const [data, setData] = useState<metricsApiResponse[] | null>(null);
 
 useEffect(() => {
     const fetchData = async () => {
       try {
-        // get current date
-        const today = new Date();
-        const formattedDate = today.toISOString().split('T')[0]; //TODO: ut or HST date?
+        // get current date with shift
+        const formattedDate = getShiftedDate();
 
-        // fetch instrument list
+        // fetch metrics list
         const timeList = await fetch(urls.TIME_METRICS_API + `date=${formattedDate}&column=COLUMN&output=OUTPUT`);
         console.log('date:',formattedDate)
         const timeMetrics: metricsApiResponse[] = await timeList.json();
@@ -54,7 +79,6 @@ useEffect(() => {
 
   fetchData();
 }, []);
-  // CANNOT FORGET THIS LINE !!!!!!!!! RETURN AT END 
   return data;}
 
 export function scheduleApi() {
@@ -63,9 +87,8 @@ export function scheduleApi() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // get current date
-        const today = new Date();
-        const formattedDate = today.toISOString().split('T')[0];
+        // get current date with shift
+        const formattedDate = getShiftedDate();
 
         // fetch instrument list
         const instrumentList = await fetch(urls.SCHEDULE_API + "/getActiveInstruments");
@@ -107,7 +130,6 @@ export function scheduleApi() {
 
   fetchData();
 }, []);
-  // CANNOT FORGET THIS LINE !!!!!!!!! RETURN AT END 
   return data;}
 
 export interface userInfoApiResponse {
@@ -149,5 +171,4 @@ export function userInfoApi() {
 
   fetchData();
 }, []);
-  // CANNOT FORGET THIS LINE !!!!!!!!! RETURN AT END 
   return data;}
