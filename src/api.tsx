@@ -66,10 +66,10 @@ useEffect(() => {
 
         // fetch metrics list
         const timeList = await fetch(urls.TIME_METRICS_API + `date=${formattedDate}&column=COLUMN&output=OUTPUT`);
-        console.log('date:',formattedDate)
+        //console.log('date:',formattedDate)
         const timeMetrics: metricsApiResponse[] = await timeList.json();
 
-        console.log(timeMetrics)
+        //console.log(timeMetrics)
 
       setData(timeMetrics);
     } catch (err) {
@@ -158,9 +158,9 @@ export function userInfoApi() {
     const fetchData = async () => {
       try {
         const userInfo = await fetch(urls.USER_INFO_API_DEV)
-        console.log(userInfo)
+        //console.log(userInfo)
         const user = await userInfo.json();
-        console.log(user)
+        //console.log(user)
         // const statesMa[0]
 
       setData(user);
@@ -172,6 +172,7 @@ export function userInfoApi() {
   fetchData();
 }, []);
   return data;}
+
 
 export const placeholderUser = {
   Id: "6679",
@@ -191,3 +192,37 @@ export const placeholderUser = {
   Phone: "(808) 555-1234",
   URL: "https://www.example.com",
   };
+
+
+export interface ObserverLog {
+  Name: string;
+  Semester: string;
+  Title: string;
+}
+
+export interface ObserverLogsApiResponse {
+  success: number; // if it's always 1/0, better to use number; if true/false, change to boolean
+  data: {
+    ObsLogTitle: ObserverLog[];
+  };
+  msg: string | null;
+}
+export function observerLogsApi() {
+  const [data, setData] = useState<ObserverLogsApiResponse | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const logsResponse = await fetch(urls.DEV_OBSLOGLIST);
+        const logsData: ObserverLogsApiResponse = await logsResponse.json();
+        console.log(logsData);
+        setData(logsData);
+      } catch (err) {
+        console.error("Error fetching observer logs:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+  return data; }
+
