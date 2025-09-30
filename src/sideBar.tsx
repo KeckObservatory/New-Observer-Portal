@@ -206,8 +206,8 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
       subItems: [
         { text: "Update My Profile", url: urls.UPDATE_MY_PROFILE, newtab: false },
         { text: "SHH Key Management", url: urls.SSH_KEY_MANAGEMENT, newtab: false },
-        { text: "My Observing Schedule (to add)", url: "", newtab: false },
-        { text: "My Observing Logs (to add)", url: "", newtab: false },
+        { text: "My Observing Schedule (to add)"},
+        { text: "My Observing Logs (to add)",  newtab: false },
         { text: "My Cover Sheets (to add)", url: "", newtab: false },
       ]
     },
@@ -235,6 +235,8 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
                     if (hasChildren) handleToggle(key);
                     // if no children -> decide how to open the url
                     else if (subItem.url) handleUrlClick(subItem);
+                    // if new page -> set page there is no url
+                    else setSelectedPage(subItem.text); 
                   }}
                 >
                   {/* Use Typography for subtabs to make text smaller */}

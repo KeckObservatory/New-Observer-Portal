@@ -201,7 +201,7 @@ export interface ObserverLog {
 }
 
 export interface ObserverLogsApiResponse {
-  success: number; // if it's always 1/0, better to use number; if true/false, change to boolean
+  success: number; 
   data: {
     ObsLogTitle: ObserverLog[];
   };
@@ -226,3 +226,62 @@ export function observerLogsApi() {
   }, []);
   return data; }
 
+
+export interface obsScheduleApiResponse {
+  Date: string;
+  StartTime: string;
+  EndTime: string;
+  TelNr: number;
+  Principal: string;
+  Observers: string;
+  Instrument: string;
+  // OA
+  // SA
+  ProjCode: string;
+  // Observing request 
+  // POC form
+
+}
+
+
+export function obsScheduleApi(obsid: number) { 
+  const [data, setData] = useState<obsScheduleApiResponse[] | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // get current date with shift
+        const formattedDate = getShiftedDate();
+        const endDate = getDateSixMonthsLater(formattedDate);
+
+        console.log('start:', formattedDate);
+        console.log('end:', endDate);
+
+        // fetch future observing dates for obsid
+        const observing_schedule = await fetch(urls.SCHEDULE_API + `/getScheduleByUser?obsid=${obsid}&startdate=${formattedDate}&enddate=${endDate}`);
+        //console.log(userInfo)
+        const obs_schedule = await observing_schedule.json();
+        console.log("schedule:", obs_schedule)
+
+      setData(obs_schedule);
+    } catch (err) {
+      console.error("Error fetching observing schedule:", err);
+    }
+  };
+
+  fetchData();
+}, []);
+  return data;}
+
+  function getDateSixMonthsLater(startDateStr: string) {
+  const startDate = new Date(startDateStr);
+  // Add 6 months
+  startDate.setMonth(startDate.getMonth() + 6);
+
+  // Handle month overflow (e.g., adding 6 months to August 31)
+  // JS Date will auto-correct to the next month if the day doesn't exist
+  // If you want to always land on the last day of the month if overflow, you can add extra logic
+
+  // Format as YYYY-MM-DD
+  return startDate.toISOString().split('T')[0];
+}
