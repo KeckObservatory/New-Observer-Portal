@@ -2,6 +2,9 @@ import { Paper } from "@mui/material";
 import type { userInfoApiResponse } from "./api";
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 
+//import React from "react";
+import { styled } from "@mui/material/styles";
+
  interface ObserverInfoProps {
   user: userInfoApiResponse;
 }
@@ -71,3 +74,13 @@ export default function UserTable({ user }: ObserverInfoProps) {
     </TableContainer>
   );
 }
+
+export const ObserverInfoBanner = styled(Paper)(({ theme }) => ({
+  width: "100%",
+  height: 80,
+  marginBottom: theme.spacing(2),
+  background: theme.palette.background.paper,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+}));

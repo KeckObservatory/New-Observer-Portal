@@ -5,7 +5,7 @@ import Stack from "@mui/material/Stack";
 import { Box } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { obsScheduleApi } from "./api";
-import type { obsScheduleApiResponse } from "./api";
+//import type { obsScheduleApiResponse } from "./api";
 import { Table, TableBody, TableCell, TableContainer, TableRow, TableHead } from '@mui/material';
 import  {List} from "@mui/material";
 import ListItem from "@mui/material/ListItem";
