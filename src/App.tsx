@@ -10,6 +10,7 @@ import React from 'react';
 import ObjectEmbed from './frame'
 
 import { MyObsSchedule } from './my_schedule';
+import { MyObsLogs } from './myLogs';
 
 function App() {
   // set page to be home when opened for the first time
@@ -45,6 +46,8 @@ function App() {
           <Box sx={{ flexGrow: 1, p: 3 }}>
             {selectedPage === "My Observing Schedule (to add)" ? (
               <MyObsSchedule open={open} />
+            ) : selectedPage === "My Observing Logs (to add)" ? (
+              <MyObsLogs open={open} />
             ) : selectedUrl ? (
               <ObjectEmbed url={selectedUrl} open={open} />
             ) : (

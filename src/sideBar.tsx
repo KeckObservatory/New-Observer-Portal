@@ -184,7 +184,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     },
     { text: "Post-Observing Support", icon: <AssignmentIcon />,
       subItems: [
-        { text: "My Observing Logs (to add)", url: "", newtab: false },
+        { text: "My Observing Logs (to add)" },
         { text: "Post Observing Comment Form", url: urls.POST_OBS_COMMENTS, newtab: false},
         { text: "Data Reduction Pipelines (to add)", url: urls.DRPS, newtab: true},
       ]
@@ -207,7 +207,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Update My Profile", url: urls.UPDATE_MY_PROFILE, newtab: false },
         { text: "SHH Key Management", url: urls.SSH_KEY_MANAGEMENT, newtab: false },
         { text: "My Observing Schedule (to add)"},
-        { text: "My Observing Logs (to add)",  newtab: false },
+        { text: "My Observing Logs (to add)"},
         { text: "My Cover Sheets (to add)", url: "", newtab: false },
       ]
     },

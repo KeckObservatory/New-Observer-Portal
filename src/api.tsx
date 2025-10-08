@@ -278,10 +278,40 @@ export function obsScheduleApi(obsid: number) {
   // Add 6 months
   startDate.setMonth(startDate.getMonth() + 6);
 
-  // Handle month overflow (e.g., adding 6 months to August 31)
-  // JS Date will auto-correct to the next month if the day doesn't exist
-  // If you want to always land on the last day of the month if overflow, you can add extra logic
-
   // Format as YYYY-MM-DD
   return startDate.toISOString().split('T')[0];
 }
+
+export interface obsLog {
+  title: string;
+  url: string;
+}
+
+
+export interface obsLogApiResponse {
+  obsid: number;
+  logs: obsLog[];
+}
+
+
+export function obsLogApi(obsid: number, semester: string) { 
+  const [data, setData] = useState<obsLogApiResponse | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // fetch future observing dates for obsid
+        const obs_logs = await fetch(urls.OBS_LOG_DEV + `obsid=${obsid}&semester=${semester}`);
+        console.log(obs_logs)
+        const logs = await obs_logs.json();
+        console.log("obs_logs:", logs)
+
+      setData(logs);
+    } catch (err) {
+      console.error("Error fetching observing logs:", err);
+    }
+  };
+
+  fetchData();
+}, []);
+  return data;}

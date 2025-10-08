@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 
 import { scheduleApi} from './api';
 import { metricsApi } from './api';
-import { observerLogsApi } from './api';
+//import { observerLogsApi } from './api';
 //import type { ApiResponse, userInfoApiResponse } from './api';
 //import type { metricsApiResponse } from './api';
 import Paper from '@mui/material/Paper';
@@ -62,10 +62,10 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function MainContent({ open }: MainContentProps) {
   const telescopeSchedData = scheduleApi();           // ApiResponse[] | null
   const metricsData = metricsApi();        // metricsApiResponse[] | null
-  const logsData = observerLogsApi();    // ObserverLogsApiResponse | null
+  //const logsData = observerLogsApi();    // ObserverLogsApiResponse | null
   //const userData = userInfoApi();          // userInfoApiResponse | null
 
-  console.log("logsData:", logsData);
+  //console.log("logsData:", logsData);
 
   // Filter instruments by telescope number (empty array if null)
   const keckI = telescopeSchedData?.filter(item => item.TelNr === 1) || [];
