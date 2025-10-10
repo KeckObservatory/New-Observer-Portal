@@ -284,7 +284,7 @@ export function obsScheduleApi(obsid: number) {
 
 export interface obsLog {
   title: string;
-  url: string;
+  filename: string;
 }
 
 

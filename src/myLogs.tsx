@@ -45,15 +45,15 @@ interface MyLogsProps  {
 };
 
 export function MyObsLogs({ open }: MyLogsProps) {
-  //const data = obsLogApi(4718, '2025A') || []
+  // your existing data hook
   const data = (obsLogApi(4718, "2025A") as obsLogApiResponse) || { logs: [] };
-
-    // const areLogs = logs.length > 0 // need to update and check log list length not total length
 
   const isLoading = !data; // before fetch completes
   const logs = data?.logs ?? [];
-
   const hasLogs = logs.length > 0;
+
+  // Base backend URL for viewing log HTMLs
+  const BASE_URL = "https://www3build.keck.hawaii.edu/api/proposals/view/";
 
   return (
     <Main open={open}>
@@ -70,22 +70,26 @@ export function MyObsLogs({ open }: MyLogsProps) {
             </Stack>
           ) : hasLogs ? (
             <Stack spacing={1} sx={{ p: 2 }}>
-              {logs.map((log) => (
-                <Link
-                  key={log.url}
-                  href={log.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  underline="hover"
-                  sx={{
-                    fontSize: "1rem",
-                    color: "primary.main",
-                    "&:hover": { textDecoration: "underline" },
-                  }}
-                >
-                  {log.title}
-                </Link>
-              ))}
+              {logs.map((log) => {
+                // build full Flask URL for each file
+                const viewUrl = `${BASE_URL}${encodeURIComponent(log.filename)}`;
+                return (
+                  <Link
+                    key={viewUrl}
+                    href={viewUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    underline="hover"
+                    sx={{
+                      fontSize: "1rem",
+                      color: "primary.main",
+                      "&:hover": { textDecoration: "underline" },
+                    }}
+                  >
+                    {log.title}
+                  </Link>
+                );
+              })}
             </Stack>
           ) : (
             <Typography sx={{ p: 2, color: "text.secondary" }}>
