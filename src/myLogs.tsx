@@ -13,10 +13,10 @@ import { styled } from '@mui/material/styles';
 import urls from './urls.json';
 import { obsLogApi } from "./api";
 import { CircularProgress, Link } from "@mui/material";
-import type { obsLogApiResponse, obsLog } from "./api";
+// import type { obsLogApiResponse, obsLog } from "./api";
 
 
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 
@@ -50,35 +50,13 @@ interface MyLogsProps  {
 };
 
 export function MyObsLogs({ open }: MyLogsProps) {
-  // const data = (obsLogApi(4718, "2025A") as obsLogApiResponse) || { logs: [] };
-
-  // const isLoading = !data; // before fetch completes
-  // const logs = data?.logs ?? [];
-  // const hasLogs = logs.length > 0;
-
-  const [semester, setSemester] = useState("2025A");
-  const [logs, setLogs] = useState<obsLog[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchLogs() {
-      setIsLoading(true);
-      try {
-        const data = (await obsLogApi(4718, semester)) as obsLogApiResponse;
-        setLogs(data?.logs ?? []);
-      } catch (err) {
-        console.error("Failed to fetch logs", err);
-        setLogs([]);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchLogs();
-  }, [semester]);
-
+  const [semester, setSemester] = useState("2025B");
+  const data = obsLogApi(4718, semester); //
+  const logs = data?.logs ?? [];
+  const isLoading = !data;
   const hasLogs = logs.length > 0;
 
-    return (
+  return (
     <Main open={open}>
       <Paper elevation={3} sx={{ width: "100%", p: 2 }}>
         <Stack spacing={2}>
@@ -94,10 +72,10 @@ export function MyObsLogs({ open }: MyLogsProps) {
               label="Semester"
               onChange={(e) => setSemester(e.target.value)}
             >
-              <MenuItem value="2025A">2023A</MenuItem>
-              <MenuItem value="2025A">2023B</MenuItem>
-              <MenuItem value="2025A">2024A</MenuItem>
-              <MenuItem value="2025A">2024B</MenuItem>
+              <MenuItem value="2023A">2023A</MenuItem>
+              <MenuItem value="2023B">2023B</MenuItem>
+              <MenuItem value="2024A">2024A</MenuItem>
+              <MenuItem value="2024B">2024B</MenuItem>
               <MenuItem value="2025A">2025A</MenuItem>
               <MenuItem value="2025B">2025B</MenuItem>
               <MenuItem value="2026A">2026A</MenuItem>

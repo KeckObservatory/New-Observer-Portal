@@ -283,35 +283,32 @@ export function obsScheduleApi(obsid: number) {
 }
 
 export interface obsLog {
-  title: string;
   filename: string;
+  title: string;
+  // ...other fields
 }
 
 
 export interface obsLogApiResponse {
-  obsid: number;
   logs: obsLog[];
 }
 
 
-export function obsLogApi(obsid: number, semester: string) { 
+export function obsLogApi(obsid: number, semester: string): obsLogApiResponse | null {
   const [data, setData] = useState<obsLogApiResponse | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchLogs() {
       try {
-        // fetch future observing dates for obsid
-        const obs_logs = await fetch(urls.OBS_LOG_DEV + `obsid=${obsid}&semester=${semester}`);
-        console.log(obs_logs)
-        const logs = await obs_logs.json();
-        console.log("obs_logs:", logs)
-
-      setData(logs);
-    } catch (err) {
-      console.error("Error fetching observing logs:", err);
+        const response = await fetch(`${urls.OBS_LOG_DEV}?obsid=${obsid}&semester=${semester}`);
+        const json = await response.json();
+        setData(json);
+      } catch (err) {
+        setData({ logs: [] });
+      }
     }
-  };
+    fetchLogs();
+  }, [obsid, semester]);
 
-  fetchData();
-}, []);
-  return data;}
+  return data;
+}
