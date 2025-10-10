@@ -72,7 +72,7 @@ export function MyObsLogs({ open }: MyLogsProps) {
             <Stack spacing={1} sx={{ p: 2 }}>
               {logs.map((log) => {
                 // build full Flask URL for each file
-                const viewUrl = `${BASE_URL}${encodeURIComponent(log.filename)}`;
+                const viewUrl = `${BASE_URL}?filename=${log.filename}`;
                 return (
                   <Link
                     key={viewUrl}
