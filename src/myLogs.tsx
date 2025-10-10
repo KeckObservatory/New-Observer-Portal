@@ -13,7 +13,12 @@ import { styled } from '@mui/material/styles';
 import urls from './urls.json';
 import { obsLogApi } from "./api";
 import { CircularProgress, Link } from "@mui/material";
-import type { obsLogApiResponse } from "./api";
+import type { obsLogApiResponse, obsLog } from "./api";
+
+
+import { useState, useEffect } from "react";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+
 
 
 
@@ -45,22 +50,59 @@ interface MyLogsProps  {
 };
 
 export function MyObsLogs({ open }: MyLogsProps) {
-  // your existing data hook
-  const data = (obsLogApi(4718, "2025A") as obsLogApiResponse) || { logs: [] };
+  // const data = (obsLogApi(4718, "2025A") as obsLogApiResponse) || { logs: [] };
 
-  const isLoading = !data; // before fetch completes
-  const logs = data?.logs ?? [];
+  // const isLoading = !data; // before fetch completes
+  // const logs = data?.logs ?? [];
+  // const hasLogs = logs.length > 0;
+
+  const [semester, setSemester] = useState("2025A");
+  const [logs, setLogs] = useState<obsLog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchLogs() {
+      setIsLoading(true);
+      try {
+        const data = (await obsLogApi(4718, semester)) as obsLogApiResponse;
+        setLogs(data?.logs ?? []);
+      } catch (err) {
+        console.error("Failed to fetch logs", err);
+        setLogs([]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchLogs();
+  }, [semester]);
+
   const hasLogs = logs.length > 0;
 
-  // Base backend URL for viewing log HTMLs
-
-  return (
+    return (
     <Main open={open}>
       <Paper elevation={3} sx={{ width: "100%", p: 2 }}>
         <Stack spacing={2}>
           <Box sx={{ p: 2, borderBottom: 2, borderColor: "divider" }}>
             <Typography variant="h6">Keck Observing Logs:</Typography>
           </Box>
+
+          {/* Semester dropdown */}
+          <FormControl sx={{ minWidth: 120, m: 2 }}>
+            <InputLabel>Semester</InputLabel>
+            <Select
+              value={semester}
+              label="Semester"
+              onChange={(e) => setSemester(e.target.value)}
+            >
+              <MenuItem value="2025A">2023A</MenuItem>
+              <MenuItem value="2025A">2023B</MenuItem>
+              <MenuItem value="2025A">2024A</MenuItem>
+              <MenuItem value="2025A">2024B</MenuItem>
+              <MenuItem value="2025A">2025A</MenuItem>
+              <MenuItem value="2025B">2025B</MenuItem>
+              <MenuItem value="2026A">2026A</MenuItem>
+            </Select>
+          </FormControl>
 
           {isLoading ? (
             <Stack alignItems="center" sx={{ p: 3 }}>
@@ -70,7 +112,6 @@ export function MyObsLogs({ open }: MyLogsProps) {
           ) : hasLogs ? (
             <Stack spacing={1} sx={{ p: 2 }}>
               {logs.map((log) => {
-                // build full Flask URL for each file
                 const viewUrl = `${urls.SERVE_LOG}?filename=${log.filename}`;
                 return (
                   <Link
