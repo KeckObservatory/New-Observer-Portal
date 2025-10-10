@@ -10,7 +10,7 @@ import { styled } from '@mui/material/styles';
 // import ListItem from "@mui/material/ListItem";
 // import {Link} from "@mui/material";
 
-// import urls from './urls.json';
+import urls from './urls.json';
 import { obsLogApi } from "./api";
 import { CircularProgress, Link } from "@mui/material";
 import type { obsLogApiResponse } from "./api";
@@ -53,7 +53,6 @@ export function MyObsLogs({ open }: MyLogsProps) {
   const hasLogs = logs.length > 0;
 
   // Base backend URL for viewing log HTMLs
-  const BASE_URL = "https://www3build.keck.hawaii.edu/api/proposals/view/";
 
   return (
     <Main open={open}>
@@ -72,7 +71,7 @@ export function MyObsLogs({ open }: MyLogsProps) {
             <Stack spacing={1} sx={{ p: 2 }}>
               {logs.map((log) => {
                 // build full Flask URL for each file
-                const viewUrl = `${BASE_URL}?filename=${log.filename}`;
+                const viewUrl = `${urls.SERVE_LOG}?filename=${log.filename}`;
                 return (
                   <Link
                     key={viewUrl}
