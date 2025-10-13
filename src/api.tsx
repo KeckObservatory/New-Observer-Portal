@@ -329,9 +329,10 @@ export function getCurrentSemester() {
   useEffect(() => {
     async function fetchCurrent() {
       try {
-        const res = await fetch(urls.DEV_SCHEDULE + "/getSemester");
+        const res = await fetch(urls.DEV_SCHEDULE2 + "/getSemester");
         const json = await res.json(); // { semester: "2025B" }
         const current = json.semester;
+        console.log(current)
         setSemester(current);
       } catch (err) {
         console.error("Failed to get current semester", err);
