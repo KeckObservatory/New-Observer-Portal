@@ -93,7 +93,7 @@ export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }
         <MetricItem
           icon={<Brightness2Icon />}
           label="Illumination"
-          value={`${data.moonillumination}%`}
+          value={`${Number(data.moonillumination) * 100}%`}
         />
       </Box>
     </StatPaper>
