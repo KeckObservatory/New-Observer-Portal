@@ -157,10 +157,22 @@ export function userInfoApi() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userInfo = await fetch(urls.USER_INFO_API_DEV)
-        console.log(userInfo)
+        {/*/      const resp = await fetch(`${KECK_BASE}/userinfo/`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }*/}
+        const userInfo = await fetch(urls.USER_INFO_API, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+        console.log(userInfo, 'userinfo in function')
         const user = await userInfo.json();
-        console.log(user)
+        console.log(user, 'user in function')
         // const statesMa[0]
 
       setData(user);
