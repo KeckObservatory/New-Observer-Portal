@@ -17,7 +17,10 @@ import { CircularProgress, Link } from "@mui/material";
 
 
 import { useState} from "react";
+import { useEffect } from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+
+import { getCurrentSemester } from "./api";
 
 
 
@@ -48,13 +51,46 @@ interface MyLogsProps  {
   open: boolean;
 };
 
+// function given current semester calculates previous x semester names -> used in drop down
+function getLastSemesters(current: string, count: number): string[] {
+  const match = current.match(/(\d{4})([AB])/);
+  if (!match) return [];
+
+  let year = parseInt(match[1]);
+  let term = match[2];
+  const semesters: string[] = [];
+
+  for (let i = 0; i < count; i++) {
+    if (term === "A") {
+      term = "B";
+      year--;
+    } else {
+      term = "A";
+    }
+    semesters.push(`${year}${term}`);
+  }
+  return semesters;
+}
+
 export function MyObsLogs({ open }: MyLogsProps) {
-  const [semester, setSemester] = useState("2025B");
+  const currentSemester = getCurrentSemester();
+  const availableSemesters = [currentSemester, ...getLastSemesters(currentSemester, 2)]; // last two semesters
+
+  // to quickly get current semester right when the api returns above
+  useEffect(() => {
+    if (currentSemester) {
+      setSemester(currentSemester);
+    }
+  }, [currentSemester]);
+
+  // drop down will auto go to current semester
+  const [semester, setSemester] = useState(currentSemester);
+
+  // api call to get logs (or loading state)
   const { data, loading } = useObsLogApi(4718, semester);
 
   const logs = data?.logs ?? [];
   const hasLogs = logs.length > 0;
-
   return (
     <Main open={open}>
       <Paper elevation={3} sx={{ width: "100%", p: 2 }}>
@@ -68,15 +104,18 @@ export function MyObsLogs({ open }: MyLogsProps) {
             <Select
               value={semester}
               label="Semester"
+              // when it changes -> reset the semester state -> recall api
               onChange={(e) => setSemester(e.target.value)}
             >
-              <MenuItem value="2024B">2024B</MenuItem>
-              <MenuItem value="2025A">2025A</MenuItem>
-              <MenuItem value="2025B">2025B</MenuItem>
+              {availableSemesters.map((s) => ( // show all avaliable semesters in drop down
+                <MenuItem key={s} value={s}>
+                  {s}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
-          {loading ? (
+          {loading ? ( // show that is loading
             <Stack alignItems="center" sx={{ p: 3 }}>
               <CircularProgress size={32} />
               <Typography sx={{ mt: 1 }}>Loading logs...</Typography>

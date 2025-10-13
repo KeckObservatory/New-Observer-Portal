@@ -303,7 +303,7 @@ export function useObsLogApi(obsid: number, semester: string) {
       setLoading(true);
       try {
         const response = await fetch(
-          `${urls.OBS_LOG_DEV2}?obsid=${obsid}&semester=${semester}`
+          `${urls.OBS_LOG_DEV}?obsid=${obsid}&semester=${semester}`
         );
         const json = await response.json();
         setData(json);
@@ -319,4 +319,26 @@ export function useObsLogApi(obsid: number, semester: string) {
   }, [obsid, semester]);
 
   return { data, loading };
+}
+
+
+
+export function getCurrentSemester() {
+  const [semester, setSemester] = useState<string>("");
+
+  useEffect(() => {
+    async function fetchCurrent() {
+      try {
+        const res = await fetch(urls.DEV_SCHEDULE + "/getSemester");
+        const json = await res.json(); // { semester: "2025B" }
+        const current = json.semester;
+        setSemester(current);
+      } catch (err) {
+        console.error("Failed to get current semester", err);
+      }
+    }
+    fetchCurrent();
+  }, []);
+
+  return semester;
 }
