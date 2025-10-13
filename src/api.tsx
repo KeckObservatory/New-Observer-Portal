@@ -294,21 +294,29 @@ export interface obsLogApiResponse {
 }
 
 
-export function obsLogApi(obsid: number, semester: string): obsLogApiResponse | null {
+export function useObsLogApi(obsid: number, semester: string) {
   const [data, setData] = useState<obsLogApiResponse | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchLogs() {
+      setLoading(true);
       try {
-        const response = await fetch(`${urls.OBS_LOG_DEV}?obsid=${obsid}&semester=${semester}`);
+        const response = await fetch(
+          `${urls.OBS_LOG_DEV2}?obsid=${obsid}&semester=${semester}`
+        );
         const json = await response.json();
         setData(json);
       } catch (err) {
+        console.error(err);
         setData({ logs: [] });
+      } finally {
+        setLoading(false);
       }
     }
+
     fetchLogs();
   }, [obsid, semester]);
 
-  return data;
+  return { data, loading };
 }

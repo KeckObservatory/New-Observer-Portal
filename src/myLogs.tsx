@@ -11,7 +11,7 @@ import { styled } from '@mui/material/styles';
 // import {Link} from "@mui/material";
 
 import urls from './urls.json';
-import { obsLogApi } from "./api";
+import { useObsLogApi } from "./api";
 import { CircularProgress, Link } from "@mui/material";
 // import type { obsLogApiResponse, obsLog } from "./api";
 
@@ -46,14 +46,13 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 
 interface MyLogsProps  {
   open: boolean;
-  //obsSchedule: obsScheduleApiResponse;
 };
 
 export function MyObsLogs({ open }: MyLogsProps) {
   const [semester, setSemester] = useState("2025B");
-  const data = obsLogApi(4718, semester); //
+  const { data, loading } = useObsLogApi(4718, semester);
+
   const logs = data?.logs ?? [];
-  const isLoading = !data;
   const hasLogs = logs.length > 0;
 
   return (
@@ -64,7 +63,6 @@ export function MyObsLogs({ open }: MyLogsProps) {
             <Typography variant="h6">Keck Observing Logs:</Typography>
           </Box>
 
-          {/* Semester dropdown */}
           <FormControl sx={{ minWidth: 120, m: 2 }}>
             <InputLabel>Semester</InputLabel>
             <Select
@@ -72,17 +70,13 @@ export function MyObsLogs({ open }: MyLogsProps) {
               label="Semester"
               onChange={(e) => setSemester(e.target.value)}
             >
-              <MenuItem value="2023A">2023A</MenuItem>
-              <MenuItem value="2023B">2023B</MenuItem>
-              <MenuItem value="2024A">2024A</MenuItem>
               <MenuItem value="2024B">2024B</MenuItem>
               <MenuItem value="2025A">2025A</MenuItem>
               <MenuItem value="2025B">2025B</MenuItem>
-              <MenuItem value="2026A">2026A</MenuItem>
             </Select>
           </FormControl>
 
-          {isLoading ? (
+          {loading ? (
             <Stack alignItems="center" sx={{ p: 3 }}>
               <CircularProgress size={32} />
               <Typography sx={{ mt: 1 }}>Loading logs...</Typography>
