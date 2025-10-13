@@ -2,14 +2,7 @@
 import Paper from '@mui/material/Paper';
 //import Grid from '@mui/material/Grid';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
 import type { telescopeSchedApiResponse } from './api';
-
-// interface TelStatusProps {
-//   keckI: ApiResponse[];
-//   keckII: ApiResponse[];
-// }
-
 
 
 export function renderTable(instruments: telescopeSchedApiResponse[]) {
@@ -17,9 +10,7 @@ export function renderTable(instruments: telescopeSchedApiResponse[]) {
     <TableContainer
       component={Paper}
       sx={{
-        //height: 350, // Set your desired fixed height (px, e.g. 300)
-        maxHeight: 331, // set max height, so when new items are added it will scroll
-        //minHeight: 300,
+        maxHeight: 320,
       }}
     >
       <Table size="small" stickyHeader>
@@ -27,7 +18,6 @@ export function renderTable(instruments: telescopeSchedApiResponse[]) {
           <TableRow>
             <TableCell>Instrument</TableCell>
             <TableCell>State</TableCell>
-            <TableCell>Ready</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -38,13 +28,12 @@ export function renderTable(instruments: telescopeSchedApiResponse[]) {
                 key={idx}
                 sx={{
                   backgroundColor: isReady ? "#95EFA3" : "#f8d7da",
+                  height: 40, 
+
                 }}
               >
                 <TableCell>{inst.Instrument}</TableCell>
                 <TableCell>{inst.State || "Unknown"}</TableCell>
-                <TableCell>
-                  {isReady ? <CheckIcon sx={{ color: "green" }} /> : <CheckIcon sx={{ color: "red", visibility: "hidden" }} />}
-                </TableCell>
               </TableRow>
             );
           })}
