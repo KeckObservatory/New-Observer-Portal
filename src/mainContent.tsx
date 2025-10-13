@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 
 import { OrderedNightMetricsStrip } from './metrics';
 import UserTable from './observerInfo';
+import { userInfoApi } from './api';
 
 //import { ObserverInfo } from './observerInfo';
 
@@ -18,7 +19,7 @@ import { Box } from '@mui/material';
 import { renderTable } from './telStatus';
 import Grid from '@mui/material/Grid';
 
-import { placeholderUser } from './api'
+//import { placeholderUser } from './api'
 import Typography from '@mui/material/Typography';
 
 import { ObserverInfoBanner } from './observerInfo';
@@ -63,8 +64,8 @@ export default function MainContent({ open }: MainContentProps) {
   const telescopeSchedData = scheduleApi();           // ApiResponse[] | null
   const metricsData = metricsApi();        // metricsApiResponse[] | null
   //const logsData = observerLogsApi();    // ObserverLogsApiResponse | null
-  //const userData = userInfoApi();          // userInfoApiResponse | null
-
+  const userData = userInfoApi();          // userInfoApiResponse | null
+  console.log("userData:", userData);
   //console.log("logsData:", logsData);
 
   // Filter instruments by telescope number (empty array if null)
@@ -98,8 +99,8 @@ export default function MainContent({ open }: MainContentProps) {
           <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
             Your Information
           </Typography>
-            {placeholderUser ? (
-              <UserTable user={placeholderUser} />
+            {userData && userData.length > 0 ? (
+              <UserTable user={userData[0]} />
             ) : (
               <div>Loading your information...</div>
             )}

@@ -158,9 +158,9 @@ export function userInfoApi() {
     const fetchData = async () => {
       try {
         const userInfo = await fetch(urls.USER_INFO_API_DEV)
-        //console.log(userInfo)
+        console.log(userInfo)
         const user = await userInfo.json();
-        //console.log(user)
+        console.log(user)
         // const statesMa[0]
 
       setData(user);

@@ -6,7 +6,7 @@ import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/mate
 import { styled } from "@mui/material/styles";
 
  interface ObserverInfoProps {
-  user: userInfoApiResponse;
+  user: userInfoApiResponse;      
 }
 
 export default function UserTable({ user }: ObserverInfoProps) {
