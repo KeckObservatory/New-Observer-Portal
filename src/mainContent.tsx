@@ -63,10 +63,8 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function MainContent({ open }: MainContentProps) {
   const telescopeSchedData = scheduleApi();           // ApiResponse[] | null
   const metricsData = metricsApi();        // metricsApiResponse[] | null
-  //const logsData = observerLogsApi();    // ObserverLogsApiResponse | null
   const userData = userInfoApi();          // userInfoApiResponse | null
   console.log("userData:", userData);
-  //console.log("logsData:", logsData);
 
   // Filter instruments by telescope number (empty array if null)
   const keckI = telescopeSchedData?.filter(item => item.TelNr === 1) || [];
@@ -99,8 +97,8 @@ export default function MainContent({ open }: MainContentProps) {
           <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
             Your Information
           </Typography>
-            {userData && userData.length > 0 ? (
-              <UserTable user={userData[0]} />
+            {userData ? (
+              <UserTable user={userData} />
             ) : (
               <div>Loading your information...</div>
             )}

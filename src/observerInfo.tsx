@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/mate
 //import React from "react";
 import { styled } from "@mui/material/styles";
 
- interface ObserverInfoProps {
+interface ObserverInfoProps {
   user: userInfoApiResponse;      
 }
 
