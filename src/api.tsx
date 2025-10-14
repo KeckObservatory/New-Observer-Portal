@@ -334,7 +334,9 @@ export function getCurrentSemester() {
   useEffect(() => {
     async function fetchCurrent() {
       try {
-        const res = await fetch(urls.DEV_SCHEDULE2 + "/getSemester");
+        // get formatted HST date
+        const formattedDate = getShiftedDate();
+        const res = await fetch(urls.DEV_SCHEDULE2 + `/getSemester?hstDate=${formattedDate}`);
         const json = await res.json(); // { semester: "2025B" }
         const current = json.semester;
         console.log(current)
