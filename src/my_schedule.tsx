@@ -12,6 +12,8 @@ import ListItem from "@mui/material/ListItem";
 import {Link} from "@mui/material";
 
 import urls from './urls.json';
+import type { userInfoApiResponse } from './api';
+
 
 
 
@@ -40,11 +42,12 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 interface MyScheduleProps  {
   open: boolean;
   //obsSchedule: obsScheduleApiResponse;
+  user: userInfoApiResponse | null;
 };
 
 export function MyObsSchedule({ open }: MyScheduleProps) {
     //const telescopeSchedData = scheduleApi();           // ApiResponse[] | null
-    const schedule = obsScheduleApi(4718) || []
+    const schedule = obsScheduleApi(4718) || [] //user.ID
     const isObserving = schedule.length > 0 // if returns something, then they have observing nights
 
     return (

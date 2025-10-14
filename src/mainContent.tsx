@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 
 import { OrderedNightMetricsStrip } from './metrics';
 import UserTable from './observerInfo';
-import { userInfoApi } from './api';
+//import { userInfoApi } from './api';
 
 //import { ObserverInfo } from './observerInfo';
 
@@ -23,6 +23,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 import { ObserverInfoBanner } from './observerInfo';
+import type { userInfoApiResponse } from './api';
 
 
 
@@ -51,6 +52,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 
 interface MainContentProps  {
   open: boolean;
+  user: userInfoApiResponse | null;
 };
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -60,11 +62,11 @@ const Item = styled(Paper)(({ theme }) => ({
   height: '100%',
 }));
 
-export default function MainContent({ open }: MainContentProps) {
+export default function MainContent({ open, user }: MainContentProps) {
   const telescopeSchedData = scheduleApi();           // ApiResponse[] | null
   const metricsData = metricsApi();        // metricsApiResponse[] | null
-  const userData = userInfoApi();          // userInfoApiResponse | null
-  console.log("userData:", userData);
+  //const userData = userInfoApi();          // userInfoApiResponse | null
+  console.log("userData:", user);
 
   // Filter instruments by telescope number (empty array if null)
   const keckI = telescopeSchedData?.filter(item => item.TelNr === 1) || [];
@@ -97,8 +99,8 @@ export default function MainContent({ open }: MainContentProps) {
           <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
             Your Information
           </Typography>
-            {userData ? (
-              <UserTable user={userData} />
+            {user ? (
+              <UserTable user={user} />
             ) : (
               <div>Loading your information...</div>
             )}

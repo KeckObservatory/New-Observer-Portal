@@ -22,7 +22,7 @@ export default function UserTable({ user }: ObserverInfoProps) {
     <TableContainer component={Paper}
     sx={{
     //height: 350, // Set your desired fixed height (px, e.g. 300)
-    maxHeight: 317, // set max height, so when new items are added it will scroll
+    maxHeight: 320, // set max height, so when new items are added it will scroll
     //minHeight: 300,
     }}
     >

@@ -11,6 +11,7 @@ import ObjectEmbed from './frame'
 
 import { MyObsSchedule } from './my_schedule';
 import { MyObsLogs } from './myLogs';
+import { userInfoApi } from './api';
 
 function App() {
   // set page to be home when opened for the first time
@@ -31,6 +32,7 @@ function App() {
     return newTheme
   }, [darkMode])
 
+  const userData = userInfoApi(); // fetch user info ONCE
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -45,13 +47,13 @@ function App() {
         />
           <Box sx={{ flexGrow: 1, p: 3 }}>
             {selectedPage === "My Observing Schedule (to add)" ? (
-              <MyObsSchedule open={open} />
+              <MyObsSchedule open={open} user={userData} />
             ) : selectedPage === "My Observing Logs (to add)" ? (
-              <MyObsLogs open={open} />
+              <MyObsLogs open={open} user={userData} />
             ) : selectedUrl ? (
               <ObjectEmbed url={selectedUrl} open={open} />
             ) : (
-              <MainContent open={open} />
+              <MainContent open={open} user={userData} />
             )}
           </Box>
       </ThemeProvider>

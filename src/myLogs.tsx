@@ -21,6 +21,8 @@ import { useEffect } from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 import { getCurrentSemester } from "./api";
+import type { userInfoApiResponse } from './api';
+
 
 
 
@@ -49,6 +51,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 
 interface MyLogsProps  {
   open: boolean;
+  user: userInfoApiResponse | null;
 };
 
 // function given current semester calculates previous x semester names -> used in drop down
@@ -72,7 +75,7 @@ function getLastSemesters(current: string, count: number): string[] {
   return semesters;
 }
 
-export function MyObsLogs({ open }: MyLogsProps) {
+export function MyObsLogs({ open, user }: MyLogsProps) {
   const currentSemester = getCurrentSemester();
   const availableSemesters = [currentSemester, ...getLastSemesters(currentSemester, 2)]; // last two semesters
 
@@ -87,7 +90,7 @@ export function MyObsLogs({ open }: MyLogsProps) {
   const [semester, setSemester] = useState(currentSemester);
 
   // api call to get logs (or loading state)
-  const { data, loading } = useObsLogApi(4718, semester);
+  const { data, loading } = useObsLogApi(4718, semester); // TODO user.ID
 
   const logs = data?.logs ?? [];
   const hasLogs = logs.length > 0;
