@@ -133,7 +133,7 @@ export function scheduleApi() {
   return data;}
 
 export interface userInfoApiResponse {
-  Id: string;
+  Id: number;
   Title: string;
   FirstName: string;
   MiddleName: string;
@@ -179,26 +179,6 @@ export function userInfoApi() {
   return data;}
 
 
-export const placeholderUser = {
-  Id: "6679",
-  FirstName: "Jane",
-  MiddleName: "",
-  LastName: "Doe",
-  Title: "Astronomer",
-  Email: "jane.doe@example.com",
-  Affiliation: "Keck Observatory",
-  WorkArea: "Instrumentation",
-  Interests: "Exoplanets, Spectroscopy",
-  Street: "123 Observatory Rd",
-  City: "Waimea",
-  State: "HI",
-  Zip: "96743",
-  Country: "USA",
-  Phone: "(808) 555-1234",
-  URL: "https://www.example.com",
-  };
-
-
 export interface ObserverLog {
   Name: string;
   Semester: string;
@@ -240,45 +220,114 @@ export interface obsScheduleApiResponse {
   Principal: string;
   Observers: string;
   Instrument: string;
-  // OA
-  // SA
   ProjCode: string;
-  // Observing request 
-  // POC form
-
 }
 
 
-export function obsScheduleApi(obsid: number) { 
-  const [data, setData] = useState<obsScheduleApiResponse[] | null>(null);
+// export function obsScheduleApi(obsid: number) { 
+//   const [data, setData] = useState<obsScheduleApiResponse[] | null>(null);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         // get current date with shift
+//         const formattedDate = getShiftedDate();
+//         const endDate = getDateSixMonthsLater(formattedDate);
+
+//         //console.log('start:', formattedDate);
+//         //console.log('end:', endDate);
+
+//         // fetch future observing dates for obsid
+//         const observing_schedule = await fetch(urls.SCHEDULE_API + `/getScheduleByUser?obsid=${obsid}&startdate=${formattedDate}&enddate=${endDate}`);
+//         //console.log(userInfo)
+//         const obs_schedule = await observing_schedule.json();
+//         console.log("schedule:", obs_schedule)
+
+//       setData(obs_schedule);
+//     } catch (err) {
+//       console.error("Error fetching observing schedule:", err);
+//     }
+//   };
+
+//   fetchData();
+// }, []);
+//   return data;}
+
+export interface nightStaffApiResponse {
+  FirstName: string;
+  Type: string; // oa, sa
+}
+
+// export function employeeApi(nights) {
+//   const [data, setData] = useState<nightStaffApiResponse[] | null>(null);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+
+//       }
+// }
+
+export interface CombinedSchedule {
+  Date: string;
+  StartTime: string;
+  EndTime: string;
+  TelNr: number;
+  Principal: string;
+  Observers: string;
+  Instrument: string;
+  ProjCode: string;
+  staff?: nightStaffApiResponse[];
+}
+
+export function useCombinedSchedule(obsid: number) {
+  const [data, setData] = useState<CombinedSchedule[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchCombined = async () => {
       try {
-        // get current date with shift
+        setLoading(true);
+        setError(null);
+
+        // Step 1: Get the observer’s schedule
         const formattedDate = getShiftedDate();
         const endDate = getDateSixMonthsLater(formattedDate);
 
-        console.log('start:', formattedDate);
-        console.log('end:', endDate);
+        const scheduleRes = await fetch(
+          `${urls.SCHEDULE_API}/getScheduleByUser?obsid=${obsid}&startdate=${formattedDate}&enddate=${endDate}`
+        );
+        if (!scheduleRes.ok) throw new Error("Failed to fetch schedule");
+        const schedule: obsScheduleApiResponse[] = await scheduleRes.json();
 
-        // fetch future observing dates for obsid
-        const observing_schedule = await fetch(urls.SCHEDULE_API + `/getScheduleByUser?obsid=${obsid}&startdate=${formattedDate}&enddate=${endDate}`);
-        //console.log(userInfo)
-        const obs_schedule = await observing_schedule.json();
-        console.log("schedule:", obs_schedule)
+        // Step 2: For each schedule date, fetch the night staff
+        const staffPromises = schedule.map(async (night) => {
+          const employeeRes = await fetch(
+            `${urls.EMPLOYEE_API_DEV}/getNightStaff?date=${night.Date}`
+          );
+          if (!employeeRes.ok) throw new Error("Failed to fetch night staff");
+          const staff: nightStaffApiResponse[] = await employeeRes.json();
+          return { ...night, staff };
+        });
 
-      setData(obs_schedule);
-    } catch (err) {
-      console.error("Error fetching observing schedule:", err);
-    }
-  };
+        const combined = await Promise.all(staffPromises);
+        setData(combined);
+      } catch (err: any) {
+        console.error("Error fetching combined schedule:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchData();
-}, []);
-  return data;}
+    fetchCombined();
+  }, [obsid]);
 
-  function getDateSixMonthsLater(startDateStr: string) {
+  return { data, loading, error };
+}
+
+function getDateSixMonthsLater(startDateStr: string) {
   const startDate = new Date(startDateStr);
   // Add 6 months
   startDate.setMonth(startDate.getMonth() + 6);
