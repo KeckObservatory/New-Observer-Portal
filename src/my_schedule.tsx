@@ -44,10 +44,12 @@ interface MyScheduleProps  {
   open: boolean;
   //obsSchedule: obsScheduleApiResponse;
   user: userInfoApiResponse | null;
+  setSelectedPage: (page: string) => void;
+  setSelectedUrl: (url: string) => void;
 };
 
 
-export function MyObsSchedule({ open, user }: MyScheduleProps) {
+export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: MyScheduleProps) {
   const obsid = user?.Id;
   //const { data: schedule, loading, error } = useCombinedSchedule(obsid || 0); //TODO fix this 0
   const { data: schedule, loading, error } = useCombinedSchedule(4718); 
@@ -110,7 +112,6 @@ export function MyObsSchedule({ open, user }: MyScheduleProps) {
                             width: 300,
                             whiteSpace: "normal",       // allows multiple lines
                             wordBreak: "break-word",    // breaks long words
-                            //overflowWrap: "anywhere",   // modern browsers
                           }}
                         >
                           <b>Observers</b>
@@ -137,7 +138,21 @@ export function MyObsSchedule({ open, user }: MyScheduleProps) {
                               py: 1, // spacing between rows
                             }}
                           >
-                            {night.Observers}
+                            {(!night.Observers || night.Observers.length === 0) ? (
+                              <Link
+                              // if there are no observers listed, link to observing request page to add them
+                                component="button"
+                                variant="body2"
+                                onClick={() => {
+                                  setSelectedPage("Observing Information");
+                                  setSelectedUrl(urls.OBSERVING_REQUEST);
+                                }}
+                              >
+                                See Observing Request
+                              </Link>
+                            ) : (
+                              night.Observers
+                            )}
                           </TableCell>
                           <TableCell>{night.Instrument}</TableCell>
                           <TableCell>{night.ProjCode}</TableCell>

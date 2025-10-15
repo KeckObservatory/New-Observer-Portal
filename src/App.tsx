@@ -47,7 +47,12 @@ function App() {
         />
           <Box sx={{ flexGrow: 1, p: 3 }}>
             {selectedPage === "My Observing Schedule (to add)" ? (
-              <MyObsSchedule open={open} user={userData} />
+              <MyObsSchedule
+                open={open}
+                user={userData}
+                setSelectedPage={setSelectedPage}
+                setSelectedUrl={setSelectedUrl}
+              />
             ) : selectedPage === "My Observing Logs (to add)" ? (
               <MyObsLogs open={open} user={userData} />
             ) : selectedUrl ? (
