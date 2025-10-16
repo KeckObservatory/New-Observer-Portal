@@ -149,6 +149,7 @@ export interface userInfoApiResponse {
   Zip: string;
   Phone: string;
   URL: string;
+  ProfilePictureURL : string;
 }
 
 export function userInfoApi() {

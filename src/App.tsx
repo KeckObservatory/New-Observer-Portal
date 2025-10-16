@@ -38,7 +38,13 @@ function App() {
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider theme={theme}>
       <CssBaseline />
-      <TopBar open={open} handleDrawerOpen={handleDrawerOpen} />
+      {userData && (
+        <TopBar 
+          open={open} 
+          handleDrawerOpen={handleDrawerOpen} 
+          user={userData} 
+        />
+      )}
         <PersistentSideBar
           open={open}
           handleDrawerClose={handleDrawerClose}

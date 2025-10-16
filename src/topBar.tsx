@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import {  Box } from "@mui/material";
 import { Avatar} from "@mui/material";
+import type { userInfoApiResponse } from "./api";
+
 
 
 const drawerWidth = 240;
@@ -48,32 +50,14 @@ const StyledAppBar = styled(MuiAppBar, {
 interface TopBarProps  {
   open: boolean;
   handleDrawerOpen: () => void;
+  user: userInfoApiResponse; 
 };
 
-export default function TopBar({ open, handleDrawerOpen }: TopBarProps) {
+export default function TopBar({ open, handleDrawerOpen, user }: TopBarProps) {
   const now = useClock();
   const ut = now.toISOString().slice(11, 19); // ut time
   const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
   const hst = hstDate.toISOString().slice(11, 19); //hst time
-  const placeholderUser = {
-    Id: "6679",
-    FirstName: "Jane",
-    MiddleName: "",
-    LastName: "Doe",
-    Title: "Astronomer",
-    Email: "jane.doe@example.com",
-    Affiliation: "Keck Observatory",
-    WorkArea: "Instrumentation",
-    Interests: "Exoplanets, Spectroscopy",
-    Street: "123 Observatory Rd",
-    City: "Waimea",
-    State: "HI",
-    Zip: "96743",
-    Country: "USA",
-    Phone: "(808) 555-1234",
-    URL: "https://www.example.com",
-    ProfilePictureURL: "", // Add a URL to test with an actual image
-    };
 
   return (
     <StyledAppBar position="fixed" open={open}>
@@ -106,11 +90,11 @@ export default function TopBar({ open, handleDrawerOpen }: TopBarProps) {
             {/* Profile avatar bubble */}
             <IconButton sx={{ p: 0 }}>
               <Avatar
-                alt={placeholderUser?.FirstName ?? "User"}
-                src={placeholderUser?.ProfilePictureURL || undefined}
+                alt={user?.FirstName ?? "User"}
+                src={user?.ProfilePictureURL || undefined}
                 sx={{ width: 40, height: 40 }}
               >
-                {(placeholderUser?.FirstName?.[0] ?? "U").toUpperCase()}
+                {(user?.FirstName?.[0] ?? "").toUpperCase()}
               </Avatar>
             </IconButton>
           </Box>
