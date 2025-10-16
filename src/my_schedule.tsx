@@ -56,6 +56,18 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
 
   const isObserving = !!schedule && schedule.length > 0;
 
+  // Get unique instruments from the schedule
+  const instrumentLinks =
+    schedule && Array.isArray(schedule)
+      ? Array.from(
+          new Set(
+            schedule
+              .map((night) => night.Instrument)
+              .filter((inst) => !!inst)
+          )
+        )
+      : [];
+
   console.log("User ID:", obsid);
   console.log("Combined schedule:", schedule);
 
@@ -67,7 +79,7 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
           <Box sx={{ p: 2, borderBottom: 2, borderColor: "divider" }}>
             <Typography variant="h6">Your Upcoming Keck Observing Nights:</Typography>
           </Box>
-          <Box sx={{ p: 2, borderBottom: 2, borderColor: "divider" }}>
+          <Box sx={{ p: 3, borderBottom: 2, borderColor: "divider" }}>
             {loading && (
               <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
                 <CircularProgress />
@@ -85,7 +97,7 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
             )}
 
             {!loading && isObserving && schedule && (
-              <Box sx={{ mt: 2 }}>
+              <Box sx={{ mt: -2 }}>
                 <TableContainer
                   component={Paper}
                   sx={{
@@ -182,22 +194,33 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
           <Box sx={{ p: 2, borderBottom: 2, borderColor: "divider" }}>
             <Typography variant="h6">Helpful Links:</Typography>
             <List dense>
+              {instrumentLinks.map((inst) => (
+                <ListItem key={inst}>
+                  <Link
+                    component="button"
+                    variant="subtitle1"
+                    underline="hover"
+                    onClick={() => {
+                      setSelectedPage(`Instrument: ${inst}`);
+                      setSelectedUrl(`${urls.INSTRUMENTS_HOME}/${inst.toLowerCase()}`);
+                    }}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    {`Learn more about ${inst}`}
+                  </Link>
+                </ListItem>
+              ))}
+              {/* Static links */}
               <ListItem>
                 <Link
-                  href={urls.INSTRUMENTS_HOME}
-                  target="_blank"
-                  rel="noopener"
+                  component="button"
+                  variant="subtitle1"
                   underline="hover"
-                >
-                  Learn more about instruments
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link
-                  href={urls.OBSERVING_REQUEST}
-                  target="_blank"
-                  rel="noopener"
-                  underline="hover"
+                  onClick={() => {
+                    setSelectedPage("Observing Information");
+                    setSelectedUrl(urls.OBSERVING_REQUEST);
+                  }}
+                  sx={{ cursor: "pointer" }}
                 >
                   Create an observing request
                 </Link>
