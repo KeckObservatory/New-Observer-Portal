@@ -10,7 +10,7 @@ export function renderTable(instruments: telescopeSchedApiResponse[]) {
     <TableContainer
       component={Paper}
       sx={{
-        maxHeight: 320,
+        maxHeight: 317,
       }}
     >
       <Table size="small" stickyHeader>

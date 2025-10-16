@@ -122,7 +122,15 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
   const topMenu: MenuItem[] = [
     { text: 'Home', icon: <HomeIcon /> },
 
-
+    { text: "Profile", icon: <AccountBoxIcon />,
+      subItems: [
+        { text: "Update My Profile", url: urls.UPDATE_MY_PROFILE, newtab: false },
+        { text: "SHH Key Management", url: urls.SSH_KEY_MANAGEMENT, newtab: false },
+        { text: "My Observing Schedule (to add)"},
+        { text: "My Observing Logs (to add)"},
+        { text: "My Cover Sheets (to add)", url: "", newtab: false },
+      ]
+    },
 
     { text: "Admin/Keck Employee", icon: <AdminPanelSettingsIcon />,
       subItems: [
@@ -202,15 +210,6 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
   
   const bottomMenu: MenuItem[] = [
 
-    { text: "Profile", icon: <AccountBoxIcon />,
-      subItems: [
-        { text: "Update My Profile", url: urls.UPDATE_MY_PROFILE, newtab: false },
-        { text: "SHH Key Management", url: urls.SSH_KEY_MANAGEMENT, newtab: false },
-        { text: "My Observing Schedule (to add)"},
-        { text: "My Observing Logs (to add)"},
-        { text: "My Cover Sheets (to add)", url: "", newtab: false },
-      ]
-    },
     { text: "Logout (to add)", icon:   <LogoutIcon /> , url: urls.LOGOUT, newtab: false}
 
   ]

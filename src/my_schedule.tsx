@@ -118,7 +118,7 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
                         </TableCell>
                         <TableCell sx={{ width: 100 }}><b>Instrument</b></TableCell>
                         <TableCell sx={{ width: 75 }}><b>Project Code</b></TableCell>
-                        <TableCell sx={{ width: 100 }}><b>Staff</b></TableCell>
+                        <TableCell sx={{ width: 125 }}><b>Staff</b></TableCell>
                       </TableRow>
                     </TableHead>
 
@@ -162,7 +162,7 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
                                 .filter((s) => ["oa", "sa"].includes(s.Type)) // only show oa and sa
                                 .map((s, i) => (
                                   <div key={i}>
-                                    {s.FirstName} ({s.Type})
+                                    {s.FirstName} ({s.Type.toUpperCase()})
                                   </div>
                                 ))
                             ) : (
