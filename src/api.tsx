@@ -3,15 +3,6 @@
 import { useEffect, useState } from "react";
 import urls from './urls.json';
 
-// type to send to main content, not what is recieved from api
-export interface telescopeSchedApiResponse {
-  Instrument: string;
-  ScienceLocation: string;
-  StorageLocation: string;
-  TelNr: number;
-  State?: string; // added property for ready state
-}
-
 export interface metricsApiResponse {
   udate: string;
   dusk_12deg: string;
@@ -81,57 +72,61 @@ useEffect(() => {
 }, []);
   return data;}
 
+export interface TelescopeSchedApiResponse {
+  Instrument: string;
+  State: string;
+  TelNr: number;
+}
+
 export function scheduleApi() {
-  const [data, setData] = useState<telescopeSchedApiResponse[] | null>(null);
+  const [data, setData] = useState<TelescopeSchedApiResponse[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // get current date with shift
         const formattedDate = getShiftedDate();
 
-        // fetch instrument list
-        // TODO: Get rid of this api call and only use the one below it
-        const instrumentList = await fetch(urls.SCHEDULE_API + "/getActiveInstruments");
-        const instruments: telescopeSchedApiResponse[] = await instrumentList.json();
+        // Fetch only instrument status
+        const response = await fetch(
+          `${urls.SCHEDULE_API}/getInstrumentStatus?date=${formattedDate}&numdays=1`
+        );
+        const result = await response.json();
+        const statesMap = result[0]; // instrument status data
 
-        // fetch state of each instrument (just one call now)
-        const instrumentState = await fetch(urls.SCHEDULE_API + `/getInstrumentStatus?date=${formattedDate}&numdays=1`)
-        //console.log(instrumentState)
-        const states = await instrumentState.json();
-        const statesMap = states[0]
+        // Map the instruments into a list with name, TelNr, and State
+        const instrumentsWithState: TelescopeSchedApiResponse[] = Object.entries(statesMap).map(
+          ([instrumentName, instState]: any) => {
+            let stateLabel = "Unknown";
 
-        // combine instruments with their state
-        // for each instrument name ... like a for loop
-        const instrumentsWithState = instruments.map((inst) => {
-        const instState = statesMap[inst.Instrument]; // match by instrument name
-        //console.log('instState:' , instState)
-        let stateLabel = "Unknown";
+            if (instState) {
+              if (instState.Available === 0) {
+                stateLabel = "Not Available";
+              } else if (instState.Available === 1 && instState.Scheduled === 0) {
+                stateLabel = "TDA Ready";
+              } else if (instState.Available === 1 && instState.Scheduled === 1) {
+                stateLabel = "Scheduled";
+              }
+            }
 
-        // depending on avaliable and if it is scheduleed -> set the state
-        if (instState) {
-          if (instState.Available === 0) {
-            stateLabel = "Not Available";
-          } else if (instState.Available === 1 && instState.Scheduled === 0) {
-            stateLabel = "TDA Ready";
-          } else if (instState.Available === 1 && instState.Scheduled === 1) {
-            stateLabel = "Scheduled";
+            return {
+              Instrument: instrumentName,
+              TelNr: instState?.TelNr ?? 0, // fallback to 0 if missing
+              State: stateLabel,
+            };
           }
-        }
-        // create new object, use all filds from inst + add new state
-        return { ...inst, State: stateLabel };
-      });
+        );
 
-      setData(instrumentsWithState);
-      //console.log("Final combined data:", instrumentsWithState);
-    } catch (err) {
-      console.error("Error fetching instruments:", err);
-    }
-  };
+        setData(instrumentsWithState);
+      } catch (err) {
+        console.error("Error fetching instrument status:", err);
+      }
+    };
 
-  fetchData();
-}, []);
-  return data;}
+    fetchData();
+  }, []);
+
+  return data;
+}
 
 export interface userInfoApiResponse {
   Id: number;
