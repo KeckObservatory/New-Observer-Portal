@@ -91,6 +91,7 @@ export function scheduleApi() {
         const formattedDate = getShiftedDate();
 
         // fetch instrument list
+        // TODO: Get rid of this api call and only use the one below it
         const instrumentList = await fetch(urls.SCHEDULE_API + "/getActiveInstruments");
         const instruments: telescopeSchedApiResponse[] = await instrumentList.json();
 
@@ -225,49 +226,11 @@ export interface obsScheduleApiResponse {
 }
 
 
-// export function obsScheduleApi(obsid: number) { 
-//   const [data, setData] = useState<obsScheduleApiResponse[] | null>(null);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         // get current date with shift
-//         const formattedDate = getShiftedDate();
-//         const endDate = getDateSixMonthsLater(formattedDate);
-
-//         //console.log('start:', formattedDate);
-//         //console.log('end:', endDate);
-
-//         // fetch future observing dates for obsid
-//         const observing_schedule = await fetch(urls.SCHEDULE_API + `/getScheduleByUser?obsid=${obsid}&startdate=${formattedDate}&enddate=${endDate}`);
-//         //console.log(userInfo)
-//         const obs_schedule = await observing_schedule.json();
-//         console.log("schedule:", obs_schedule)
-
-//       setData(obs_schedule);
-//     } catch (err) {
-//       console.error("Error fetching observing schedule:", err);
-//     }
-//   };
-
-//   fetchData();
-// }, []);
-//   return data;}
-
 export interface nightStaffApiResponse {
   FirstName: string;
   Type: string; // oa, sa
 }
 
-// export function employeeApi(nights) {
-//   const [data, setData] = useState<nightStaffApiResponse[] | null>(null);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-
-//       }
-// }
 
 export interface CombinedSchedule {
   Date: string;
@@ -386,7 +349,7 @@ export function getCurrentSemester() {
       try {
         // get formatted HST date
         const formattedDate = getShiftedDate();
-        const res = await fetch(urls.DEV_SCHEDULE2 + `/getSemester?hstDate=${formattedDate}`);
+        const res = await fetch(urls.DEV_SCHEDULE2 + `/getSemester?date=${formattedDate}`);
         const json = await res.json(); // { semester: "2025B" }
         const current = json.semester;
         console.log(current)
@@ -399,4 +362,14 @@ export function getCurrentSemester() {
   }, []);
 
   return semester;
+}
+
+export async function getEmployeeLinks(userId: number): Promise<{ name: string; url: string }[]> {
+  try {
+    const res = await fetch(urls.DEV_EMPLOYEE + `/getEmployeeLinks?userid=${userId}`);
+    const json = await res.json();
+    return json.links || [];
+  } catch {
+    return [];
+  }
 }

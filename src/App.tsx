@@ -50,6 +50,7 @@ function App() {
           handleDrawerClose={handleDrawerClose}
           setSelectedPage={setSelectedPage}
           setSelectedUrl={setSelectedUrl}
+          user={userData}
         />
           <Box sx={{ flexGrow: 1, p: 3 }}>
             {selectedPage === "My Observing Schedule (to add)" ? (

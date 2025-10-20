@@ -31,6 +31,9 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 
 // urls
 import urls from './urls.json'
+import type { userInfoApiResponse } from './api';
+
+import { getEmployeeLinks } from './api';
 
 const drawerWidth = 240;
 
@@ -49,6 +52,7 @@ interface SidebarProps {
   handleDrawerClose: () => void;
   setSelectedPage: (page: string) => void; 
   setSelectedUrl: (url: string | null) => void; // to embed url inside app
+  user: userInfoApiResponse | null;
 }
 
 // type for menu items in the side bar (so they have a name, icon, and optional sub-items)
@@ -71,8 +75,20 @@ interface SubItem {
 
 
 // ----- Component -----
-export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, setSelectedUrl }: SidebarProps) {
+export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, setSelectedUrl, user }: SidebarProps) {
   const theme = useTheme();
+
+  const [employeeLinks, setEmployeeLinks] = React.useState<{ name: string; url: string }[]>([]);
+
+  React.useEffect(() => {
+    if (user?.Id) {
+      getEmployeeLinks(user.Id).then((links) => {
+        setEmployeeLinks(links || []);
+      });
+    }
+  }, [user?.Id]);
+
+  console.log("Employee Links:", employeeLinks);
 
   // track which menu items are open (can be more than one) with boolean
   // true -> open, false -> closed
@@ -129,13 +145,6 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "My Observing Schedule (to add)"},
         { text: "My Observing Logs (to add)"},
         { text: "My Cover Sheets (to add)", url: "", newtab: false },
-      ]
-    },
-
-    { text: "Admin/Keck Employee", icon: <AdminPanelSettingsIcon />,
-      subItems: [
-        { text: "POC Admin Page (internal)", url: urls.POC_ADMIN_PAGE, newtab: false},
-        { text: "Remote Observing Admin Page", url: urls.REMOTE_OBS_ADMIN_PAGE, newtab: false } 
       ]
     },
 
@@ -207,7 +216,19 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     },
     { text: "Publication Ackowledgement", icon:   <CreateIcon /> , url: urls.PUB_ACK, newtab: false}
     ];
-  
+
+    // for keck employees only, add extra admin section
+    if (employeeLinks.length > 0) {
+    topMenu.push({
+      text: "Admin/Keck Employee",
+      icon: <AdminPanelSettingsIcon />,
+      subItems: employeeLinks.map(link => ({
+        text: link.name,
+        url: link.url,
+        newtab: false
+      }))
+    });
+  }
   const bottomMenu: MenuItem[] = [
 
     { text: "Logout (to add)", icon:   <LogoutIcon /> , url: urls.LOGOUT, newtab: false}
