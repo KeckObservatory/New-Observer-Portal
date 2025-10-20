@@ -364,9 +364,9 @@ export function getCurrentSemester() {
   return semester;
 }
 
-export async function getEmployeeLinks(userId: number): Promise<{ name: string; url: string }[]> {
+export async function getEmployeeLinks(obsid: number): Promise<{ name: string; url: string }[]> {
   try {
-    const res = await fetch(urls.DEV_EMPLOYEE + `/getEmployeeLinks?userid=${userId}`);
+    const res = await fetch(urls.DEV_EMPLOYEE + `/getEmployeeLinks?obsid=${obsid}`);
     const json = await res.json();
     return json.links || [];
   } catch {
