@@ -77,7 +77,7 @@ function getLastSemesters(current: string, count: number): string[] {
 
 export function MyObsLogs({ open, user }: MyLogsProps) {
   const obsid = user?.Id
-  console.log("User ID:", obsid)
+  //console.log("User ID:", obsid)
   const currentSemester = getCurrentSemester();
   const availableSemesters = [currentSemester, ...getLastSemesters(currentSemester, 2)]; // last two semesters
 

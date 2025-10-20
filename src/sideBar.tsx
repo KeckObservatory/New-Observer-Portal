@@ -82,8 +82,13 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
 
   React.useEffect(() => {
     if (user?.Id) {
-      getEmployeeLinks(user.Id).then((links) => {
-        setEmployeeLinks(links || []);
+      getEmployeeLinks(user.Id).then((result) => {
+        // If result.links exists and is an array, use it; otherwise, set to []
+        if (Array.isArray(result?.links)) {
+          setEmployeeLinks(result.links);
+        } else {
+          setEmployeeLinks([]);
+        }
       });
     }
   }, [user?.Id]);
