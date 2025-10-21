@@ -147,9 +147,10 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
       subItems: [
         { text: "Update My Profile", url: urls.UPDATE_MY_PROFILE, newtab: false },
         { text: "SHH Key Management", url: urls.SSH_KEY_MANAGEMENT, newtab: false },
-        { text: "My Observing Schedule (to add)"},
-        { text: "My Observing Logs (to add)"},
-        { text: "My Cover Sheets (to add)", url: "", newtab: false },
+        { text: "My Observing Schedule (new)"},
+        { text: "My Observing Logs (new)"},
+        { text: "My Observing Requests (to add)"},
+        { text: "My Cover Sheets (to add)"},
       ]
     },
 
