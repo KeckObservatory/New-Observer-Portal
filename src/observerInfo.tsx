@@ -5,6 +5,11 @@ import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/mate
 //import React from "react";
 import { styled } from "@mui/material/styles";
 
+
+import { Typography, List, ListItem, ListItemText, ListItemIcon } from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+
 interface ObserverInfoProps {
   user: userInfoApiResponse;      
 }
@@ -77,10 +82,57 @@ export default function UserTable({ user }: ObserverInfoProps) {
 
 export const ObserverInfoBanner = styled(Paper)(({ theme }) => ({
   width: "100%",
-  height: 80,
+  height: "auto",
   marginBottom: theme.spacing(2),
   background: theme.palette.background.paper,
   display: "flex",
-  alignItems: "center",
+  flexDirection: "column",
+  alignItems: "flex-start",
   justifyContent: "center",
+  padding: theme.spacing(2),
 }));
+
+export function ObserverInfoMock() {
+  return (
+    <ObserverInfoBanner elevation={3}>
+      <Typography variant="h6" gutterBottom>
+        Welcome to the new Observer Portal!
+      </Typography>
+
+      <Typography variant="body1" gutterBottom>
+        You are observing in <strong>20 days</strong> using <strong>KCWI</strong>.
+      </Typography>
+
+      <Typography variant="subtitle1" sx={{ mt: 1 }}>
+        Please look over your observing checklist:
+      </Typography>
+
+      <List dense>
+        <ListItem>
+          <ListItemIcon>
+            <CheckCircleOutlineIcon color="success" />
+          </ListItemIcon>
+          <ListItemText primary="Sumbit observing reqest" />
+        </ListItem>
+        <ListItem>
+          <ListItemIcon>
+            <RadioButtonUncheckedIcon color="disabled" />
+          </ListItemIcon>
+          <ListItemText primary="Use the Planning Tool to create target list" />
+        </ListItem>
+        <ListItem>
+          <ListItemIcon>
+            <RadioButtonUncheckedIcon color="disabled" />
+          </ListItemIcon>
+          <ListItemText primary="Upload starlist" />
+        </ListItem>
+        <ListItem>
+          <ListItemIcon>
+            <RadioButtonUncheckedIcon color="disabled" />
+          </ListItemIcon>
+          <ListItemText primary="Add observers into observing request" />
+        </ListItem>
+      </List>
+    </ObserverInfoBanner>
+  );
+}

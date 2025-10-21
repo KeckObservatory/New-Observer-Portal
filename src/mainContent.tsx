@@ -22,7 +22,7 @@ import Grid from '@mui/material/Grid';
 //import { placeholderUser } from './api'
 import Typography from '@mui/material/Typography';
 
-import { ObserverInfoBanner } from './observerInfo';
+import { ObserverInfoMock } from './observerInfo';
 import type { userInfoApiResponse } from './api';
 
 
@@ -74,7 +74,7 @@ export default function MainContent({ open, user }: MainContentProps) {
 
   return (
     <Main open={open}>
-      <ObserverInfoBanner />
+      <ObserverInfoMock />
       <Grid container spacing={2} sx={{ height: "85%" }}>
         <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>
