@@ -207,15 +207,14 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     },
     { text: "Post-Observing Support", icon: <AssignmentIcon />,
       subItems: [
-        { text: "My Observing Logs (to add)" },
         { text: "Post Observing Comment Form", url: urls.POST_OBS_COMMENTS, newtab: false},
-        { text: "Data Reduction Pipelines (to add)", url: urls.DRPS, newtab: true},
+        { text: "Data Reduction Pipelines", url: urls.DRPS, newtab: false},
       ]
     },
     { text: "Data Access", icon: <CloudDownloadIcon />,
       subItems: [
         { text: "Keck Observatory Archive", url: urls.KOA, newtab: true},
-        { text: "Data Discovery Service (to add)", url: urls.DDS, newtab: true },
+        { text: "Data Discovery Service", url: urls.DDS, newtab: true },
         { text: "Observers\' Data Access Portal", url: urls.ODAP, newtab: true},
         { text: "My KOA Data (to add)", url: "", newtab: true},
       ]
