@@ -156,7 +156,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
 
     { text: "Telescope Schedule", icon: <CalendarMonthIcon />, url: urls.TELESCOPE_SCHEDULE, newtab: false },
     
-    { text: "Maunakea Weather Center", icon: <AcUnitIcon />, url : urls.MK_WEATHER_CENTER, newtab: false},
+    { text: "Maunakea Weather Center", icon: <AcUnitIcon />, url : urls.MK_WEATHER_CENTER, newtab: true},
 
     { text: "Pre-Observing Support", icon: <ChecklistIcon />,
       subItems: [
