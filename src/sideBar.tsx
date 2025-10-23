@@ -156,8 +156,12 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
 
     { text: "Telescope Schedule", icon: <CalendarMonthIcon />, url: urls.TELESCOPE_SCHEDULE, newtab: false },
     
-    { text: "Maunakea Weather Center", icon: <AcUnitIcon />, url : urls.MK_WEATHER_CENTER, newtab: true},
-
+    { text: "Weather Conditions", icon: <AcUnitIcon />, 
+      subItems: [
+        { text: "Maunakea Weather Center", url : urls.MK_WEATHER_CENTER, newtab: true},
+        { text : "Keck Cloud Cameras", url : urls.CLOUD_CAMS, newtab: false}
+      ]
+    },
     { text: "Pre-Observing Support", icon: <ChecklistIcon />,
       subItems: [
         { text: "Instrument Home", url: urls.INSTRUMENTS_HOME, newtab: false},
