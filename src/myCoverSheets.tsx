@@ -145,6 +145,8 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
               <Typography>Loading...</Typography>
             ) : error ? (
               <Typography color="error">{error}</Typography>
+            ) : (data?.programs?.length === 0) ? (
+              <Typography>No coversheets for this semester.</Typography>
             ) : (
               <TableContainer component={Paper} sx={{ maxHeight: 331 }}>
                 <Table size="small" stickyHeader sx={{ tableLayout: "fixed", width: "100%" }}>
