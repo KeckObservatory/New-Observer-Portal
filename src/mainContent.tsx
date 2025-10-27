@@ -22,7 +22,7 @@ import Grid from '@mui/material/Grid';
 //import { placeholderUser } from './api'
 import Typography from '@mui/material/Typography';
 
-import { ObserverInfoMock } from './observerInfo';
+import { ObserverInfoBannerWithSchedule } from './observerInfo';
 import type { userInfoApiResponse } from './api';
 
 
@@ -53,6 +53,8 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 interface MainContentProps  {
   open: boolean;
   user: userInfoApiResponse | null;
+  setSelectedPage?: (page: string) => void;
+  setSelectedUrl?: (url: string) => void;
 };
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -62,7 +64,7 @@ const Item = styled(Paper)(({ theme }) => ({
   height: '100%',
 }));
 
-export default function MainContent({ open, user }: MainContentProps) {
+export default function MainContent({ open, user, setSelectedPage, setSelectedUrl }: MainContentProps) {
   const telescopeSchedData = scheduleApi();           // ApiResponse[] | null
   const metricsData = metricsApi();        // metricsApiResponse[] | null
   //const userData = userInfoApi();          // userInfoApiResponse | null
@@ -74,7 +76,11 @@ export default function MainContent({ open, user }: MainContentProps) {
 
   return (
     <Main open={open}>
-      <ObserverInfoMock />
+      <ObserverInfoBannerWithSchedule user={user} setSelectedPage={function (page: string): void {
+        throw new Error('Function not implemented.');
+      } } setSelectedUrl={function (url: string): void {
+        throw new Error('Function not implemented.');
+      } }/>
       <Grid container spacing={2} sx={{ height: "85%" }}>
         <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>

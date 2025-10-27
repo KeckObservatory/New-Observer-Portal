@@ -1,14 +1,19 @@
-import { Paper } from "@mui/material";
+import { Paper, Box } from "@mui/material";
 import type { userInfoApiResponse } from "./api";
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
-
-//import React from "react";
 import { styled } from "@mui/material/styles";
-
-
 import { Typography, List, ListItem, ListItemText, ListItemIcon } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { useCombinedSchedule } from "./api";
+//import { differenceInCalendarDays, isAfter, isBefore, parseISO } from "date-fns";
+
+import urls from './urls.json';
+
+type ChecklistItem = {
+  task: string;
+  url?: string;
+};
 
 interface ObserverInfoProps {
   user: userInfoApiResponse;      
@@ -26,9 +31,7 @@ export default function UserTable({ user }: ObserverInfoProps) {
   return (
     <TableContainer component={Paper}
     sx={{
-    //height: 350, /
     maxHeight: 317, // set max height, so when new items are added it will scroll
-    //minHeight: 300,
     }}
     >
       <Table size="small" stickyHeader></Table>
@@ -92,47 +95,110 @@ export const ObserverInfoBanner = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-export function ObserverInfoMock() {
+// Define instrument categories
+//const ALL_INSTRUMENTS = ["KCWI", "DEIMOS", "LRIS", "LRISp", "NIRC2", "OSIRIS", "HIRESb", "HIRESr", "MOSFIRE", "ESI", "KPF", "NIRES", "NIRSPEC", "LRIS"]
+const MASKED_INSTRUMENTS = ["DEIMOS", "LRIS", "LRISp"];
+const LGS_AO_INSTRUMENTS = ["NIRC2", "OSIRIS"];
+const NON_AO_INSTRUMENTS = ["KCWI", "DEIMOS", "LRIS", "LRISp", "HIRESb", "HIRESr", "MOSFIRE", "ESI", "KPF", "NIRES", "NIRSPEC"];
+const KPF_CC = ["KPF"]
+
+// Define checklists for each category
+const CHECKLISTS = {
+  all: [
+    { task: "Submit observing request", url : urls.OBSERVING_REQUEST},
+    { task: "Prepare finding charts"},
+    { task: "Configure and test your remote observing software", url : urls.SSH_KEY_MANAGEMENT}
+  ],
+  masked: [
+    { task: "Submit slitmask information 5 weeks in advance", url : urls.SLITMASK_TOOL },
+    { task: "Submit configuration forms 5 weeks in advance", url : urls.CONFIGURATION_SUBMISSION },
+    //{ task: "", url : ""}
+  ],
+  non_ao: [
+    { task: "Plan your observation", url : urls.PLANNING_TOOL},
+    { task: "Submit your starlist", url : urls.NON_AO_STARLIST},
+  ],
+  lgs_ao: [
+    { task: "Plan your LGS observation", url : urls.PLAN_LGS_OBS},
+    { task: "Submit your AO starlist", url : urls.AO_STARLIST},
+  ],
+  kpf_cc: [
+    { task: "Submit observing blocks", url : urls.KPF_CC},
+  ]
+};
+
+function getInstrumentCategories(instrument: string): string[] {
+  const categories = ["all"];
+  if (MASKED_INSTRUMENTS.includes(instrument)) categories.push("masked");
+  if (LGS_AO_INSTRUMENTS.includes(instrument)) categories.push("lgs_ao");
+  if (NON_AO_INSTRUMENTS.includes(instrument)) categories.push("non_ao");
+  if (KPF_CC.includes(instrument)) categories.push("kpf_cc");
+  return categories;
+}
+
+interface ObserverBannerProps {
+  user: userInfoApiResponse | null;
+  setSelectedPage: (page: string) => void;
+  setSelectedUrl: (url: string) => void;
+}
+
+export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelectedUrl }: ObserverBannerProps) {
+  const obsid = user?.Id;
+  console.log("User ID:", obsid);
+  const { data: schedule, loading, error } = useCombinedSchedule(4718);
+
+  if (loading) return <ObserverInfoBanner elevation={3}><Typography>Loading...</Typography></ObserverInfoBanner>;
+  if (error) return <ObserverInfoBanner elevation={3}><Typography color="error">{error}</Typography></ObserverInfoBanner>;
+  if (!schedule || schedule.length === 0) return <ObserverInfoBanner elevation={3}><Typography>No upcoming observations within 2 months.</Typography></ObserverInfoBanner>;
+
   return (
     <ObserverInfoBanner elevation={3}>
       <Typography variant="h6" gutterBottom>
         Welcome to the new Observer Portal!
       </Typography>
-
-      <Typography variant="body1" gutterBottom>
-        You are observing in <strong>20 days</strong> using <strong>KCWI</strong>.
-      </Typography>
-
-      <Typography variant="subtitle1" sx={{ mt: 1 }}>
-        Please look over your observing checklist:
-      </Typography>
-
-      <List dense>
-        <ListItem>
-          <ListItemIcon>
-            <CheckCircleOutlineIcon color="success" />
-          </ListItemIcon>
-          <ListItemText primary="Sumbit observing reqest" />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <RadioButtonUncheckedIcon color="disabled" />
-          </ListItemIcon>
-          <ListItemText primary="Use the Planning Tool to create target list" />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <RadioButtonUncheckedIcon color="disabled" />
-          </ListItemIcon>
-          <ListItemText primary="Upload starlist" />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <RadioButtonUncheckedIcon color="disabled" />
-          </ListItemIcon>
-          <ListItemText primary="Add observers into observing request" />
-        </ListItem>
-      </List>
+      {schedule.map((night, idx) => (
+        <Box key={idx} sx={{ mb: 2, width: "100%" }}>
+          <Typography variant="body1" gutterBottom>
+            You are observing in <strong>{night.DaysUntil}</strong> days using <strong>{night.Instrument}</strong> on <strong>{night.Date}</strong>.
+          </Typography>
+          <Typography variant="subtitle1" sx={{ mt: 1 }}>
+            Please look over your observing checklist:
+          </Typography>
+          <List dense>
+            {getInstrumentCategories(night.Instrument).map((category, i) => (
+              <Box key={category} sx={{ mb: 1 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                </Typography>
+                  {(CHECKLISTS[category] || []).map((item: ChecklistItem, idx: number) => (
+                  <ListItem key={idx}>
+                    <ListItemIcon>
+                      <RadioButtonUncheckedIcon color="disabled" />
+                    </ListItemIcon>
+                    {item.url ? (
+                      <ListItemText
+                        primary={
+                          <Typography
+                            component="span"
+                            sx={{ color: "primary.main", cursor: "pointer", textDecoration: "underline" }}
+                            onClick={() => {
+                              if (typeof setSelectedPage === "function") setSelectedPage(item.task);
+                              if (typeof setSelectedUrl === "function") setSelectedUrl(item.url);
+                            }}
+                          >
+                            {item.task}
+                          </Typography>
+                        }
+                      />
+                    ) : (
+                      <ListItemText primary={item.task} />
+                    )}
+                  </ListItem>
+                ))}
+              </Box>
+            ))}
+          </List>
+        </Box>
+      ))}
     </ObserverInfoBanner>
   );
 }
