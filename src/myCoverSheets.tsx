@@ -1,10 +1,9 @@
-import { Paper, Typography, Stack, Box, Table, TableBody, TableCell, TableContainer, TableRow, TableHead, List, ListItem, Link } from "@mui/material";
+import { Paper, Typography, Stack, Box, Table, TableBody, TableCell, TableContainer, TableRow, TableHead, List, ListItem, Link, FormControl, Select, MenuItem, InputLabel } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import urls from './urls.json';
 import type { userInfoApiResponse } from './api';
-//import type { GetProgramIdsResponse } from './api';
 import { useEffect, useState } from "react";
-
+import { getCurrentSemester, getLastSemesters } from "./api";
 
 const drawerWidth = 240;
 
@@ -42,20 +41,33 @@ type Program = {
   type?: string;
 }
 
-
 export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: MyCoverSheetsProps) {
-  const id = user?.Id;
-  console.log("MyCoverSheets user ID:", id);
-  //const obsid = user?.Id || 4718;
-  const obsid = 4718;
+  const obsid = user?.Id || 4718;
 
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Semester dropdown state
+  const currentSemester = getCurrentSemester();
+  const [selectedSemester, setSelectedSemester] = useState<string>("");
+  const [semesterOptions, setSemesterOptions] = useState<string[]>([]);
+
+  // Update semester options when currentSemester changes
+  useEffect(() => {
+    if (currentSemester) {
+      setSemesterOptions([currentSemester, ...getLastSemesters(currentSemester, 3)]);
+      setSelectedSemester(currentSemester);
+    }
+  }, [currentSemester]);
+
+  // Fetch cover sheets when obsid or selectedSemester changes
   useEffect(() => {
     async function fetchData() {
       try {
+        setLoading(true);
+        setError(null);
+
         if (!obsid) {
           setError("No observer ID found");
           setLoading(false);
@@ -66,14 +78,14 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
         const response = await fetch(`${urls.DEV_PROPOSALS_API}/getProgramIDs?obsid=${obsid}`);
         if (!response.ok) throw new Error(`${response.status}`);
         const data = await response.json();
-        console.log("getProgramIDs data:", data);
-
-        // TODO, add filtering by semester so less data to go through for title and type
-        const programs = data.programs || [];
+        // Filter programs by selected semester
+        const programs = (data.programs || []).filter((p: Program) =>
+          p.semid && p.semid.includes(selectedSemester)
+        );
 
         // for each program get title/type
         const enrichedPrograms = await Promise.all(
-          programs.map(async (program: any) => {
+          programs.map(async (program: Program) => {
             try {
               const coverResponse = await fetch(`${urls.DEV_PROPOSALS_API}/getCoverSheetInfo?semid=${program.semid}`);
               const coverData = await coverResponse.json();
@@ -98,10 +110,8 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
         setLoading(false);
       }
     }
-    fetchData();
-  }, [obsid]);
-
-  console.log(data)
+    if (selectedSemester) fetchData();
+  }, [obsid, selectedSemester]);
 
   return (
     <Main open={open}>
@@ -110,6 +120,23 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
           {/* Header */}
           <Box sx={{ p: 2, borderBottom: 2, borderColor: "divider" }}>
             <Typography variant="h6">My Cover Sheets</Typography>
+          </Box>
+
+          {/* Semester Dropdown */}
+          <Box sx={{ p: 2, pt: 0 }}>
+            <FormControl size="small" sx={{ minWidth: 180 }}>
+              <InputLabel id="semester-select-label">Semester</InputLabel>
+              <Select
+                labelId="semester-select-label"
+                value={selectedSemester}
+                label="Semester"
+                onChange={e => setSelectedSemester(e.target.value)}
+              >
+                {semesterOptions.map((sem) => (
+                  <MenuItem key={sem} value={sem}>{sem}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
 
           {/* Table */}

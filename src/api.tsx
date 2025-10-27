@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import urls from './urls.json';
+import { differenceInCalendarDays } from "date-fns";
 
 export interface metricsApiResponse {
   udate: string;
@@ -234,13 +235,14 @@ export interface CombinedSchedule {
   TelNr: number;
   Principal: string;
   Observers: string;
-  Instrument: string;
+  Instrument: string; 
   ProjCode: string;
   staff?: nightStaffApiResponse[];
+  DaysUntil: number;
 }
 
 export function useCombinedSchedule(obsid: number) {
-  const [data, setData] = useState<CombinedSchedule[] | null>(null);
+  const [data, setData] = useState<(CombinedSchedule & { DaysUntil: number })[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -267,7 +269,13 @@ export function useCombinedSchedule(obsid: number) {
           );
           if (!employeeRes.ok) throw new Error("Failed to fetch night staff");
           const staff: nightStaffApiResponse[] = await employeeRes.json();
-          return { ...night, staff };
+
+          // Calculate days until observation
+          const today = new Date();
+          const obsDate = new Date(night.Date);
+          const DaysUntil = differenceInCalendarDays(obsDate, today);
+
+          return { ...night, staff, DaysUntil };
         });
 
         const combined = await Promise.all(staffPromises);
@@ -359,6 +367,27 @@ export function getCurrentSemester() {
   return semester;
 }
 
+// function given current semester calculates previous x semester names -> used in drop down
+export function getLastSemesters(current: string, count: number): string[] {
+  const match = current.match(/(\d{4})([AB])/);
+  if (!match) return [];
+
+  let year = parseInt(match[1]);
+  let term = match[2];
+  const semesters: string[] = [];
+
+  for (let i = 0; i < count; i++) {
+    if (term === "A") {
+      term = "B";
+      year--;
+    } else {
+      term = "A";
+    }
+    semesters.push(`${year}${term}`);
+  }
+  return semesters;
+}
+
 export async function getEmployeeLinks(obsid: number): Promise<{ links?: { name: string; url: string }[] }> {
   try {
     const res = await fetch(urls.DEV_EMPLOYEE + `/getEmployeeLinks?obsid=${obsid}`);
@@ -367,3 +396,4 @@ export async function getEmployeeLinks(obsid: number): Promise<{ links?: { name:
     return {};
   }
 }
+
