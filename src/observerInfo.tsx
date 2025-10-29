@@ -14,6 +14,7 @@ import urls from './urls.json';
 type ChecklistItem = {
   task: string;
   url?: string;
+  newTab?: boolean;
 };
 
 interface ObserverInfoProps {
@@ -118,7 +119,7 @@ const CHECKLISTS = {
     //{ task: "", url : ""}
   ],
   non_ao: [
-    { task: "Plan your observation", url : urls.PLANNING_TOOL},
+    { task: "Plan your observation", url : urls.PLANNING_TOOL, newTab: true},
     { task: "Submit your starlist", url : urls.NON_AO_STARLIST},
   ],
   lgs_ao: [
@@ -126,7 +127,7 @@ const CHECKLISTS = {
     { task: "Submit your AO starlist", url : urls.AO_STARLIST},
   ],
   kpf_cc: [
-    { task: "Submit observing blocks", url : urls.KPF_CC},
+    { task: "Submit observing blocks", url : urls.KPF_CC, newTab: true},
   ]
 };
 
@@ -167,30 +168,73 @@ export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelec
           <Typography variant="subtitle1" sx={{ mt: 1 }}>
             Please look over your observing checklist:
           </Typography>
-          <List dense>
+          <List dense sx={{ py: 0 }}>
             {getInstrumentCategories(night.Instrument).map((category) => (
-              <Box key={category} sx={{ mb: 1 }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                </Typography>
-                    {(CHECKLISTS[category as keyof typeof CHECKLISTS] || []).map((item: ChecklistItem, idx: number) => (
-                  <ListItem key={idx} disableGutters sx={{ pl: 2 }}>
+              <Box key={category} sx={{ mb: 0.5 }}>
+                {(CHECKLISTS[category as keyof typeof CHECKLISTS] || []).map((item: ChecklistItem, idx: number) => (
+                  <ListItem
+                    key={idx}
+                    disableGutters
+                    sx={{ pl: 2, py: 0.2, minHeight: 0 }}
+                  >
                     {item.url ? (
+                      item.newTab ? (
+                        <ListItemText
+                          primary={
+                            <Typography
+                              component="a"
+                              href={item.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              sx={{
+                                color: "primary.main",
+                                textDecoration: "underline",
+                                fontSize: "0.92rem",
+                                cursor: "pointer",
+                                lineHeight: 1.4,
+                              }}
+                            >
+                              • {item.task}
+                            </Typography>
+                          }
+                        />
+                      ) : (
+                        <ListItemText
+                          primary={
+                            <Typography
+                              component="span"
+                              sx={{
+                                color: "primary.main",
+                                textDecoration: "underline",
+                                fontSize: "0.92rem",
+                                cursor: "pointer",
+                                lineHeight: 1.4,
+                              }}
+                              onClick={() => {
+                                setSelectedPage?.(item.task);
+                                setSelectedUrl?.(item.url ||"");
+                              }}
+                            >
+                              • {item.task}
+                            </Typography>
+                          }
+                        />
+                      )
+                    ) : (
                       <ListItemText
                         primary={
                           <Typography
                             component="span"
-                            sx={{ color: "primary.main", cursor: "pointer", textDecoration: "underline" }}
-                            onClick={() => {
-                              if (typeof setSelectedPage === "function") setSelectedPage(item.task);
-                                if (typeof setSelectedUrl === "function" && item.url) setSelectedUrl(item.url);
+                            sx={{
+                              color: "text.primary",
+                              fontSize: "0.92rem",
+                              lineHeight: 1.4,
                             }}
                           >
                             • {item.task}
                           </Typography>
                         }
                       />
-                    ) : (
-                      <ListItemText primary={`• ${item.task}`} />
                     )}
                   </ListItem>
                 ))}
