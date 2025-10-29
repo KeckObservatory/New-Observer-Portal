@@ -27,7 +27,7 @@ function App() {
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
-  const darkMode = false
+  const [darkMode, setDarkMode] = useState(false);
 
   const theme = useMemo(() => {
     const newTheme = handleTheme(darkMode)
@@ -46,6 +46,8 @@ function App() {
           open={open} 
           handleDrawerOpen={handleDrawerOpen} 
           user={userData} 
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
         />
       )}
         <PersistentSideBar

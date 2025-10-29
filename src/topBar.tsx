@@ -7,11 +7,10 @@ import MuiAppBar from '@mui/material/AppBar';
 import type { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { useEffect, useState } from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import {  Box } from "@mui/material";
-import { Avatar} from "@mui/material";
+import { Box } from "@mui/material";
+import { Avatar } from "@mui/material";
+import Switch from '@mui/material/Switch';
 import type { userInfoApiResponse } from "./api";
-
-
 
 const drawerWidth = 240;
 
@@ -24,7 +23,6 @@ function useClock() {
   }, []);
   return now;
 }
-
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -47,60 +45,68 @@ const StyledAppBar = styled(MuiAppBar, {
   }),
 }));
 
-interface TopBarProps  {
+interface TopBarProps {
   open: boolean;
   handleDrawerOpen: () => void;
-  user: userInfoApiResponse; 
+  user: userInfoApiResponse;
+  darkMode: boolean;
+  setDarkMode: (val: boolean) => void;
 };
 
-export default function TopBar({ open, handleDrawerOpen, user }: TopBarProps) {
+export default function TopBar({ open, handleDrawerOpen, user, darkMode, setDarkMode }: TopBarProps) {
   const now = useClock();
   const ut = now.toISOString().slice(11, 19); // ut time
   const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
-  const hst = hstDate.toISOString().slice(11, 19); //hst time
+  const hst = hstDate.toISOString().slice(11, 19); // hst time
 
   return (
     <StyledAppBar position="fixed" open={open}>
-        <Toolbar>
-          {!open && (
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{ mr: 2 }}
-            >
-              <MenuIcon />
-            </IconButton>
-          )}
-          <Typography variant="h6" noWrap component="div">
-            Observer Portal
-          </Typography>
+      <Toolbar>
+        {!open && (
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
+        <Typography variant="h6" noWrap component="div">
+          Observer Portal
+        </Typography>
 
-          <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
-            {/* Clock section */}
-            <Box sx={{ display: "flex", alignItems: "center", mr: 4 }}>
-              <AccessTimeIcon fontSize="large" sx={{ mr: 2 }} />
-              <Box display="flex" gap={4}>
-                <Typography variant="h5">UT: {ut}</Typography>
-                <Typography variant="h5">HST: {hst}</Typography>
-              </Box>
+        <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
+          {/* Clock section */}
+          <Box sx={{ display: "flex", alignItems: "center", mr: 4 }}>
+            <AccessTimeIcon fontSize="large" sx={{ mr: 2 }} />
+            <Box display="flex" gap={4}>
+              <Typography variant="h5">UT: {ut}</Typography>
+              <Typography variant="h5">HST: {hst}</Typography>
             </Box>
-
-            {/* Profile avatar bubble */}
-            <IconButton sx={{ p: 0 }}>
-              <Avatar
-                alt={user?.FirstName ?? "User"}
-                src={user?.ProfilePictureURL || undefined}
-                sx={{ width: 40, height: 40 }}
-              >
-                {(user?.FirstName?.[0] ?? "").toUpperCase()}
-              </Avatar>
-            </IconButton>
           </Box>
 
-        </Toolbar>  
+          {/* Add the switch here */}
+          <Switch
+            checked={darkMode}
+            onChange={e => setDarkMode(e.target.checked)}
+            color="default"
+            sx={{ mr: 2 }}
+          />
 
-      </StyledAppBar>
+          {/* Profile avatar bubble */}
+          <IconButton sx={{ p: 0 }}>
+            <Avatar
+              alt={user?.FirstName ?? "User"}
+              src={user?.ProfilePictureURL || undefined}
+              sx={{ width: 40, height: 40 }}
+            >
+              {(user?.FirstName?.[0] ?? "").toUpperCase()}
+            </Avatar>
+          </IconButton>
+        </Box>
+      </Toolbar>
+    </StyledAppBar>
   );
 }
