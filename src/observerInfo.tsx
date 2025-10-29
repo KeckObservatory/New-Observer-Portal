@@ -2,9 +2,10 @@ import { Paper, Box } from "@mui/material";
 import type { userInfoApiResponse } from "./api";
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import { styled } from "@mui/material/styles";
-import { Typography, List, ListItem, ListItemText, ListItemIcon } from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { Typography, List, ListItem, ListItemText} from "@mui/material";
+//import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+//import CircleIcon from '@mui/icons-material/Circle';
+//import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { useCombinedSchedule } from "./api";
 //import { differenceInCalendarDays, isAfter, isBefore, parseISO } from "date-fns";
 
@@ -17,6 +18,8 @@ type ChecklistItem = {
 
 interface ObserverInfoProps {
   user: userInfoApiResponse;      
+  setSelectedPage?: (page: string) => void;
+  setSelectedUrl?: (url: string) => void;
 }
 
 export default function UserTable({ user }: ObserverInfoProps) {
@@ -138,8 +141,8 @@ function getInstrumentCategories(instrument: string): string[] {
 
 interface ObserverBannerProps {
   user: userInfoApiResponse | null;
-  setSelectedPage: (page: string) => void;
-  setSelectedUrl: (url: string) => void;
+  setSelectedPage?: (page: string) => void;
+  setSelectedUrl?: (url: string) => void;
 }
 
 export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelectedUrl }: ObserverBannerProps) {
@@ -165,15 +168,12 @@ export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelec
             Please look over your observing checklist:
           </Typography>
           <List dense>
-            {getInstrumentCategories(night.Instrument).map((category, i) => (
+            {getInstrumentCategories(night.Instrument).map((category) => (
               <Box key={category} sx={{ mb: 1 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                 </Typography>
-                  {(CHECKLISTS[category] || []).map((item: ChecklistItem, idx: number) => (
-                  <ListItem key={idx}>
-                    <ListItemIcon>
-                      <RadioButtonUncheckedIcon color="disabled" />
-                    </ListItemIcon>
+                    {(CHECKLISTS[category as keyof typeof CHECKLISTS] || []).map((item: ChecklistItem, idx: number) => (
+                  <ListItem key={idx} disableGutters sx={{ pl: 2 }}>
                     {item.url ? (
                       <ListItemText
                         primary={
@@ -182,15 +182,15 @@ export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelec
                             sx={{ color: "primary.main", cursor: "pointer", textDecoration: "underline" }}
                             onClick={() => {
                               if (typeof setSelectedPage === "function") setSelectedPage(item.task);
-                              if (typeof setSelectedUrl === "function") setSelectedUrl(item.url);
+                                if (typeof setSelectedUrl === "function" && item.url) setSelectedUrl(item.url);
                             }}
                           >
-                            {item.task}
+                            • {item.task}
                           </Typography>
                         }
                       />
                     ) : (
-                      <ListItemText primary={item.task} />
+                      <ListItemText primary={`• ${item.task}`} />
                     )}
                   </ListItem>
                 ))}

@@ -76,11 +76,11 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
 
   return (
     <Main open={open}>
-      <ObserverInfoBannerWithSchedule user={user} setSelectedPage={function (page: string): void {
-        throw new Error('Function not implemented.');
-      } } setSelectedUrl={function (url: string): void {
-        throw new Error('Function not implemented.');
-      } }/>
+      <ObserverInfoBannerWithSchedule
+        user={user}
+        setSelectedPage={setSelectedPage}
+        setSelectedUrl={setSelectedUrl}
+      />
       <Grid container spacing={2} sx={{ height: "85%" }}>
         <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>

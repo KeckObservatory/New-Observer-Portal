@@ -216,7 +216,6 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                 </Link>
               </ListItem>
             </List>
-            <Typography>Explore "Pre-Observing Support" for more information and links.</Typography>
           </Box>
         </Stack>
       </Paper>

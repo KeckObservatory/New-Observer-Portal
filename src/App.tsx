@@ -77,7 +77,12 @@ function App() {
             ) : selectedUrl ? (
               <ObjectEmbed url={selectedUrl} open={open} />
             ) : (
-              <MainContent open={open} user={userData} />
+              <MainContent                 
+                open={open}
+                user={userData}
+                setSelectedPage={setSelectedPage}
+                setSelectedUrl={setSelectedUrl}
+               />
             )}
           </Box>
       </ThemeProvider>
