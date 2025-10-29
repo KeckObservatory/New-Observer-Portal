@@ -57,6 +57,7 @@ export default function TopBar({ open, handleDrawerOpen, user, darkMode, setDark
   const now = useClock();
   const ut = now.toISOString().slice(11, 19); // ut time
   const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
+  const utDateStr = now.toISOString().slice(0, 10); // e.g., "2025-10-29"
   const hst = hstDate.toISOString().slice(11, 19); // hst time
 
   return (
@@ -80,6 +81,9 @@ export default function TopBar({ open, handleDrawerOpen, user, darkMode, setDark
         <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
           {/* Clock section */}
           <Box sx={{ display: "flex", alignItems: "center", mr: 4 }}>
+            <Typography variant="h5" sx={{ mr: 2 }}>
+              UT: {utDateStr}
+            </Typography>
             <AccessTimeIcon fontSize="large" sx={{ mr: 2 }} />
             <Box display="flex" gap={4}>
               <Typography variant="h5">UT: {ut}</Typography>
