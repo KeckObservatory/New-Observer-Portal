@@ -57,7 +57,7 @@ useEffect(() => {
         const formattedDate = getShiftedDate();
 
         // fetch metrics list
-        const timeList = await fetch(urls.TIME_METRICS_API + `date=${formattedDate}&column=COLUMN&output=OUTPUT`);
+        const timeList = await fetch(urls.METRICS_API + `date=${formattedDate}&column=COLUMN&output=OUTPUT`);
         //console.log('date:',formattedDate)
         const timeMetrics: metricsApiResponse[] = await timeList.json();
 
@@ -190,24 +190,6 @@ export interface ObserverLogsApiResponse {
   };
   msg: string | null;
 }
-export function observerLogsApi() {
-  const [data, setData] = useState<ObserverLogsApiResponse | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const logsResponse = await fetch(urls.DEV_OBSLOGLIST);
-        const logsData: ObserverLogsApiResponse = await logsResponse.json();
-        console.log(logsData);
-        setData(logsData);
-      } catch (err) {
-        console.error("Error fetching observer logs:", err);
-      }
-    };
-
-    fetchData();
-  }, []);
-  return data; }
 
 
 export interface obsScheduleApiResponse {
@@ -265,7 +247,7 @@ export function useCombinedSchedule(obsid: number) {
         // Step 2: For each schedule date, fetch the night staff
         const staffPromises = schedule.map(async (night) => {
           const employeeRes = await fetch(
-            `${urls.EMPLOYEE_API_DEV}/getNightStaff?date=${night.Date}`
+            `${urls.EMPLOYEE_API}/getNightStaff?date=${night.Date}`
           );
           if (!employeeRes.ok) throw new Error("Failed to fetch night staff");
           const staff: nightStaffApiResponse[] = await employeeRes.json();
@@ -324,9 +306,10 @@ export function useObsLogApi(obsid: number, semester: string) {
       setLoading(true);
       try {
         const response = await fetch(
-          `${urls.OBS_LOG_DEV}?obsid=${obsid}&semester=${semester}`
+          `${urls.PROPOSALS_API}/getObsLogInfo?obsid=${obsid}&semester=${semester}`
         );
         const json = await response.json();
+        //console.log("Fetched Obs Logs:", json);
         setData(json);
       } catch (err) {
         console.error(err);
@@ -352,7 +335,7 @@ export function getCurrentSemester() {
       try {
         // get formatted HST date
         const formattedDate = getShiftedDate();
-        const res = await fetch(urls.DEV_SCHEDULE2 + `/getSemester?date=${formattedDate}`);
+        const res = await fetch(urls.SCHEDULE_API + `/getSemester?date=${formattedDate}`);
         const json = await res.json(); // { semester: "2025B" }
         const current = json.semester;
         console.log(current)
@@ -390,7 +373,7 @@ export function getLastSemesters(current: string, count: number): string[] {
 
 export async function getEmployeeLinks(obsid: number): Promise<{ links?: { name: string; url: string }[] }> {
   try {
-    const res = await fetch(urls.DEV_EMPLOYEE + `/getEmployeeLinks?obsid=${obsid}`);
+    const res = await fetch(urls.EMPLOYEE_API + `/getEmployeeLinks?obsid=${obsid}`);
     return await res.json();
   } catch {
     return {};

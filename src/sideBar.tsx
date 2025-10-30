@@ -206,7 +206,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Staff Astronomers", url: urls.STAFF_ASTRONOMERS, newtab: false },
         { text: "Instrument Status (SIAS)", url: urls.SIAS, newtab: false },
         { text: "KPF-CC Dashboard", url: urls.KPF_CC, newtab: true},
-        { text: "Keola (Observing Logs) (to add)", url: urls.KEOLA, newtab: false },
+        { text: "Keola (Observing Logs) (to add)"},
         ]
     },
     { text: "Post-Observing Support", icon: <AssignmentIcon />,

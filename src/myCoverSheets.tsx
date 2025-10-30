@@ -75,7 +75,7 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
         }
 
         // get all programs for obsid
-        const response = await fetch(`${urls.DEV_PROPOSALS_API}/getProgramIDs?obsid=${obsid}`);
+        const response = await fetch(`${urls.PROPOSALS_API}/getProgramIDs?obsid=${obsid}`);
         if (!response.ok) throw new Error(`${response.status}`);
         const data = await response.json();
         // Filter programs by selected semester
@@ -87,7 +87,7 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
         const enrichedPrograms = await Promise.all(
           programs.map(async (program: Program) => {
             try {
-              const coverResponse = await fetch(`${urls.DEV_PROPOSALS_API}/getCoverSheetInfo?semid=${program.semid}`);
+              const coverResponse = await fetch(`${urls.PROPOSALS_API}/getCoverSheetInfo?semid=${program.semid}`);
               const coverData = await coverResponse.json();
               if (coverData.success === "SUCCESS" && coverData.result) {
                 return {

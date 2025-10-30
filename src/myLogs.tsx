@@ -128,7 +128,7 @@ export function MyObsLogs({ open, user }: MyLogsProps) {
           ) : hasLogs ? (
             <Stack spacing={1} sx={{ p: 2 }}>
               {logs.map((log) => {
-                const viewUrl = `${urls.SERVE_LOG}?filename=${log.filename}&obsid=${obsid}`;
+                const viewUrl = `${urls.PROPOSALS_API}/viewObsLog?filename=${log.filename}&obsid=${obsid}`;
                 return (
                   <Link
                     key={viewUrl}
