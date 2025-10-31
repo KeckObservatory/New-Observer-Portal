@@ -76,11 +76,11 @@ function App() {
                   setSelectedPage={setSelectedPage}
                   setSelectedUrl={setSelectedUrl}
                 />
-              ) : selectedPage === "My Observing Logs (new)" ? (
+              ) : selectedPage === "My Observing Logs" ? (
                 <MyObsLogs open={open} user={userData} />
               ) : selectedPage === "My Observing Requests (to add)" ? (
                 <MyRequests open={open} />
-              ) : selectedPage === "My Cover Sheets (to add)" ? (
+              ) : selectedPage === "My Cover Sheets" ? (
                 <MyCoverSheets
                   open={open}
                   user={userData}

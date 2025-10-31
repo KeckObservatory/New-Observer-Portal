@@ -93,8 +93,6 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     }
   }, [user?.Id]);
 
-  console.log("Employee Links:", employeeLinks);
-
   // track which menu items are open (can be more than one) with boolean
   // true -> open, false -> closed
   const [openKeys, setOpenKeys] = React.useState<Record<string, boolean>>({});
@@ -152,10 +150,10 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
       subItems: [
         { text: "Update My Profile", url: urls.UPDATE_MY_PROFILE, newtab: false },
         { text: "SHH Key Management", url: urls.SSH_KEY_MANAGEMENT, newtab: false },
-        { text: "My Observing Schedule (new)"},
-        { text: "My Observing Logs (new)"},
+        { text: "My Observing Schedule"},
+        { text: "My Observing Logs"},
         { text: "My Observing Requests (to add)"},
-        { text: "My Cover Sheets (to add)"},
+        { text: "My Cover Sheets"},
       ]
     },
 
@@ -173,7 +171,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Applying for Keck Time", 
           subItems: [
             { text: "Observing Information", url: urls.OBSERVING_INFORMATION, newtab: false},
-            { text: "My Cover Sheets (to add)", url: "", newtab: false},
+            { text: "My Cover Sheets", url: "", newtab: false},
             { text: "Coversheet Submission", url: urls.COVER_SHEET_SUBMISSION, newtab: false},
             { text: "KPF-CC Observing Block Submission", url : urls.KPF_CC_OBS_BLOCK_SUBMISSION, newtab: false},
           ]
@@ -202,7 +200,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
             { text: "VSQ Reservations", url: urls.VSQ_RESERVATIONS, newtab: false },
           ]
         },
-        { text: "Remote Observing Software (to add)", url: urls.REMOTE_OBS_SOFTWARE, newtab: true},
+        { text: "Remote Observing Software", url: urls.REMOTE_OBS_SOFTWARE, newtab: true},
       ]
     },
     { text: "Observing Support", icon: <FolderSpecialIcon />,
@@ -211,7 +209,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Staff Astronomers", url: urls.STAFF_ASTRONOMERS, newtab: false },
         { text: "Instrument Status (SIAS)", url: urls.SIAS, newtab: false },
         { text: "KPF-CC Dashboard", url: urls.KPF_CC, newtab: true},
-        { text: "Keola (Observing Logs) (to add)"},
+        { text: "Keola (to add)"},
         ]
     },
     { text: "Post-Observing Support", icon: <AssignmentIcon />,

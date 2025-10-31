@@ -141,15 +141,14 @@ function getInstrumentCategories(instrument: string): string[] {
 }
 
 interface ObserverBannerProps {
-  user: userInfoApiResponse | null;
+  user: userInfoApiResponse;
   setSelectedPage?: (page: string) => void;
   setSelectedUrl?: (url: string) => void;
 }
 
 export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelectedUrl }: ObserverBannerProps) {
   const obsid = user?.Id;
-  console.log("User ID:", obsid);
-  const { data: schedule, loading, error } = useCombinedSchedule(4718);
+  const { data: schedule, loading, error } = useCombinedSchedule(obsid);
 
   if (loading) return <ObserverInfoBanner elevation={3}><Typography>Loading...</Typography></ObserverInfoBanner>;
   if (error) return <ObserverInfoBanner elevation={3}><Typography color="error">{error}</Typography></ObserverInfoBanner>;

@@ -40,7 +40,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 
 interface MainContentProps  {
   open: boolean;
-  user: userInfoApiResponse | null;
+  user: userInfoApiResponse;
   setSelectedPage?: (page: string) => void;
   setSelectedUrl?: (url: string) => void;
 };
