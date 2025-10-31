@@ -173,7 +173,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
             { text: "Observing Information", url: urls.OBSERVING_INFORMATION, newtab: false},
             { text: "My Cover Sheets", url: "", newtab: false},
             { text: "Coversheet Submission", url: urls.COVER_SHEET_SUBMISSION, newtab: false},
-            { text: "KPF-CC Observing Block Submission", url : urls.KPF_CC_OBS_BLOCK_SUBMISSION, newtab: false},
+            { text: "KPF-CC Observing Block Submission", url : urls.KPF_CC_OBS_BLOCK_SUBMISSION, newtab: true},
           ]
         },
         { text: "DEIMOS/LRIS Support", 
@@ -208,7 +208,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Instruments Home", url: urls.INSTRUMENTS_HOME, newtab: false},
         { text: "Staff Astronomers", url: urls.STAFF_ASTRONOMERS, newtab: false },
         { text: "Instrument Status (SIAS)", url: urls.SIAS, newtab: false },
-        { text: "KPF-CC Dashboard", url: urls.KPF_CC, newtab: true},
+        { text: "KPF-CC OB Submission", url: urls.KPF_CC_OBS_BLOCK_SUBMISSION, newtab: true},
         { text: "Keola (to add)"},
         ]
     },

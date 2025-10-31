@@ -35,8 +35,8 @@ function App() {
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
 
-  // State for dark mode on or off -> of by default
-  const [darkMode, setDarkMode] = useState(false);
+  // State for dark mode on or off -> ON by default
+  const [darkMode, setDarkMode] = useState(true);
 
   const theme = useMemo(() => {
     const newTheme = handleTheme(darkMode)
@@ -69,7 +69,7 @@ function App() {
             {/* Main content area */} 
             {/* Checks if its a new page -> if so open specific */} 
             <Box sx={{ flexGrow: 1, p: 3 }}>
-              {selectedPage === "My Observing Schedule (new)" ? (
+              {selectedPage === "My Observing Schedule" ? (
                 <MyObsSchedule
                   open={open}
                   user={userData}

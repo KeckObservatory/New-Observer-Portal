@@ -127,7 +127,7 @@ const CHECKLISTS = {
     { task: "Submit your AO starlist", url : urls.AO_STARLIST},
   ],
   kpf_cc: [
-    { task: "Submit observing blocks", url : urls.KPF_CC, newTab: true},
+    { task: "Submit observing blocks", url : urls.KPF_CC_OBS_BLOCK_SUBMISSION, newTab: true},
   ]
 };
 
