@@ -29,7 +29,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 
 interface MyCoverSheetsProps  {
   open: boolean;
-  user: userInfoApiResponse | null;
+  user: userInfoApiResponse;
   setSelectedPage?: (page: string) => void;
   setSelectedUrl?: (url: string) => void;
 }
@@ -41,8 +41,12 @@ type Program = {
   type?: string;
 }
 
+/**
+ * MyCoverSheets displays links to the user's coversheets ,
+ * allows filtering by semester, and provides helpful links.
+ */
 export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: MyCoverSheetsProps) {
-  const obsid = user?.Id || 4718;
+  const obsid = user?.Id;
 
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -139,7 +143,7 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
             </FormControl>
           </Box>
 
-          {/* Table */}
+          {/* Table of coversheets */}
           <Box sx={{ mt: 2 }}>
             {loading ? (
               <Typography>Loading...</Typography>

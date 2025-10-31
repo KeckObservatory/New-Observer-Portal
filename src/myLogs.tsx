@@ -1,31 +1,17 @@
 import { Paper } from "@mui/material";
-// import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import  { Typography } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { Box } from "@mui/material";
 import { styled } from '@mui/material/styles';
-//import type { obsScheduleApiResponse } from "./api";
-// import { Table, TableBody, TableCell, TableContainer, TableRow, TableHead } from '@mui/material';
-// import  {List} from "@mui/material";
-// import ListItem from "@mui/material/ListItem";
-// import {Link} from "@mui/material";
-
 import urls from './urls.json';
 import { useObsLogApi } from "./api";
 import { CircularProgress, Link } from "@mui/material";
-// import type { obsLogApiResponse, obsLog } from "./api";
-
-
 import { useState} from "react";
 import { useEffect } from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-
 import { getCurrentSemester } from "./api";
 import type { userInfoApiResponse } from './api';
-
-
-
-
+import { getLastSemesters } from "./api";
 
 const drawerWidth = 240;
 
@@ -51,33 +37,12 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 
 interface MyLogsProps  {
   open: boolean;
-  user: userInfoApiResponse | null;
+  user: userInfoApiResponse;
 };
 
-// function given current semester calculates previous x semester names -> used in drop down
-function getLastSemesters(current: string, count: number): string[] {
-  const match = current.match(/(\d{4})([AB])/);
-  if (!match) return [];
-
-  let year = parseInt(match[1]);
-  let term = match[2];
-  const semesters: string[] = [];
-
-  for (let i = 0; i < count; i++) {
-    if (term === "A") {
-      term = "B";
-      year--;
-    } else {
-      term = "A";
-    }
-    semesters.push(`${year}${term}`);
-  }
-  return semesters;
-}
 
 export function MyObsLogs({ open, user }: MyLogsProps) {
   const obsid = user?.Id
-  //console.log("User ID:", obsid)
   const currentSemester = getCurrentSemester();
   const availableSemesters = [currentSemester, ...getLastSemesters(currentSemester, 2)]; // last two semesters
 
@@ -88,11 +53,11 @@ export function MyObsLogs({ open, user }: MyLogsProps) {
     }
   }, [currentSemester]);
 
-  // drop down will auto go to current semester
+  // Drop down will auto go to current semester
   const [semester, setSemester] = useState(currentSemester);
 
   // api call to get logs (or loading state)
-  const { data, loading } = useObsLogApi(4718, semester); // TODO user.ID
+  const { data, loading } = useObsLogApi(obsid, semester); 
 
   const logs = data?.logs ?? [];
   const hasLogs = logs.length > 0;
@@ -109,10 +74,10 @@ export function MyObsLogs({ open, user }: MyLogsProps) {
             <Select
               value={semester}
               label="Semester"
-              // when it changes -> reset the semester state -> recall api
+              // When it changes -> reset the semester state -> recall api
               onChange={(e) => setSemester(e.target.value)}
             >
-              {availableSemesters.map((s) => ( // show all avaliable semesters in drop down
+              {availableSemesters.map((s) => ( // Show all avaliable semesters in drop down
                 <MenuItem key={s} value={s}>
                   {s}
                 </MenuItem>

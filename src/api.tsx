@@ -205,16 +205,16 @@ export function userInfoApi() {
     const fetchData = async () => {
       try {
         // Need to include credentials to get cookies
-        const userInfo = await fetch(urls.USER_INFO_API, {
+        const userInfo = await fetch(urls.USERINFOCOOKIES , {
           method: 'GET',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           }
         });
-        console.log(userInfo, 'userinfo in function')
+        //console.log(userInfo, 'userinfo in function')
         const user = await userInfo.json();
-        console.log(user, 'user in function')
+        //console.log(user, 'user in function')
 
       setData(user);
     } catch (err) {
