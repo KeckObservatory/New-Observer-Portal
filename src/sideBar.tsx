@@ -223,7 +223,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Keck Observatory Archive", url: urls.KOA, newtab: true},
         { text: "Data Discovery Service", url: urls.DDS, newtab: true },
         { text: "Observers\' Data Access Portal", url: urls.ODAP, newtab: true},
-        { text: "My KOA Data (to add)", url: "", newtab: true},
+        { text: "My KOA Data (to add)"},
       ]
     },
     { text: "Publication Ackowledgement", icon:   <CreateIcon /> , url: urls.PUB_ACK, newtab: false}
