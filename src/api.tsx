@@ -1,31 +1,14 @@
-// File to handle all api calls and export the data 
+// File to handle all API calls and export the data for the Observer Portal
 
 import { useEffect, useState } from "react";
 import urls from './urls.json';
 import { differenceInCalendarDays } from "date-fns";
 
-export interface metricsApiResponse {
-  udate: string;
-  dusk_12deg: string;
-  dusk_18deg: string;
-  dawn_18deg: string;
-  dawn_12deg: string;
-  dark: string;
-  sunset: string;
-  sunrise: string;
-  moonRADEC: string;
-  moonrise: string;
-  moonset: string;
-  moonillumination: string;
-  moonphase: string;
-  moonbrightness: string;
-  length: string;
-  midpoint: string;
-}
 
-// Function to get current shifted date
-// if before 8am HST (18:00 UTC) return yesterday's date
-// if not, return today's date
+/**
+ * Returns the current shifted date as YYYY-MM-DD.
+ * If before 8am HST (18:00 UTC), returns yesterday's date.
+ */
 function getShiftedDate() {
   const now = new Date();
 
@@ -46,39 +29,98 @@ function getShiftedDate() {
   return hawaiiDayBoundaryUTC.toISOString().split("T")[0];
 }
 
+/**
+ * Returns the date six months later from the given start date as YYYY-MM-DD.
+ */
+function getDateSixMonthsLater(startDateStr: string) {
+  const startDate = new Date(startDateStr);
+  // Add 6 months
+  startDate.setMonth(startDate.getMonth() + 6);
 
+  // Format as YYYY-MM-DD
+  return startDate.toISOString().split('T')[0];
+}
+
+/**
+ * Given current semester, calculates previous X semester names (used in dropdowns).
+ */
+export function getLastSemesters(current: string, count: number): string[] {
+  const match = current.match(/(\d{4})([AB])/);
+  if (!match) return [];
+
+  let year = parseInt(match[1]);
+  let term = match[2];
+  const semesters: string[] = [];
+
+  for (let i = 0; i < count; i++) {
+    if (term === "A") {
+      term = "B";
+      year--;
+    } else {
+      term = "A";
+    }
+    semesters.push(`${year}${term}`);
+  }
+  return semesters;
+}
+
+/* Interface for metrics API response */ 
+export interface metricsApiResponse {
+  udate: string;
+  dusk_12deg: string;
+  dusk_18deg: string;
+  dawn_18deg: string;
+  dawn_12deg: string;
+  dark: string;
+  sunset: string;
+  sunrise: string;
+  moonRADEC: string;
+  moonrise: string;
+  moonset: string;
+  moonillumination: string;
+  moonphase: string;
+  moonbrightness: string;
+  length: string;
+  midpoint: string;
+}
+
+/**
+ * Fetches time metrics for the current shifted date.
+ */
 export function metricsApi() {
   const [data, setData] = useState<metricsApiResponse[] | null>(null);
 
 useEffect(() => {
     const fetchData = async () => {
       try {
-        // get current date with shift
+        // Get current date with shift
         const formattedDate = getShiftedDate();
 
-        // fetch metrics list
+        // Fetch metrics list
         const timeList = await fetch(urls.METRICS_API + `date=${formattedDate}&column=COLUMN&output=OUTPUT`);
-        //console.log('date:',formattedDate)
         const timeMetrics: metricsApiResponse[] = await timeList.json();
-
-        //console.log(timeMetrics)
 
       setData(timeMetrics);
     } catch (err) {
-      console.error("Error fetching time metrics:", err);
+      //console.error("Error fetching time metrics:", err);
     }
   };
-
   fetchData();
 }, []);
   return data;}
 
+  /**
+ * Interface for telescope schedule API response
+ */
 export interface TelescopeSchedApiResponse {
   Instrument: string;
   State: string;
   TelNr: number;
 }
 
+/**
+ * Fetches the instrument status for the current shifted date for main page telSchedule.
+ */
 export function scheduleApi() {
   const [data, setData] = useState<TelescopeSchedApiResponse[] | null>(null);
 
@@ -98,7 +140,8 @@ export function scheduleApi() {
         const instrumentsWithState: TelescopeSchedApiResponse[] = Object.entries(statesMap).map(
           ([instrumentName, instState]: any) => {
             let stateLabel = "Unknown";
-
+            
+            // Calculate state based on Available and Scheduled fields
             if (instState) {
               if (instState.Available === 0) {
                 stateLabel = "Not Available";
@@ -111,7 +154,7 @@ export function scheduleApi() {
 
             return {
               Instrument: instrumentName,
-              TelNr: instState?.TelNr ?? 0, // fallback to 0 if missing
+              TelNr: instState?.TelNr ?? 0,
               State: stateLabel,
             };
           }
@@ -119,7 +162,7 @@ export function scheduleApi() {
 
         setData(instrumentsWithState);
       } catch (err) {
-        console.error("Error fetching instrument status:", err);
+        //console.error("Error fetching instrument status:", err);
       }
     };
 
@@ -129,6 +172,9 @@ export function scheduleApi() {
   return data;
 }
 
+/**
+ * Interface for user info API response, called in App.tsx
+ */
 export interface userInfoApiResponse {
   Id: number;
   Title: string;
@@ -149,12 +195,16 @@ export interface userInfoApiResponse {
   ProfilePictureURL : string;
 }
 
+/**
+ * Fetches the current user's info.
+ */
 export function userInfoApi() {
   const [data, setData] = useState<userInfoApiResponse | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Need to include credentials to get cookies
         const userInfo = await fetch(urls.USER_INFO_API, {
           method: 'GET',
           credentials: 'include',
@@ -168,7 +218,7 @@ export function userInfoApi() {
 
       setData(user);
     } catch (err) {
-      console.error("Error fetching user:", err);
+      //console.error("Error fetching user:", err);
     }
   };
 
@@ -176,40 +226,17 @@ export function userInfoApi() {
 }, []);
   return data;}
 
-
-export interface ObserverLog {
-  Name: string;
-  Semester: string;
-  Title: string;
-}
-
-export interface ObserverLogsApiResponse {
-  success: number; 
-  data: {
-    ObsLogTitle: ObserverLog[];
-  };
-  msg: string | null;
-}
-
-
-export interface obsScheduleApiResponse {
-  Date: string;
-  StartTime: string;
-  EndTime: string;
-  TelNr: number;
-  Principal: string;
-  Observers: string;
-  Instrument: string;
-  ProjCode: string;
-}
-
-
+/**
+ * Interface for employee night staff API response
+ */
 export interface nightStaffApiResponse {
   FirstName: string;
   Type: string; // oa, sa
 }
 
-
+/**
+ * Interface for constructed combined schedule + night staff.
+ */
 export interface CombinedSchedule {
   Date: string;
   StartTime: string;
@@ -223,6 +250,23 @@ export interface CombinedSchedule {
   DaysUntil: number;
 }
 
+/**
+* Interface for observation schedule API response
+*  */
+export interface obsScheduleApiResponse {
+  Date: string;
+  StartTime: string;
+  EndTime: string;
+  TelNr: number;
+  Principal: string;
+  Observers: string;
+  Instrument: string;
+  ProjCode: string;
+}
+
+/**
+ * Fetches the combined schedule and staff for an observer.
+ */
 export function useCombinedSchedule(obsid: number) {
   const [data, setData] = useState<(CombinedSchedule & { DaysUntil: number })[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -276,27 +320,24 @@ export function useCombinedSchedule(obsid: number) {
   return { data, loading, error };
 }
 
-function getDateSixMonthsLater(startDateStr: string) {
-  const startDate = new Date(startDateStr);
-  // Add 6 months
-  startDate.setMonth(startDate.getMonth() + 6);
-
-  // Format as YYYY-MM-DD
-  return startDate.toISOString().split('T')[0];
-}
-
+/**
+ * Interface for each observing log 
+*/
 export interface obsLog {
   filename: string;
   title: string;
-  // ...other fields
 }
 
-
+/**
+ * getObsLogInfo ApiResponse interface 
+ */
 export interface obsLogApiResponse {
   logs: obsLog[];
 }
 
-
+/**
+ * Fetches observing logs for a given observer and semester.
+ */
 export function useObsLogApi(obsid: number, semester: string) {
   const [data, setData] = useState<obsLogApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -326,7 +367,9 @@ export function useObsLogApi(obsid: number, semester: string) {
 }
 
 
-
+/**
+ * Fetches the current semester based on the shifted date.
+ */
 export function getCurrentSemester() {
   const [semester, setSemester] = useState<string>("");
 
@@ -338,10 +381,9 @@ export function getCurrentSemester() {
         const res = await fetch(urls.SCHEDULE_API + `/getSemester?date=${formattedDate}`);
         const json = await res.json(); // { semester: "2025B" }
         const current = json.semester;
-        console.log(current)
         setSemester(current);
       } catch (err) {
-        console.error("Failed to get current semester", err);
+        //console.error("Failed to get current semester", err);
       }
     }
     fetchCurrent();
@@ -350,27 +392,10 @@ export function getCurrentSemester() {
   return semester;
 }
 
-// function given current semester calculates previous x semester names -> used in drop down
-export function getLastSemesters(current: string, count: number): string[] {
-  const match = current.match(/(\d{4})([AB])/);
-  if (!match) return [];
 
-  let year = parseInt(match[1]);
-  let term = match[2];
-  const semesters: string[] = [];
-
-  for (let i = 0; i < count; i++) {
-    if (term === "A") {
-      term = "B";
-      year--;
-    } else {
-      term = "A";
-    }
-    semesters.push(`${year}${term}`);
-  }
-  return semesters;
-}
-
+/**
+ * Fetches employee links for a given observer.
+ */
 export async function getEmployeeLinks(obsid: number): Promise<{ links?: { name: string; url: string }[] }> {
   try {
     const res = await fetch(urls.EMPLOYEE_API + `/getEmployeeLinks?obsid=${obsid}`);

@@ -1,19 +1,14 @@
 import {  Paper } from "@mui/material";
-// import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import  { Typography } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { Box } from "@mui/material";
 import { styled } from '@mui/material/styles';
-//import { obsScheduleApi } from "./api";
-//import type { obsScheduleApiResponse } from "./api";
 import { Table, TableBody, TableCell, TableContainer, TableRow, TableHead } from '@mui/material';
 import  {List} from "@mui/material";
 import ListItem from "@mui/material/ListItem";
 import {Link} from "@mui/material";
-
 import urls from './urls.json';
 import type { userInfoApiResponse } from './api';
-
 import { CircularProgress } from "@mui/material";
 import { useCombinedSchedule } from "./api";
 
@@ -42,17 +37,18 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
 
 interface MyScheduleProps  {
   open: boolean;
-  //obsSchedule: obsScheduleApiResponse;
-  user: userInfoApiResponse | null;
+  user: userInfoApiResponse;
   setSelectedPage: (page: string) => void;
   setSelectedUrl: (url: string) => void;
 };
 
-
+/**
+ * MyObsSchedule displays the user's upcoming observing nights in a table,
+ * along with helpful instrument and observing links.
+ */
 export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: MyScheduleProps) {
   const obsid = user?.Id;
-  //const { data: schedule, loading, error } = useCombinedSchedule(obsid || 0); //TODO fix this 0
-  const { data: schedule, loading, error } = useCombinedSchedule(4718); 
+  const { data: schedule, loading, error } = useCombinedSchedule(obsid); 
 
   const isObserving = !!schedule && schedule.length > 0;
 
@@ -68,9 +64,6 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
         )
       : [];
 
-  console.log("User ID:", obsid);
-  console.log("Combined schedule:", schedule);
-
   return (
     <Main open={open}>
       <Paper elevation={3} sx={{ width: "100%", p: 2 }}>
@@ -80,22 +73,26 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
             <Typography variant="h6">Your Upcoming Keck Observing Nights:</Typography>
           </Box>
           <Box sx={{ p: 3, borderBottom: 2, borderColor: "divider" }}>
+          {/* Loading spinner */}
             {loading && (
               <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
                 <CircularProgress />
               </Box>
             )}
 
+            {/* Error message */}
             {error && (
               <Typography color="error" sx={{ p: 2 }}>
                 Error loading schedule: {error}
               </Typography>
             )}
 
+            {/* No observing nights */}
             {!loading && !isObserving && (
               <Typography sx={{ p: 2 }}>No upcoming observing nights found.</Typography>
             )}
 
+            {/* Observing nights table */}
             {!loading && isObserving && schedule && (
               <Box sx={{ mt: -2 }}>
                 <TableContainer
@@ -150,9 +147,9 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
                               py: 1, // spacing between rows
                             }}
                           >
+                            {/* If no observers, link to observing request page */}
                             {(!night.Observers || night.Observers.length === 0) ? (
                               <Link
-                              // if there are no observers listed, link to observing request page to add them
                                 component="button"
                                 variant="body2"
                                 onClick={() => {
@@ -169,6 +166,7 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
                           <TableCell>{night.Instrument}</TableCell>
                           <TableCell>{night.ProjCode}</TableCell>
                           <TableCell sx={{ whiteSpace: "normal", wordWrap: "break-word", py: 1 }}>
+                            {/* Show OA/SA staff for the night */}
                             {night.staff && night.staff.length > 0 ? (
                               night.staff
                                 .filter((s) => ["oa", "sa"].includes(s.Type)) // only show oa and sa
@@ -194,6 +192,7 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
           <Box sx={{ p: 2, borderBottom: 2, borderColor: "divider" }}>
             <Typography variant="h6">Helpful Links:</Typography>
             <List dense>
+              {/* Instrument-specific links */}
               {instrumentLinks.map((inst) => (
                 <ListItem key={inst}>
                   <Link

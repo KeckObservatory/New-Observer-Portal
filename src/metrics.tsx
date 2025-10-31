@@ -2,12 +2,14 @@ import { Stack, Box, Typography } from "@mui/material";
 import NightsStayIcon from "@mui/icons-material/NightsStay";
 import Brightness2Icon from "@mui/icons-material/Brightness2";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
-
 import React from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import type { metricsApiResponse } from "./api";
 
+/**
+ * Styled Paper component for the night metrics strip.
+ */
 const StatPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   display: "flex",
@@ -18,6 +20,9 @@ const StatPaper = styled(Paper)(({ theme }) => ({
   minHeight: 120,
 }));
 
+/**
+ * Displays a single metric with icon, label/name, and value.
+ */
 function MetricItem({
   icon,
   label,

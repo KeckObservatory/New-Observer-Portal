@@ -23,6 +23,10 @@ const StyledObject = styled("object", {
 
 }));
 
+/**
+ * This component is what shows external web pages within the main content area.
+ * Embeds an external URL in an <object> tag
+ */
 const ObjectEmbed: React.FC<ObjectProps> = ({
   url,
   open = false,

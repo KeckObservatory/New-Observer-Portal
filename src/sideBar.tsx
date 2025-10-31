@@ -106,6 +106,11 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
 
   // when clicking a menu item without subitems
   const handleMenuClick = (item: MenuItem) => {
+    if (item.text === "Logout") {
+      // Redirect and replace the app with the logout page
+      window.location.href = "/logout";
+      return;
+    }
     setSelectedPage(item.text);
     if (item.url) {
       if (item.newtab) {
@@ -239,9 +244,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     });
   }
   const bottomMenu: MenuItem[] = [
-
-    { text: "Logout (to add)", icon:   <LogoutIcon /> , url: urls.LOGOUT, newtab: false}
-
+    { text: "Logout", icon: <LogoutIcon /> }
   ]
 
   // Recursive renderer for subItems (subtabs)
