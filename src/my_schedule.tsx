@@ -150,6 +150,18 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
                                 .map((s, i) => (
                                   <div key={i}>
                                     {s.FirstName} ({s.Type.toUpperCase()})
+                                    {s.Email && (
+                                      <>
+                                        {" "}
+                                        <a
+                                        // add email attached to name
+                                          href={`mailto:${s.Email}`}
+                                          style={{ color: "#1976d2", textDecoration: "underline", fontSize: "0.95em" }}
+                                        >
+                                          {s.Email}
+                                        </a>
+                                      </>
+                                    )}
                                   </div>
                                 ))
                             ) : (

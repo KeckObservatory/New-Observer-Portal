@@ -232,6 +232,7 @@ export function userInfoApi() {
 export interface nightStaffApiResponse {
   FirstName: string;
   Type: string; // oa, sa
+  Email: string;
 }
 
 /**
