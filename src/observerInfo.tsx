@@ -22,6 +22,9 @@ interface ObserverInfoProps {
   setSelectedUrl?: (url: string) => void;
 }
 
+/**
+ * Displays a table of user information.
+ */
 export default function UserTable({ user }: ObserverInfoProps) {
   const fullName = [user.FirstName, user.MiddleName, user.LastName]
     .filter(Boolean)
@@ -85,7 +88,9 @@ export default function UserTable({ user }: ObserverInfoProps) {
     </TableContainer>
   );
 }
-
+/**
+ * Styled Paper component for the observer info banner.
+ */
 export const ObserverInfoBanner = styled(Paper)(({ theme }) => ({
   width: "100%",
   height: "auto",
@@ -99,7 +104,6 @@ export const ObserverInfoBanner = styled(Paper)(({ theme }) => ({
 }));
 
 // Define instrument categories
-//const ALL_INSTRUMENTS = ["KCWI", "DEIMOS", "LRIS", "LRISp", "NIRC2", "OSIRIS", "HIRESb", "HIRESr", "MOSFIRE", "ESI", "KPF", "NIRES", "NIRSPEC", "LRIS"]
 const MASKED_INSTRUMENTS = ["DEIMOS", "LRIS", "LRISp"];
 const LGS_AO_INSTRUMENTS = ["NIRC2", "OSIRIS"];
 const NON_AO_INSTRUMENTS = ["KCWI", "DEIMOS", "LRIS", "LRISp", "HIRESb", "HIRESr", "MOSFIRE", "ESI", "KPF", "NIRES", "NIRSPEC"];
@@ -129,7 +133,9 @@ const CHECKLISTS = {
     { task: "Submit observing blocks", url : urls.KPF_CC_OBS_BLOCK_SUBMISSION, newTab: true},
   ]
 };
-
+/**
+ * Returns the checklist categories for a given instrument.
+ */
 function getInstrumentCategories(instrument: string): string[] {
   const categories = ["all"];
   if (MASKED_INSTRUMENTS.includes(instrument)) categories.push("masked");
@@ -144,7 +150,10 @@ interface ObserverBannerProps {
   setSelectedPage?: (page: string) => void;
   setSelectedUrl?: (url: string) => void;
 }
-
+/**
+ * ObserverInfoBannerWithSchedule displays a collapsible checklist banner
+ * with upcoming observing nights and relevant tasks.
+ */
 export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelectedUrl }: ObserverBannerProps) {
   const [open, setOpen] = useState(true); // state for collapse
   const obsid = user?.Id;
@@ -156,6 +165,7 @@ export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelec
 
   return (
     <ObserverInfoBanner elevation={3}>
+    {/* Banner header with collapse/expand button */}
       <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
         <Typography variant="h6" gutterBottom sx={{ flexGrow: 1 }}>
           Welcome to the new Observer Portal!
@@ -164,6 +174,7 @@ export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelec
           {open ? <ExpandLess /> : <ExpandMore />}
         </IconButton>
       </Box>
+      {/* Collapsible checklist content */}
       <Collapse in={open} sx={{ width: "100%" }}>
         {schedule.map((night, idx) => (
           <Box key={idx} sx={{ mb: 2, width: "100%" }}>

@@ -27,7 +27,9 @@ function useClock() {
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
-
+/**
+ * Styled AppBar that shifts right when the sidebar is open.
+ */
 const StyledAppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
@@ -52,7 +54,9 @@ interface TopBarProps {
   darkMode: boolean;
   setDarkMode: (val: boolean) => void;
 };
-
+/**
+ * TopBar displays the app bar with title, clock, dark mode switch, and user avatar.
+ */
 export default function TopBar({ open, handleDrawerOpen, user, darkMode, setDarkMode }: TopBarProps) {
   const now = useClock();
   const ut = now.toISOString().slice(11, 19); // ut time
@@ -63,6 +67,7 @@ export default function TopBar({ open, handleDrawerOpen, user, darkMode, setDark
   return (
     <StyledAppBar position="fixed" open={open}>
       <Toolbar>
+      {/* Show menu icon if sidebar is closed */}
         {!open && (
           <IconButton
             color="inherit"
@@ -91,7 +96,7 @@ export default function TopBar({ open, handleDrawerOpen, user, darkMode, setDark
             </Box>
           </Box>
 
-          {/* Add the switch here */}
+          {/* Dark mode switch */}
           <Switch
             checked={darkMode}
             onChange={e => setDarkMode(e.target.checked)}

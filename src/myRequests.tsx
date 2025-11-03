@@ -7,7 +7,9 @@ interface MyRequestsProps  {
   setSelectedPage?: (page: string) => void;
   setSelectedUrl?: (url: string) => void;
 }
-
+/**
+ * Sample data for observation requests.
+ */
 const sampleRows = [
   {
     Date: "2025-10-03",
@@ -44,14 +46,19 @@ const sampleRows = [
   }
 ];
 
+/**
+ * MyRequests displays a table of the user's observing requests.
+ * Replace sampleRows with real data when backend is ready.
+ */
 export function MyRequests({ open }: MyRequestsProps) {
   return (
     <Main open={open}>
       <Paper elevation={3} sx={{ width: "100%", p: 2 }}>
         <Stack spacing={2}>
           <Box sx={{ p: 2, borderBottom: 2, borderColor: "divider" }}>
-            <Typography variant="h6">My Requests</Typography>
+            <Typography variant="h6">My Requests (Example)</Typography>
           </Box>
+          {/* Requests Table */}
           <Box sx={{ mt: 2 }}>
             <TableContainer component={Paper} sx={{ maxHeight: 331 }}>
               <Table size="small" stickyHeader sx={{ tableLayout: "fixed", width: "100%" }}>

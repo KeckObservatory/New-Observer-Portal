@@ -1,6 +1,4 @@
-//import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-//import Grid from '@mui/material/Grid';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import type { TelescopeSchedApiResponse } from './api';
 import { useTheme } from '@mui/material/styles';

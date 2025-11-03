@@ -74,12 +74,16 @@ interface SubItem {
 }
 
 
-// ----- Component -----
+/**
+ * PersistentSideBar renders the main navigation drawer with nested menu items.
+ */
 export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, setSelectedUrl, user }: SidebarProps) {
   const theme = useTheme();
 
+  // State for employee links (admin section)
   const [employeeLinks, setEmployeeLinks] = React.useState<{ name: string; url: string }[]>([]);
 
+  // Fetch employee links if user is a Keck employee
   React.useEffect(() => {
     if (user?.Id) {
       getEmployeeLinks(user.Id).then((result) => {
@@ -97,12 +101,12 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
   // true -> open, false -> closed
   const [openKeys, setOpenKeys] = React.useState<Record<string, boolean>>({});
 
-  // open/close for a given key (menu item)
+  // Toggle open/close for a given menu key
   const handleToggle = (key: string) => {
     setOpenKeys(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // when clicking a menu item without subitems
+  // Handle click on a menu item without subitems
   const handleMenuClick = (item: MenuItem) => {
     if (item.text === "Logout") {
       // Redirect and replace the app with the logout page
@@ -122,18 +126,18 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     }
   };
 
-  // when clicking a subitem with a url
+  // Handle click on a subitem to embed in app
   const handleSubItemClickEmbed = (subItem: SubItem) => {
     setSelectedPage(subItem.text)
     setSelectedUrl(subItem.url || null)
   }
 
-  // when clicking a subitem that should open in a new tab
+  // Handle click on a subitem to open in new tab
   const handleSubItemClickNewTab = (subItem: SubItem) => {
     window.open(subItem.url, '_blank', 'noopener,noreferrer');
   };
 
-  // decide what to do when clicking a subitem, new tab or embed based off "newtab" boolean
+  // Decide how to open a subitem based on newtab boolean
   const handleUrlClick = (subItem: SubItem) => {
     if (subItem.newtab) {
       handleSubItemClickNewTab(subItem);
@@ -142,8 +146,10 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     }
   };
 
-  // items for the top part of side bar above divider
-  const topMenu: MenuItem[] = [
+ /**
+   * Top menu items for the sidebar.
+   */
+    const topMenu: MenuItem[] = [
     { text: 'Home', icon: <HomeIcon /> },
 
     { text: "Profile", icon: <AccountBoxIcon />,
@@ -229,7 +235,9 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     { text: "Publication Ackowledgement", icon:   <CreateIcon /> , url: urls.PUB_ACK, newtab: false}
     ];
 
-    // for keck employees only, add extra admin section
+ /**
+   * Top menu items for the sidebar.
+   */
     if (employeeLinks.length > 0) {
     topMenu.push({
       text: "Admin/Keck Employee",
@@ -241,6 +249,9 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
       }))
     });
   }
+  /**
+   * Bottom menu items (logout, etc).
+   */
   const bottomMenu: MenuItem[] = [
     { text: "Logout", icon: <LogoutIcon /> }
   ]
@@ -290,7 +301,9 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     );
   }
 
-  // Render menu (top or bottom)
+  /**
+   * Render a menu list (top or bottom).
+   */
   const renderMenuList = (menu: MenuItem[], menuType: 'top' | 'bottom') => (
     <List>
       {menu.map((item, index) => {

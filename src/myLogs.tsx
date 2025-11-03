@@ -18,7 +18,10 @@ interface MyLogsProps  {
   user: userInfoApiResponse;
 };
 
-
+/**
+ * MyObsLogs displays the user's observing logs for a selected semester.
+ * Allows switching semesters via dropdown and shows loading/error states.
+ */
 export function MyObsLogs({ open, user }: MyLogsProps) {
   const obsid = user?.Id
   const currentSemester = getCurrentSemester();
@@ -46,7 +49,8 @@ export function MyObsLogs({ open, user }: MyLogsProps) {
           <Box sx={{ p: 2, borderBottom: 2, borderColor: "divider" }}>
             <Typography variant="h6">Keck Observing Logs:</Typography>
           </Box>
-
+          
+          {/* Semester selection dropdown */}
           <FormControl sx={{ minWidth: 120, m: 2 }}>
             <InputLabel>Semester</InputLabel>
             <Select
@@ -63,12 +67,14 @@ export function MyObsLogs({ open, user }: MyLogsProps) {
             </Select>
           </FormControl>
 
-          {loading ? ( // show that is loading
+          {/* Loading spinner */}
+          {loading ? ( 
             <Stack alignItems="center" sx={{ p: 3 }}>
               <CircularProgress size={32} />
               <Typography sx={{ mt: 1 }}>Loading logs...</Typography>
             </Stack>
           ) : hasLogs ? (
+            // List of logs as links
             <Stack spacing={1} sx={{ p: 2 }}>
               {logs.map((log) => {
                 const viewUrl = `${urls.PROPOSALS_API}/viewObsLog?filename=${log.filename}&obsid=${obsid}`;
@@ -91,6 +97,7 @@ export function MyObsLogs({ open, user }: MyLogsProps) {
               })}
             </Stack>
           ) : (
+             // No logs found message
             <Typography sx={{ p: 2, color: "text.secondary" }}>
               No observing logs found for this semester.
             </Typography>
