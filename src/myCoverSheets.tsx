@@ -1,31 +1,9 @@
 import { Paper, Typography, Stack, Box, Table, TableBody, TableCell, TableContainer, TableRow, TableHead, List, ListItem, Link, FormControl, Select, MenuItem, InputLabel } from "@mui/material";
-import { styled } from '@mui/material/styles';
 import urls from './urls.json';
 import type { userInfoApiResponse } from './api';
 import { useEffect, useState } from "react";
 import { getCurrentSemester, getLastSemesters } from "./api";
-
-const drawerWidth = 240;
-
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  marginTop: theme.mixins.toolbar.minHeight,
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: -drawerWidth,
-  ...(open && {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
+import { Main } from './theme';
 
 interface MyCoverSheetsProps  {
   open: boolean;

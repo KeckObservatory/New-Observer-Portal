@@ -2,7 +2,6 @@ import {  Paper } from "@mui/material";
 import  { Typography } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { Box } from "@mui/material";
-import { styled } from '@mui/material/styles';
 import { Table, TableBody, TableCell, TableContainer, TableRow, TableHead } from '@mui/material';
 import  {List} from "@mui/material";
 import ListItem from "@mui/material/ListItem";
@@ -11,29 +10,7 @@ import urls from './urls.json';
 import type { userInfoApiResponse } from './api';
 import { CircularProgress } from "@mui/material";
 import { useCombinedSchedule } from "./api";
-
-
-const drawerWidth = 240;
-
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  marginTop: theme.mixins.toolbar.minHeight, // so the main content is below the topbar
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: -drawerWidth,
-  ...(open && {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
+import { Main } from './theme';
 
 interface MyScheduleProps  {
   open: boolean;

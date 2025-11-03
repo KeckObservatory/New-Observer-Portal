@@ -11,32 +11,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { ObserverInfoBannerWithSchedule } from './observerInfo';
 import type { userInfoApiResponse } from './api';
-
-
-const drawerWidth = 240;
-
-/**
- * Styled main content area that shifts right when the sidebar is open.
- */
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  marginTop: theme.mixins.toolbar.minHeight, // so the main content is below the topbar
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: -drawerWidth,
-  ...(open && {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
+import { Main } from './theme';
 
 interface MainContentProps  {
   open: boolean;

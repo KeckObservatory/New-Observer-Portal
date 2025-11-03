@@ -2,7 +2,6 @@ import { Paper } from "@mui/material";
 import  { Typography } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import { Box } from "@mui/material";
-import { styled } from '@mui/material/styles';
 import urls from './urls.json';
 import { useObsLogApi } from "./api";
 import { CircularProgress, Link } from "@mui/material";
@@ -12,28 +11,7 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { getCurrentSemester } from "./api";
 import type { userInfoApiResponse } from './api';
 import { getLastSemesters } from "./api";
-
-const drawerWidth = 240;
-
-const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
-  open?: boolean;
-}>(({ theme, open }) => ({
-  flexGrow: 1,
-  padding: theme.spacing(3),
-  marginTop: theme.mixins.toolbar.minHeight, // so the main content is below the topbar
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: -drawerWidth,
-  ...(open && {
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    marginLeft: 0,
-  }),
-}));
+import { Main } from './theme';
 
 interface MyLogsProps  {
   open: boolean;
