@@ -225,7 +225,7 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                       setSelectedUrl?.(urls.SUB_ENG_REQ + currentSemester);
                     }}
                   >
-                    Submit Engineering Request for ({currentSemester})
+                    Submit Engineering Request({currentSemester})
                   </Link>
                 </ListItem>
               )}
