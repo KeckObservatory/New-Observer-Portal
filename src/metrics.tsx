@@ -62,12 +62,12 @@ export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }
       >
 
       {/* Night of shifted date */}
-        <Box sx={{ minWidth: 160, textAlign: "right", ml: 2 }}>
+        <Box sx={{ minWidth: 0, px: 1, textAlign: "right" }}>
           <Typography variant="subtitle1" fontWeight="bold">
             Night of {shiftedDate} UT
           </Typography>
         </Box>
-
+        
         {/* Moonrise */}
         <MetricItem icon={<Brightness2Icon />} label="Moonrise" value={data.moonrise} />
 

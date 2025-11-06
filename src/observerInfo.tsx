@@ -48,10 +48,6 @@ export default function UserTable({ user }: ObserverInfoProps) {
             <TableCell>{fullName}</TableCell>
           </TableRow>
           <TableRow>
-            <TableCell><b>ID</b></TableCell>
-            <TableCell>{user.Id}</TableCell>
-          </TableRow>
-          <TableRow>
             <TableCell><b>Email</b></TableCell>
             <TableCell>{user.Email}</TableCell>
           </TableRow>
