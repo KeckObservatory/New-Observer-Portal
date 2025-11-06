@@ -200,6 +200,12 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
             { text: "Planning Tool", url: urls.PLANNING_TOOL, newtab: true },
           ]
         },
+        { text: "Starlists",
+          subItems: [
+            { text: "Starlist", url: urls.NON_AO_STARLIST, newtab: false},
+            { text: "AO Starlist", url: urls.AO_STARLIST, newtab: false },
+          ]
+        },
         { text: "HQ and Remote Observing",
           subItems: [
             { text: "Observing Request", url: urls.OBSERVING_REQUEST, newtab: false},

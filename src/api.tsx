@@ -9,7 +9,7 @@ import { differenceInCalendarDays } from "date-fns";
  * Returns the current shifted date as YYYY-MM-DD.
  * If before 8am HST (18:00 UTC), returns yesterday's date.
  */
-function getShiftedDate() {
+export function getShiftedDate() {
   const now = new Date();
 
   // Hawaii is UTC-10, so 8:00 AM HST = 18:00 UTC

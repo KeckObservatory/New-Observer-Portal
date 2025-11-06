@@ -6,6 +6,8 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import type { metricsApiResponse } from "./api";
+import { getShiftedDate } from './api';
+
 
 /**
  * Styled Paper component for the night metrics strip.
@@ -45,6 +47,8 @@ function MetricItem({
 
 export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }) {
   if (!data) return null;
+  const shiftedDate = getShiftedDate();
+
 
   return (
     <StatPaper elevation={3}>
@@ -56,22 +60,26 @@ export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }
           width: "100%",
         }}
       >
-      {/* Dawn 18° + 12° */}
-        <MetricItem
-          icon={<NightsStayIcon />}
-          label="Dawn"
-          value={
-            <>
-              <Typography variant="body1" fontWeight="bold">{`18°: ${data.dawn_18deg}`}</Typography>
-              <Typography variant="body1" fontWeight="bold">{`12°: ${data.dawn_12deg}`}</Typography>
-            </>
-          }
-        />
-        {/* Sunrise */}
-        <MetricItem icon={<WbSunnyIcon />} label="Sunrise" value={data.sunrise} />
 
-        {/* Midpoint */}
-        <MetricItem icon={<NightsStayIcon />} label="Midpoint" value={data.midpoint}  />
+      {/* Night of shifted date */}
+        <Box sx={{ minWidth: 160, textAlign: "right", ml: 2 }}>
+          <Typography variant="subtitle1" fontWeight="bold">
+            Night of {shiftedDate} UT
+          </Typography>
+        </Box>
+
+        {/* Moonrise */}
+        <MetricItem icon={<Brightness2Icon />} label="Moonrise" value={data.moonrise} />
+
+        {/* Moonset */}
+        <MetricItem icon={<Brightness2Icon />} label="Moonset" value={data.moonset} />
+
+        {/* Illumination */}
+        <MetricItem
+          icon={<Brightness2Icon />}
+          label="Illumination"
+          value={`${Math.round(Number(data.moonillumination) * 100)}%`}
+        />
 
         {/* Sunset */}
         <MetricItem icon={<WbSunnyIcon />} label="Sunset" value={data.sunset} />
@@ -88,18 +96,25 @@ export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }
           }
         />
 
-        {/* Moonrise */}
-        <MetricItem icon={<Brightness2Icon />} label="Moonrise" value={data.moonrise} />
+        {/* Midpoint */}
+        <MetricItem icon={<NightsStayIcon />} label="Midpoint" value={data.midpoint}  />
 
-        {/* Moonset */}
-        <MetricItem icon={<Brightness2Icon />} label="Moonset" value={data.moonset} />
-
-        {/* Illumination */}
+        {/* Dawn 18° + 12° */}
         <MetricItem
-          icon={<Brightness2Icon />}
-          label="Illumination"
-          value={`${Math.round(Number(data.moonillumination) * 100)}%`}
+          icon={<NightsStayIcon />}
+          label="Dawn"
+          value={
+            <>
+              <Typography variant="body1" fontWeight="bold">{`18°: ${data.dawn_18deg}`}</Typography>
+              <Typography variant="body1" fontWeight="bold">{`12°: ${data.dawn_12deg}`}</Typography>
+            </>
+          }
         />
+
+        {/* Sunrise */}
+        <MetricItem icon={<WbSunnyIcon />} label="Sunrise" value={data.sunrise} />
+
+
       </Box>
     </StatPaper>
   );
