@@ -4,6 +4,8 @@ import type { userInfoApiResponse } from './api';
 import { useEffect, useState } from "react";
 import { getCurrentSemester, getLastSemesters } from "./api";
 import { Main } from './theme';
+import { getEmployeeLinks } from "./api"; // Make sure this is imported
+
 
 interface MyCoverSheetsProps  {
   open: boolean;
@@ -34,6 +36,19 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
   const currentSemester = getCurrentSemester();
   const [selectedSemester, setSelectedSemester] = useState<string>("");
   const [semesterOptions, setSemesterOptions] = useState<string[]>([]);
+
+  // Check if user is a Keck employee
+  const [isKeckEmployee, setIsKeckEmployee] = useState(false);
+
+  useEffect(() => {
+    async function checkEmployee() {
+      if (user?.Id) {
+        const result = await getEmployeeLinks(user.Id);
+        setIsKeckEmployee(Array.isArray(result?.links) && result.links.length > 0);
+      }
+    }
+    checkEmployee();
+  }, [user?.Id]);
 
   // Update semester options when currentSemester changes
   useEffect(() => {
@@ -197,6 +212,23 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                   KPF-CC Observing Block Submission
                 </Link>
               </ListItem>
+              {/* Only show for Keck employees */}
+              {isKeckEmployee && currentSemester && (
+                <ListItem>
+                  <Link
+                    component="button"
+                    variant="h6"
+                    underline="hover"
+                    sx={{ cursor: "pointer", fontSize: "1.15rem", fontWeight: 600 }}
+                    onClick={() => {
+                      setSelectedPage?.("Submit Engineering Request");
+                      setSelectedUrl?.(urls.SUB_ENG_REQ + currentSemester);
+                    }}
+                  >
+                    Submit Engineering Request for ({currentSemester})
+                  </Link>
+                </ListItem>
+              )}
             </List>
           </Box>
         </Stack>
