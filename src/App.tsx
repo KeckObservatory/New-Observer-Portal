@@ -45,6 +45,7 @@ function App() {
 
   // Fetch user info ONCE ONLY -> to send to all child components
   const userData = userInfoApi(); 
+  //const userData = {"status": "GOOD", "Title": "manager", "Id": 6679, "FirstName": "Ava", "MiddleName": "test", "LastName": "DeLaGarza", "Email": "adelagarza@keck.hawaii.edu", "Affiliation": "keck", "WorkArea": "", "Interests": "", "Street":"", "City": "", "State": "", "Country": "", "Zip": "", "Phone": "",  "URL": '',  "username": "adelagarza",  "AllocInst": "Keck", "BadEmail": "N",  "ProfilePictureURL": "1"}
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -58,6 +59,8 @@ function App() {
               user={userData} 
               darkMode={darkMode}
               setDarkMode={setDarkMode}
+              setSelectedPage={setSelectedPage}
+              setSelectedUrl={setSelectedUrl}
             />
             <PersistentSideBar
               open={open}
