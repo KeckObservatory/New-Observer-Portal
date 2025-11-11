@@ -1,4 +1,4 @@
-import { Paper, Box } from "@mui/material";
+import { Paper, Box, Button, Stack } from "@mui/material";
 import type { userInfoApiResponse } from "./api";
 import { Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material';
 import { styled } from "@mui/material/styles";
@@ -25,7 +25,7 @@ interface ObserverInfoProps {
 /**
  * Displays a table of user information.
  */
-export default function UserTable({ user }: ObserverInfoProps) {
+export default function UserTable({ user, setSelectedPage, setSelectedUrl }: ObserverInfoProps) {
   const fullName = [user.FirstName, user.MiddleName, user.LastName]
     .filter(Boolean)
     .join(" ");
@@ -35,53 +35,80 @@ export default function UserTable({ user }: ObserverInfoProps) {
     .join(", ");
 
   return (
-    <TableContainer component={Paper}
-    sx={{
-    maxHeight: 317, // set max height, so when new items are added it will scroll
-    }}
-    >
-      <Table size="small" stickyHeader></Table>
-      <Table size="medium">
-        <TableBody>
-          <TableRow>
-            <TableCell><b>Name</b></TableCell>
-            <TableCell>{fullName}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell><b>Email</b></TableCell>
-            <TableCell>{user.Email}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell><b>Affiliation</b></TableCell>
-            <TableCell>{user.Affiliation}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell><b>Work Area</b></TableCell>
-            <TableCell>{user.WorkArea}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell><b>Interests</b></TableCell>
-            <TableCell>{user.Interests}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell><b>Address</b></TableCell>
-            <TableCell>{fullAddress}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell><b>Phone</b></TableCell>
-            <TableCell>{user.Phone}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell><b>URL</b></TableCell>
-            <TableCell>
-              <a href={user.URL} target="_blank" rel="noopener noreferrer">
-                {user.URL}
-              </a>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <TableContainer component={Paper}
+        sx={{
+          //maxHeight: 600,
+        }}
+      >
+        <Table size="small" stickyHeader></Table>
+        <Table size="medium">
+          <TableBody>
+            <TableRow>
+              <TableCell><b>Name</b></TableCell>
+              <TableCell>{fullName}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell><b>Email</b></TableCell>
+              <TableCell>{user.Email}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell><b>Affiliation</b></TableCell>
+              <TableCell>{user.Affiliation}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell><b>Work Area</b></TableCell>
+              <TableCell>{user.WorkArea}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell><b>Interests</b></TableCell>
+              <TableCell>{user.Interests}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell><b>Address</b></TableCell>
+              <TableCell>{fullAddress}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell><b>Phone</b></TableCell>
+              <TableCell>{user.Phone}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell><b>URL</b></TableCell>
+              <TableCell>
+                <a href={user.URL} target="_blank" rel="noopener noreferrer">
+                  {user.URL}
+                </a>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {/* Add action buttons below the table */}
+      <Stack direction="row" spacing={2} sx={{ mt: 2, justifyContent: "flex-end" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => {
+            // Always open "Update My Profile" in the main area
+            if (setSelectedPage && setSelectedUrl) {
+              setSelectedPage("Update My Profile");
+              setSelectedUrl(urls.UPDATE_MY_PROFILE);
+            }
+          }}
+        >
+          Edit Profile
+        </Button>
+        <Button
+          variant="outlined"
+          color="error"
+          onClick={() => {
+            window.location.href = "/logout";
+          }}
+        >
+          Logout
+        </Button>
+      </Stack>
+    </>
   );
 }
 /**

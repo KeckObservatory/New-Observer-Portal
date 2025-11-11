@@ -4,7 +4,6 @@ import { scheduleApi} from './api';
 import { metricsApi } from './api';
 import Paper from '@mui/material/Paper';
 import { OrderedNightMetricsStrip } from './metrics';
-import UserTable from './observerInfo';
 import { Box } from '@mui/material';
 import { renderTable } from './telStatus';
 import Grid from '@mui/material/Grid';
@@ -81,13 +80,9 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
         <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
           <Item>
           <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
-            Your Information
+            Fast Links
           </Typography>
-            {user ? (
-              <UserTable user={user} />
-            ) : (
-              <div>Loading your information...</div>
-            )}
+
           </Item>
         </Grid>
       </Grid>

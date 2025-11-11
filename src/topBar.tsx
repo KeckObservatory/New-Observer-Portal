@@ -10,7 +10,12 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { Box } from "@mui/material";
 import { Avatar } from "@mui/material";
 import Switch from '@mui/material/Switch';
+import Tooltip from '@mui/material/Tooltip';
 import type { userInfoApiResponse } from "./api";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import UserTable from './observerInfo'; // Import your UserTable component
 
 const drawerWidth = 240;
 
@@ -53,16 +58,29 @@ interface TopBarProps {
   user: userInfoApiResponse;
   darkMode: boolean;
   setDarkMode: (val: boolean) => void;
+  setSelectedPage: (page: string) => void;      
+  setSelectedUrl: (url: string) => void;       
 };
 /**
  * TopBar displays the app bar with title, clock, dark mode switch, and user avatar.
  */
-export default function TopBar({ open, handleDrawerOpen, user, darkMode, setDarkMode }: TopBarProps) {
+export default function TopBar({
+  open,
+  handleDrawerOpen,
+  user,
+  darkMode,
+  setDarkMode,
+  setSelectedPage,      
+  setSelectedUrl        
+}: TopBarProps) {
   const now = useClock();
   const ut = now.toISOString().slice(11, 19); // ut time
   const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
   const utDateStr = now.toISOString().slice(0, 10); // e.g., "2025-10-29"
   const hst = hstDate.toISOString().slice(11, 19); // hst time
+
+  // State to control profile dialog open/close
+  const [profileOpen, setProfileOpen] = useState(false);
 
   return (
     <StyledAppBar position="fixed" open={open}>
@@ -96,26 +114,45 @@ export default function TopBar({ open, handleDrawerOpen, user, darkMode, setDark
             </Box>
           </Box>
 
-          {/* Dark mode switch */}
-          <Switch
-            checked={darkMode}
-            onChange={e => setDarkMode(e.target.checked)}
-            color="default"
-            sx={{ mr: 2 }}
-          />
+          {/* Dark mode switch with tooltip */}
+          <Tooltip title={darkMode ? "Switch to light mode" : "Switch to dark mode"}>
+            <Switch
+              checked={darkMode}
+              onChange={e => setDarkMode(e.target.checked)}
+              color="default"
+              sx={{ mr: 2 }}
+            />
+          </Tooltip>
 
-          {/* Profile avatar bubble */}
-          <IconButton sx={{ p: 0 }}>
-            <Avatar
-              alt={user?.FirstName ?? "User"}
-              src={user?.ProfilePictureURL || undefined}
-              sx={{ width: 40, height: 40 }}
-            >
-              {(user?.FirstName?.[0] ?? "").toUpperCase()}
-            </Avatar>
-          </IconButton>
+          {/* Profile avatar bubble with tooltip */}
+          <Tooltip title="View profile">
+            <IconButton sx={{ p: 0 }} onClick={() => setProfileOpen(true)}>
+              <Avatar
+                alt={user?.FirstName ?? "User"}
+                src={user?.ProfilePictureURL || undefined}
+                sx={{ width: 40, height: 40 }}
+              >
+                {(user?.FirstName?.[0] ?? "").toUpperCase()}
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </Box>
       </Toolbar>
+      
+      {/* Profile dialog */}
+      <Dialog open={profileOpen} onClose={() => setProfileOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Your Information</DialogTitle>
+        <DialogContent>
+          <UserTable
+            user={user}
+            setSelectedPage={(page) => {
+              setProfileOpen(false); // Close the dialog when Edit Profile is clicked
+              setSelectedPage(page);
+            }}
+            setSelectedUrl={setSelectedUrl}
+          />
+        </DialogContent>
+      </Dialog>
     </StyledAppBar>
   );
 }
