@@ -155,7 +155,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     { text: "Profile", icon: <AccountBoxIcon />,
       subItems: [
         { text: "Update My Profile", url: urls.UPDATE_MY_PROFILE, newtab: false },
-        { text: "SHH Key Management", url: urls.SSH_KEY_MANAGEMENT, newtab: false },
+        { text: "SSH Key Management", url: urls.SSH_KEY_MANAGEMENT, newtab: false },
         { text: "My Observing Schedule"},
         { text: "My Observing Logs"},
         { text: "My Observing Requests (to add)"},
