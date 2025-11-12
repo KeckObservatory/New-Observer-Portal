@@ -406,3 +406,16 @@ export async function getEmployeeLinks(obsid: number): Promise<{ links?: { name:
   }
 }
 
+/**
+ * Fetches newest semester avaliable to submit coversheet.
+ */
+export async function getNewestSemester(): Promise<string> {
+  try {
+    const res = await fetch(urls.PROPOSALS_DEV_API + `/getNewestSemester`);
+    const json = await res.json(); // { semester: "2025B" }
+    console.log(json, 'newest semester api response')
+    return json.semester;
+  } catch {
+    return "";
+  }
+}

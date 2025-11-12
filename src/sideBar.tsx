@@ -28,6 +28,7 @@ import AcUnitIcon from '@mui/icons-material/AcUnit';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import CreateIcon from '@mui/icons-material/Create';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import StarsIcon from '@mui/icons-material/Stars';
 
 // urls
 import urls from './urls.json'
@@ -164,7 +165,13 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
     },
 
     { text: "Telescope Schedule", icon: <CalendarMonthIcon />, url: urls.TELESCOPE_SCHEDULE, newtab: false },
-    
+
+    { text: "ToO Resources", icon: <StarsIcon />,
+      subItems: [
+            { text: "ToO Policies", url: urls.ToO_POLICIES, newtab: false },
+            { text: "ToO Request Tool", url: urls.ToO_REQUEST_TOOL, newtab: true },
+          ]
+    },
 
     { text: "Pre-Observing Support", icon: <ChecklistIcon />,
       subItems: [
@@ -181,12 +188,6 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
           subItems: [
             { text: "Configuration Submission", url: urls.CONFIGURATION_SUBMISSION, newtab: false},
             { text: "Slitmask Submission", url: urls.SLITMASK_SUBMISSION , newtab: false },
-          ]
-        },
-        { text: "Target of Opportunity (ToO)",
-          subItems: [
-            { text: "ToO Policies", url: urls.ToO_POLICIES, newtab: false },
-            { text: "ToO Request Tool", url: urls.ToO_REQUEST_TOOL, newtab: true },
           ]
         },
         { text: "Target Planning",

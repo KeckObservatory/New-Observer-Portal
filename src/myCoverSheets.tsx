@@ -2,7 +2,7 @@ import { Paper, Typography, Stack, Box, Table, TableBody, TableCell, TableContai
 import urls from './urls.json';
 import type { userInfoApiResponse } from './api';
 import { useEffect, useState } from "react";
-import { getCurrentSemester, getLastSemesters } from "./api";
+import { getCurrentSemester, getLastSemesters, getNewestSemester } from "./api";
 import { Main } from './theme';
 import { getEmployeeLinks } from "./api"; // Make sure this is imported
 
@@ -27,6 +27,8 @@ type Program = {
  */
 export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: MyCoverSheetsProps) {
   const obsid = user?.Id;
+  //const obsid = 1521; // for testing
+
 
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -36,6 +38,9 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
   const currentSemester = getCurrentSemester();
   const [selectedSemester, setSelectedSemester] = useState<string>("");
   const [semesterOptions, setSemesterOptions] = useState<string[]>([]);
+
+  // Add state for newest semester
+  const [newestSemester, setNewestSemester] = useState<string>("");
 
   // Check if user is a Keck employee
   const [isKeckEmployee, setIsKeckEmployee] = useState(false);
@@ -50,13 +55,27 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
     checkEmployee();
   }, [user?.Id]);
 
-  // Update semester options when currentSemester changes
+  // Fetch newest semester on mount
+  useEffect(() => {
+    async function fetchNewest() {
+      const sem = await getNewestSemester();
+      setNewestSemester(sem);
+    }
+    fetchNewest();
+  }, []);
+
+  // Update semester options when currentSemester or newestSemester changes
   useEffect(() => {
     if (currentSemester) {
-      setSemesterOptions([currentSemester, ...getLastSemesters(currentSemester, 3)]);
+      let semesters = [currentSemester, ...getLastSemesters(currentSemester, 15)];
+      // If newestSemester is not already in the list, add it to the front
+      if (newestSemester && !semesters.includes(newestSemester)) {
+        semesters = [newestSemester, ...semesters];
+      }
+      setSemesterOptions(semesters);
       setSelectedSemester(currentSemester);
     }
-  }, [currentSemester]);
+  }, [currentSemester, newestSemester]);
 
   // Fetch cover sheets when obsid or selectedSemester changes
   useEffect(() => {
@@ -206,7 +225,7 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                   sx={{ cursor: "pointer", fontSize: "1.15rem", fontWeight: 600 }}
                   onClick={() => {
                     setSelectedPage?.("KPF-CC Observing Block Submission");
-                    setSelectedUrl?.(urls.KPF_CC_OBS_BLOCK_SUBMISSION);
+                    setSelectedUrl?.(urls.KPF_CC_OBS_BLOCK_SUBMISSION); //TODO NEEDS TO OPEN NEW TAB
                   }}
                 >
                   KPF-CC Observing Block Submission
