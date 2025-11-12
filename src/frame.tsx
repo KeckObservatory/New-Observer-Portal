@@ -20,6 +20,8 @@ const StyledObject = styled("object", {
   // vw => viewport width and height (percentage of screen)
   width: open ? `calc(100vw - ${drawerWidth}px)` : "100vw",
   height: `calc(100vh - ${topBarHeight}px)`,
+    background: "#fff", // Force white background for embedded content
+
 
 }));
 

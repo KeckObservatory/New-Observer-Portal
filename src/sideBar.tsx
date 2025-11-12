@@ -165,12 +165,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
 
     { text: "Telescope Schedule", icon: <CalendarMonthIcon />, url: urls.TELESCOPE_SCHEDULE, newtab: false },
     
-    { text: "Weather Conditions", icon: <AcUnitIcon />, 
-      subItems: [
-        { text: "Maunakea Weather Center", url : urls.MK_WEATHER_CENTER, newtab: true},
-        { text : "Keck Cloud Cameras", url : urls.CLOUD_CAMS, newtab: false}
-      ]
-    },
+
     { text: "Pre-Observing Support", icon: <ChecklistIcon />,
       subItems: [
         { text: "Instrument Home", url: urls.INSTRUMENTS_HOME, newtab: false},
@@ -191,7 +186,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Target of Opportunity (ToO)",
           subItems: [
             { text: "ToO Policies", url: urls.ToO_POLICIES, newtab: false },
-            { text: "ToO Request Tool", url: urls.ToO_REQUEST_TOOL, newtab: false },
+            { text: "ToO Request Tool", url: urls.ToO_REQUEST_TOOL, newtab: true },
           ]
         },
         { text: "Target Planning",
@@ -236,6 +231,12 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Data Discovery Service", url: urls.DDS, newtab: true },
         { text: "Observers\' Data Access Portal", url: urls.ODAP, newtab: true},
         { text: "My KOA Data (to add)"},
+      ]
+    },
+    { text: "Weather Conditions", icon: <AcUnitIcon />, 
+      subItems: [
+        { text: "Maunakea Weather Center", url : urls.MK_WEATHER_CENTER, newtab: true},
+        { text : "Keck Cloud Cameras", url : urls.CLOUD_CAMS, newtab: false}
       ]
     },
     { text: "Publication Ackowledgement", icon:   <CreateIcon /> , url: urls.PUB_ACK, newtab: false}
