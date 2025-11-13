@@ -35,10 +35,12 @@ import urls from './urls.json'
 import type { userInfoApiResponse } from './api';
 
 import { getEmployeeLinks } from './api';
+import StandardWordmark from './assets/StandardWordmark.png' 
+
 
 const drawerWidth = 240;
 
-// top part of side bar -> is blank now
+// top part of side bar
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -351,13 +353,18 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box' },
+        '& .MuiDrawer-paper': { width: drawerWidth, boxSizing: 'border-box', overflowY: "scroll" },
       }}
       variant="persistent"
       anchor="left"
       open={open}
     >
       <DrawerHeader>
+      <img
+        src={StandardWordmark}
+        alt="Keck Logo"
+        style={{ height: 40, marginRight: 0, marginLeft: 10, width: "auto" }}
+      />
         <IconButton onClick={handleDrawerClose}>
           {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
