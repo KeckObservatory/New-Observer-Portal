@@ -1,5 +1,3 @@
-import urls from './urls.json';
-
 export interface SubItem {
   text: string;
   url?: string;

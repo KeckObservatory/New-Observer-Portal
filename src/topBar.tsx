@@ -58,8 +58,8 @@ interface TopBarProps {
   user: userInfoApiResponse;
   darkMode: boolean;
   setDarkMode: (val: boolean) => void;
-  setSelectedPage: (page: string) => void;      
-  setSelectedUrl: (url: string) => void;       
+  setSelectedPage?: (page: string) => void;
+  setSelectedUrl?: (url: string | null) => void;  
 };
 /**
  * TopBar displays the app bar with title, clock, dark mode switch, and user avatar.
@@ -147,7 +147,7 @@ export default function TopBar({
             user={user}
             setSelectedPage={(page) => {
               setProfileOpen(false); // Close the dialog when Edit Profile is clicked
-              setSelectedPage(page);
+              if (setSelectedPage) setSelectedPage(page);
             }}
             setSelectedUrl={setSelectedUrl}
           />
