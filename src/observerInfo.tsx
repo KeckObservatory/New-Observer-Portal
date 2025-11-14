@@ -189,7 +189,7 @@ export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelec
 
   if (loading) return <ObserverInfoBanner elevation={3}><Typography>Loading...</Typography></ObserverInfoBanner>;
   if (error) return <ObserverInfoBanner elevation={3}><Typography color="error">{error}</Typography></ObserverInfoBanner>;
-  if (!schedule || schedule.length === 0) return <ObserverInfoBanner elevation={3}><Typography>No upcoming observations within 6 months.</Typography></ObserverInfoBanner>;
+  if (!schedule || schedule.length === 0) return <ObserverInfoBanner elevation={3}><Typography>No scheduled nights as a PI or observer in the next 6 months.</Typography></ObserverInfoBanner>;
 
   return (
     <ObserverInfoBanner elevation={3}>

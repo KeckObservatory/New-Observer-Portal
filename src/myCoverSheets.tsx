@@ -5,13 +5,13 @@ import { useEffect, useState } from "react";
 import { getCurrentSemester, getLastSemesters, getNewestSemester } from "./api";
 import { Main } from './theme';
 import { getEmployeeLinks } from "./api"; // Make sure this is imported
-
+import { handleUrlClick } from './urlLogic';
 
 interface MyCoverSheetsProps  {
   open: boolean;
   user: userInfoApiResponse;
   setSelectedPage?: (page: string) => void;
-  setSelectedUrl?: (url: string) => void;
+  setSelectedUrl?: (url: string | null) => void; 
 }
 
 type Program = {
@@ -209,10 +209,13 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                   variant="h6"
                   underline="hover"
                   sx={{ cursor: "pointer", fontSize: "1.15rem", fontWeight: 600 }}
-                  onClick={() => {
-                    setSelectedPage?.("Coversheet Submission");
-                    setSelectedUrl?.(urls.COVER_SHEET_SUBMISSION);
-                  }}
+                  onClick={() =>
+                    handleUrlClick(
+                      { text: "Coversheet Submission", url: urls.COVER_SHEET_SUBMISSION, newtab: false },
+                      setSelectedPage,
+                      setSelectedUrl
+                    )
+                  }
                 >
                   Coversheet Submission
                 </Link>
@@ -223,10 +226,13 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                   variant="h6"
                   underline="hover"
                   sx={{ cursor: "pointer", fontSize: "1.15rem", fontWeight: 600 }}
-                  onClick={() => {
-                    setSelectedPage?.("KPF-CC Observing Block Submission");
-                    setSelectedUrl?.(urls.KPF_CC_OBS_BLOCK_SUBMISSION); //TODO NEEDS TO OPEN NEW TAB
-                  }}
+                  onClick={() =>
+                    handleUrlClick(
+                      { text: "KPF-CC Observing Block Submission", url: urls.KPF_CC_OBS_BLOCK_SUBMISSION, newtab: true },
+                      setSelectedPage,
+                      setSelectedUrl
+                    )
+                  }
                 >
                   KPF-CC Observing Block Submission
                 </Link>
@@ -239,10 +245,13 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                     variant="h6"
                     underline="hover"
                     sx={{ cursor: "pointer", fontSize: "1.15rem", fontWeight: 600 }}
-                    onClick={() => {
-                      setSelectedPage?.("Submit Engineering Request");
-                      setSelectedUrl?.(urls.SUB_ENG_REQ + currentSemester);
-                    }}
+                    onClick={() =>
+                      handleUrlClick(
+                        { text: "Submit Engineering Request", url: urls.SUB_ENG_REQ + currentSemester, newtab: false },
+                        setSelectedPage,
+                        setSelectedUrl
+                      )
+                    }
                   >
                     Submit Engineering Request ({currentSemester})
                   </Link>
