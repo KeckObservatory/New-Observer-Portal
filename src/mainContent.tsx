@@ -12,11 +12,16 @@ import { ObserverInfoBannerWithSchedule } from './observerInfo';
 import type { userInfoApiResponse } from './api';
 import { Main } from './theme';
 
+import StandardPatch from './assets/StandardPatch.png';
+import urls from './urls.json'
+//import handleUrlClick from './sideBar';
+import { handleUrlClick } from './urlLogic';
+
 interface MainContentProps  {
   open: boolean;
   user: userInfoApiResponse;
   setSelectedPage?: (page: string) => void;
-  setSelectedUrl?: (url: string) => void;
+  setSelectedUrl?: (url: string | null) => void; 
 };
 
 /**
@@ -29,15 +34,24 @@ const Item = styled(Paper)(({ theme }) => ({
   height: '100%',
 }));
 
+const fastLinks = [
+  { text: "Trigger a ToO", url: urls.ToO_REQUEST_TOOL, newtab: true },
+  { text: "Semester Info", url: urls.SEMESTER_INFO, newtab: false },
+  { text: "KPF-CC OB Submission", url: urls.KPF_CC_OBS_BLOCK_SUBMISSION, newtab: true },
+  { text: "Planning Tool (NEW!)", url: urls.PLANNING_TOOL, newtab: true },
+  { text: "Keck Observatory Archive", url: urls.KOA, newtab: true },
+];
+
 /**
  * MainContent component displays the dashboard with:
  * - Observer info banner
  * - Keck I and Keck II instrument status tables
- * - User information
+ * - Fast Links section
  * - Night metrics strip
  */
 export default function MainContent({ open, user, setSelectedPage, setSelectedUrl }: MainContentProps) {
-    // Fetch telescope schedule and metrics data
+  
+  // Fetch telescope schedule and metrics data
   const telescopeSchedData = scheduleApi();          
   const metricsData = metricsApi();       
 
@@ -47,6 +61,49 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
 
   return (
     <Main open={open}>
+       {/* Welcome message at the top */}
+          <Paper
+            elevation={3}
+            sx={{
+              mb: 3,
+              p: 3,
+              display: "flex",
+              alignItems: "flex-start",
+              position: "relative",
+              flexDirection: "row",
+              justifyContent: "center",
+              minHeight: 170,
+            }}
+          >
+            <img
+              src={StandardPatch}
+              alt="Keck Logo"
+              style={{
+                height: 150,
+                width: "auto",
+                position: "absolute",
+                top: 10,
+                left: 24,
+              }}
+            />
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                Welcome to the Keck Observer Portal!
+              </Typography>
+              <Typography variant="subtitle1" sx={{ mt: 1 }}>
+                Your dashboard for schedules, instrument status, and observing resources.
+              </Typography>
+            </Box>
+          </Paper>
+      
       {/* Banner with welcome and checklist */}
       <ObserverInfoBannerWithSchedule
         user={user}
@@ -76,13 +133,46 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
           </Item>
         </Grid>
 
-        {/* User information */}
+        {/* Fast Links section */}
         <Grid size={{ xs: 12, sm: 4, md: 4 }} sx={{ height: "100%" }}>
-          <Item>
-          <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
-            Fast Links
-          </Typography>
-
+          <Item
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100%",
+              minHeight: 388, 
+              maxHeight: 388,
+            }}
+          >
+            <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
+              Fast Links
+            </Typography>
+            <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-evenly", mt: 2 }}>
+              {fastLinks.map(link => (
+                <Typography
+                  key={link.text}
+                  component="button"
+                  variant="body1"
+                  sx={{
+                    background: "none",
+                    border: "none",
+                    color: "primary.main",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    fontWeight: 500,
+                    fontSize: "1.1rem",
+                    p: 0,
+                    m: 0,
+                    width: "100%",
+                    "&:hover": { textDecoration: "underline" },
+                  }}
+                  onClick={() => handleUrlClick(link, setSelectedPage, setSelectedUrl)}
+                >
+                  {link.text}
+                </Typography>
+              ))}
+            </Box>
           </Item>
         </Grid>
       </Grid>
