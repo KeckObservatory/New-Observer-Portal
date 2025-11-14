@@ -25,6 +25,8 @@ interface MyScheduleProps  {
  */
 export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: MyScheduleProps) {
   const obsid = user?.Id;
+  //const obsid = 1521 //for testing
+  //const obsid = 4718
   const { data: schedule, loading, error } = useCombinedSchedule(obsid); 
 
   const isObserving = !!schedule && schedule.length > 0;
@@ -104,7 +106,7 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
                         </TableCell>
                         <TableCell sx={{ width: 100 }}><b>Instrument</b></TableCell>
                         <TableCell sx={{ width: 75 }}><b>Project Code</b></TableCell>
-                        <TableCell sx={{ width: 125 }}><b>Staff</b></TableCell>
+                        <TableCell sx={{ width: 125 }}><b>Support Astronomer</b></TableCell>
                       </TableRow>
                     </TableHead>
 
@@ -146,10 +148,14 @@ export function MyObsSchedule({ open, user, setSelectedPage, setSelectedUrl }: M
                             {/* Show OA/SA staff for the night */}
                             {night.staff && night.staff.length > 0 ? (
                               night.staff
-                                .filter((s) => ["oa", "sa"].includes(s.Type)) // only show oa and sa
+                                .filter(
+                                  (s) =>
+                                    [ "sa" ,"saoc"].includes(s.Type) &&
+                                    String(s.TelNr) === String(night.TelNr)
+                                )
                                 .map((s, i) => (
                                   <div key={i}>
-                                    {s.FirstName} ({s.Type.toUpperCase()})
+                                    {s.FirstName} 
                                     {s.Email && (
                                       <>
                                         {" "}

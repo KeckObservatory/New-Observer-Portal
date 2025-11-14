@@ -233,6 +233,7 @@ export interface nightStaffApiResponse {
   FirstName: string;
   Type: string; // oa, sa
   Email: string;
+  TelNr: string;
 }
 
 /**

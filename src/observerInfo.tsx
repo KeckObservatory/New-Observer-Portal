@@ -9,17 +9,18 @@ import { useState } from "react";
 import { Collapse, IconButton } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import { handleUrlClick } from './urlLogic';
 
 type ChecklistItem = {
-  task: string;
+  text: string;
   url?: string;
-  newTab?: boolean;
+  newtab?: boolean; // <-- make sure this matches urlLogic
 };
 
 interface ObserverInfoProps {
   user: userInfoApiResponse;      
   setSelectedPage?: (page: string) => void;
-  setSelectedUrl?: (url: string) => void;
+  setSelectedUrl?: (url: string | null) => void; 
 }
 
 /**
@@ -130,30 +131,27 @@ export const ObserverInfoBanner = styled(Paper)(({ theme }) => ({
 const MASKED_INSTRUMENTS = ["DEIMOS", "LRIS", "LRISp"];
 const LGS_AO_INSTRUMENTS = ["NIRC2", "OSIRIS"];
 const NON_AO_INSTRUMENTS = ["KCWI", "DEIMOS", "LRIS", "LRISp", "HIRESb", "HIRESr", "MOSFIRE", "ESI", "KPF", "NIRES", "NIRSPEC"];
-const KPF_CC = ["KPF"]
 
 // Define checklists for each category
 const CHECKLISTS = {
   all: [
-    { task: "Submit observing request", url : urls.OBSERVING_REQUEST},
-    { task: "Prepare finding charts"},
-    { task: "Configure and test your remote observing software", url : urls.SSH_KEY_MANAGEMENT}
+    { text: "Learn about the instrument", url : urls.INSTRUMENTS_HOME, newtab: false},
+    { text: "Submit observing request", url : urls.OBSERVING_REQUEST, newtab: false},
+    { text: "Prepare finding charts"},
+    { text: "Configure and test your remote observing software 1-5 days before your run", url : urls.SSH_KEY_MANAGEMENT, newtab: false},
+    { text: "Contact your Staff Astronomer with any questions"}
   ],
   masked: [
-    { task: "Submit slitmask information 5 weeks in advance", url : urls.SLITMASK_TOOL },
-    { task: "Submit configuration forms 5 weeks in advance", url : urls.CONFIGURATION_SUBMISSION },
-    //{ task: "", url : ""}
+    { text: "Submit slitmask information 5 weeks in advance", url : urls.SLITMASK_TOOL, newtab: true},
+    { text: "Submit configuration forms 5 weeks in advance", url : urls.CONFIGURATION_SUBMISSION, newtab: false},
   ],
   non_ao: [
-    { task: "Plan your observation", url : urls.PLANNING_TOOL, newTab: true},
-    { task: "Submit your starlist", url : urls.NON_AO_STARLIST},
+    { text: "Plan your observation using the Planning Tool", url : urls.PLANNING_TOOL, newtab: true},
+    { text: "Submit your starlist", url : urls.NON_AO_STARLIST, newtab: false},
   ],
   lgs_ao: [
-    { task: "Plan your LGS observation", url : urls.PLAN_LGS_OBS},
-    { task: "Submit your AO starlist", url : urls.AO_STARLIST},
-  ],
-  kpf_cc: [
-    { task: "Submit observing blocks", url : urls.KPF_CC_OBS_BLOCK_SUBMISSION, newTab: true},
+    { text: "Plan your observation", url : urls.PLAN_LGS_OBS, newtab: false},
+    { text: "Submit your AO starlist", url : urls.AO_STARLIST, newtab: false},
   ]
 };
 /**
@@ -164,34 +162,41 @@ function getInstrumentCategories(instrument: string): string[] {
   if (MASKED_INSTRUMENTS.includes(instrument)) categories.push("masked");
   if (LGS_AO_INSTRUMENTS.includes(instrument)) categories.push("lgs_ao");
   if (NON_AO_INSTRUMENTS.includes(instrument)) categories.push("non_ao");
-  if (KPF_CC.includes(instrument)) categories.push("kpf_cc");
   return categories;
 }
 
 interface ObserverBannerProps {
   user: userInfoApiResponse;
   setSelectedPage?: (page: string) => void;
-  setSelectedUrl?: (url: string) => void;
+  setSelectedUrl?: (url: string | null) => void; // <-- allow null
 }
 /**
  * ObserverInfoBannerWithSchedule displays a collapsible checklist banner
  * with upcoming observing nights and relevant tasks.
  */
 export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelectedUrl }: ObserverBannerProps) {
-  const [open, setOpen] = useState(true); // state for collapse
+  const [open, setOpen] = useState(true); // state for whole checklist
+  //const obsid = 4718; // testing only
   const obsid = user?.Id;
   const { data: schedule, loading, error } = useCombinedSchedule(obsid);
 
+  // Track open/closed state for each day
+  const [openDays, setOpenDays] = useState<{ [idx: number]: boolean }>({});
+
+  const toggleDay = (idx: number) => {
+    setOpenDays(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
   if (loading) return <ObserverInfoBanner elevation={3}><Typography>Loading...</Typography></ObserverInfoBanner>;
   if (error) return <ObserverInfoBanner elevation={3}><Typography color="error">{error}</Typography></ObserverInfoBanner>;
-  if (!schedule || schedule.length === 0) return <ObserverInfoBanner elevation={3}><Typography>No upcoming observations within 2 months.</Typography></ObserverInfoBanner>;
+  if (!schedule || schedule.length === 0) return <ObserverInfoBanner elevation={3}><Typography>No upcoming observations within 6 months.</Typography></ObserverInfoBanner>;
 
   return (
     <ObserverInfoBanner elevation={3}>
-    {/* Banner header with collapse/expand button */}
+      {/* Banner header with collapse/expand button */}
       <Box sx={{ display: "flex", alignItems: "center", width: "100%" }}>
         <Typography variant="h6" gutterBottom sx={{ flexGrow: 1 }}>
-          Welcome to the new Observer Portal!
+          Your Observing Schedule:
         </Typography>
         <IconButton onClick={() => setOpen((prev) => !prev)} size="small">
           {open ? <ExpandLess /> : <ExpandMore />}
@@ -199,89 +204,123 @@ export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelec
       </Box>
       {/* Collapsible checklist content */}
       <Collapse in={open} sx={{ width: "100%" }}>
-        {schedule.map((night, idx) => (
-          <Box key={idx} sx={{ mb: 2, width: "100%" }}>
-            <Typography variant="body1" gutterBottom>
-              You are observing in <strong>{night.DaysUntil}</strong> days using <strong>{night.Instrument}</strong> on <strong>{night.Date}</strong>.
-            </Typography>
-            <Typography variant="subtitle1" sx={{ mt: 1 }}>
-              Please look over your observing checklist:
-            </Typography>
-            <List dense sx={{ py: 0 }}>
-              {getInstrumentCategories(night.Instrument).map((category) => (
-                <Box key={category} sx={{ mb: 0.5 }}>
-                  {(CHECKLISTS[category as keyof typeof CHECKLISTS] || []).map((item: ChecklistItem, idx: number) => (
-                    <ListItem
-                      key={idx}
-                      disableGutters
-                      sx={{ pl: 2, py: 0.2, minHeight: 0 }}
-                    >
-                      {item.url ? (
-                        item.newTab ? (
-                          <ListItemText
-                            primary={
-                              <Typography
-                                component="a"
-                                href={item.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                sx={{
-                                  color: "primary.main",
-                                  textDecoration: "underline",
-                                  fontSize: "0.92rem",
-                                  cursor: "pointer",
-                                  lineHeight: 1.4,
-                                }}
-                              >
-                                • {item.task}
-                              </Typography>
-                            }
-                          />
-                        ) : (
-                          <ListItemText
-                            primary={
-                              <Typography
-                                component="span"
-                                sx={{
-                                  color: "primary.main",
-                                  textDecoration: "underline",
-                                  fontSize: "0.92rem",
-                                  cursor: "pointer",
-                                  lineHeight: 1.4,
-                                }}
-                                onClick={() => {
-                                  setSelectedPage?.(item.task);
-                                  setSelectedUrl?.(item.url ||"");
-                                }}
-                              >
-                                • {item.task}
-                              </Typography>
-                            }
-                          />
-                        )
-                      ) : (
-                        <ListItemText
-                          primary={
-                            <Typography
-                              component="span"
-                              sx={{
-                                color: "text.primary",
-                                fontSize: "0.92rem",
-                                lineHeight: 1.4,
-                              }}
+        <List dense sx={{ py: 0 }}>
+          {schedule.map((night, idx) => (
+            <Box key={idx} sx={{ mb: 1, width: "100%" }}>
+              {/* Day summary row */}
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  background: "rgba(0,0,0,0.03)",
+                  borderRadius: 1,
+                  px: 2,
+                  py: 1,
+                  cursor: "pointer",
+                  "&:hover": { background: "rgba(0,0,0,0.07)" }
+                }}
+                onClick={() => toggleDay(idx)}
+              >
+                <IconButton
+                  size="small"
+                  onClick={e => { e.stopPropagation(); toggleDay(idx); }}
+                  sx={{ mr: 1 }}
+                >
+                  {openDays[idx] ? <ExpandLess /> : <ExpandMore />}
+                </IconButton>
+                <Typography variant="body1" sx={{ flexGrow: 1 }}>
+                  <strong>{night.Date}</strong> &mdash; <strong>{night.Instrument}</strong> ({night.DaysUntil} days)
+                </Typography>
+              </Box>
+              {/* Checklist for this day */}
+              <Collapse in={!!openDays[idx]} sx={{ width: "100%" }}>
+                <Box sx={{ pl: 5, pr: 2, pt: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                    Please look over your observing checklist:
+                  </Typography>
+                  <List dense sx={{ py: 0 }}>
+                    {getInstrumentCategories(night.Instrument).map((category) => (
+                      <Box key={category} sx={{ mb: 0.5 }}>
+                        {(CHECKLISTS[category as keyof typeof CHECKLISTS] || []).map((item: ChecklistItem, i: number) => {
+                          // Find the SA for this night
+                          const sa = night.staff?.find(
+                            (s: any) =>
+                              s.Type &&
+                              ["sa", "saoc"].includes(s.Type.toLowerCase()) &&
+                              String(s.TelNr) === String(night.TelNr)
+                          );
+                          const isSAContact = item.text === "Contact your Staff Astronomer with any questions";
+                          return (
+                            <ListItem
+                              key={i}
+                              disableGutters
+                              sx={{ pl: 2, py: 0.2, minHeight: 0 }}
                             >
-                              • {item.task}
-                            </Typography>
-                          }
-                        />
-                      )}
-                    </ListItem>
-                  ))}
+                              {item.url ? (
+                                <ListItemText
+                                  primary={
+                                    <Typography
+                                      component="button"
+                                      sx={{
+                                        background: "none",
+                                        border: "none",
+                                        color: "primary.main",
+                                        textDecoration: "underline",
+                                        fontSize: "0.92rem",
+                                        cursor: "pointer",
+                                        lineHeight: 1.4,
+                                        p: 0,
+                                        m: 0,
+                                        textAlign: "left",
+                                        width: "100%",
+                                        "&:hover": { textDecoration: "underline" },
+                                      }}
+                                      onClick={() => handleUrlClick(item, setSelectedPage, setSelectedUrl)}
+                                    >
+                                      • {item.text}
+                                    </Typography>
+                                  }
+                                />
+                              ) : (
+                                <ListItemText
+                                  primary={
+                                    <Typography
+                                      component="span"
+                                      sx={{
+                                        color: "text.primary",
+                                        fontSize: "0.92rem",
+                                        lineHeight: 1.4,
+                                      }}
+                                    >
+                                      • {isSAContact && sa && sa.Email ? (
+                                          <>
+                                            Contact your Staff Astronomer at{" "}
+                                            <a
+                                              href={`mailto:${sa.Email}`}
+                                              style={{ color: "#1976d2", textDecoration: "underline" }}
+                                            >
+                                              {sa.Email}
+                                            </a>
+                                            {" "}with any questions
+                                          </>
+                                        ) : (
+                                          item.text
+                                        )}
+                                    </Typography>
+                                  }
+                                />
+                              )}
+                            </ListItem>
+                          );
+                        })}
+                      </Box>
+                    ))}
+                  </List>
                 </Box>
-              ))}
-            </List>
-          </Box>
-        ))}
+              </Collapse>
+            </Box>
+          ))}
+        </List>
       </Collapse>
     </ObserverInfoBanner>
   );

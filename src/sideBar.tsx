@@ -181,7 +181,6 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Applying for Keck Time", 
           subItems: [
             { text: "Observing Information", url: urls.OBSERVING_INFORMATION, newtab: false},
-            { text: "My Cover Sheets", url: "", newtab: false},
             { text: "Coversheet Submission", url: urls.COVER_SHEET_SUBMISSION, newtab: false},
             { text: "KPF-CC Observing Block Submission", url : urls.KPF_CC_OBS_BLOCK_SUBMISSION, newtab: true},
           ]
@@ -189,7 +188,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "DEIMOS/LRIS Support", 
           subItems: [
             { text: "Configuration Submission", url: urls.CONFIGURATION_SUBMISSION, newtab: false},
-            { text: "Slitmask Submission", url: urls.SLITMASK_SUBMISSION , newtab: false },
+            { text: "Slitmask Submission", url: urls.SLITMASK_SUBMISSION , newtab: true },
           ]
         },
         { text: "Target Planning",
