@@ -75,9 +75,10 @@ export default function TopBar({
 }: TopBarProps) {
   const now = useClock();
   const ut = now.toISOString().slice(11, 19); // ut time
-  const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
   const utDateStr = now.toISOString().slice(0, 10); // e.g., "2025-10-29"
+  const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
   const hst = hstDate.toISOString().slice(11, 19); // hst time
+  const hstDateStr = hstDate.toISOString().slice(0, 10); // e.g., "2025-10-28"
 
   // State to control profile dialog open/close
   const [profileOpen, setProfileOpen] = useState(false);
@@ -102,16 +103,15 @@ export default function TopBar({
         </Typography>
 
         <Box sx={{ ml: "auto", display: "flex", alignItems: "center" }}>
-          {/* Clock section */}
-          <Box sx={{ display: "flex", alignItems: "center", mr: 4 }}>
-            <Typography variant="h5" sx={{ mr: 2 }}>
-              UT: {utDateStr}
+          {/* Clock section reformatted and centered */}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2, mr: 2 }}>
+            <Typography variant="h5" sx={{ display: "flex", alignItems: "center" }}>
+              UT: {ut} {utDateStr}
             </Typography>
-            <AccessTimeIcon fontSize="large" sx={{ mr: 2 }} />
-            <Box display="flex" gap={4}>
-              <Typography variant="h5">UT: {ut}</Typography>
-              <Typography variant="h5">HST: {hst}</Typography>
-            </Box>
+            <AccessTimeIcon fontSize="medium" sx={{ verticalAlign: "middle" }} />
+            <Typography variant="h5" sx={{ display: "flex", alignItems: "center" }}>
+              HST: {hst} {hstDateStr}
+            </Typography>
           </Box>
 
           {/* Dark mode switch with tooltip */}

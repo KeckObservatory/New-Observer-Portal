@@ -68,18 +68,7 @@ export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }
           </Typography>
         </Box>
         
-        {/* Moonrise */}
-        <MetricItem icon={<Brightness2Icon />} label="Moonrise" value={data.moonrise} />
 
-        {/* Moonset */}
-        <MetricItem icon={<Brightness2Icon />} label="Moonset" value={data.moonset} />
-
-        {/* Illumination */}
-        <MetricItem
-          icon={<Brightness2Icon />}
-          label="Illumination"
-          value={`${Math.round(Number(data.moonillumination) * 100)}%`}
-        />
 
         {/* Sunset */}
         <MetricItem icon={<WbSunnyIcon />} label="Sunset" value={data.sunset} />
@@ -113,6 +102,19 @@ export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }
 
         {/* Sunrise */}
         <MetricItem icon={<WbSunnyIcon />} label="Sunrise" value={data.sunrise} />
+
+                {/* Moonrise */}
+        <MetricItem icon={<Brightness2Icon />} label="Moonrise" value={data.moonrise} />
+
+        {/* Moonset */}
+        <MetricItem icon={<Brightness2Icon />} label="Moonset" value={data.moonset} />
+
+        {/* Illumination */}
+        <MetricItem
+          icon={<Brightness2Icon />}
+          label="Illumination"
+          value={`${Math.round(Number(data.moonillumination) * 100)}%`}
+        />
 
 
       </Box>
