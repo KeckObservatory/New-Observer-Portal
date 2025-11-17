@@ -2,8 +2,12 @@ import Paper from '@mui/material/Paper';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import type { TelescopeSchedApiResponse } from './api';
 import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
-export function renderTable(instruments: TelescopeSchedApiResponse[]) {
+export function renderTable(
+  instruments: (TelescopeSchedApiResponse & { ReadyState?: string })[]
+) {
   const theme = useTheme();
 
   return (
@@ -18,7 +22,8 @@ export function renderTable(instruments: TelescopeSchedApiResponse[]) {
         <TableHead>
           <TableRow>
             <TableCell>Instrument</TableCell>
-            <TableCell>State</TableCell>
+            <TableCell>Avalibility</TableCell>
+            <TableCell>Ready</TableCell>
           </TableRow>
         </TableHead>
 
@@ -43,11 +48,27 @@ export function renderTable(instruments: TelescopeSchedApiResponse[]) {
                 {/* Show the instrument name and state */}
                 <TableCell>{inst.Instrument}</TableCell>
                 <TableCell>{inst.State || "Unknown"}</TableCell>
+                <TableCell>{inst.ReadyState || ""}</TableCell> {/* Show real-time state */}
               </TableRow>
             );
           })}
         </TableBody>
       </Table>
     </TableContainer>
+  );
+}
+
+export function renderKeckI(keckI: (TelescopeSchedApiResponse & { ReadyState?: string })[], formattedDate: string) {
+  return (
+    <Grid>
+        <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
+          Keck I
+        </Typography>
+        {/* Add this below the title */}
+        <Typography variant="caption" sx={{ display: "block", mb: 1, color: "text.secondary" }}>
+          Instrument availability for the night of {formattedDate} HST
+        </Typography>
+        {keckI.length > 0 ? renderTable(keckI) : <div>Loading Keck I...</div>}
+    </Grid>
   );
 }

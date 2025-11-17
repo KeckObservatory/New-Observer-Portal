@@ -59,6 +59,10 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
   const keckI = telescopeSchedData?.filter(item => item.TelNr === 1) || [];
   const keckII = telescopeSchedData?.filter(item => item.TelNr === 2) || [];
 
+  const now = new Date();
+  const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
+  const formattedDate = hstDate.toISOString().slice(0, 10);
+
   return (
     <Main open={open}>
        {/* Welcome message at the top */}
@@ -73,6 +77,8 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
               flexDirection: "row",
               justifyContent: "center",
               minHeight: 170,
+              bgcolor: "background.paper", // theme background
+              color: "text.primary",       // theme text
             }}
           >
             <img
@@ -95,11 +101,23 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
                 justifyContent: "center",
               }}
             >
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
+              <Typography variant="h4" sx={{ fontWeight: 700, color: "text.secondary" }}>
                 Welcome to the Keck Observer Portal!
               </Typography>
-              <Typography variant="subtitle1" sx={{ mt: 1 }}>
+              <Typography variant="subtitle1" sx={{ mt: 1, color: "text.secondary" }}>
                 Your dashboard for schedules, instrument status, and observing resources.
+              </Typography>
+              <Typography variant="subtitle1" sx={{ mt: 1, color: "text.secondary" }}>
+                Have feedback?{" "}
+                <a
+                  href="https://forms.gle/9FWFXDm13HgY1gpf8"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#1976d2", textDecoration: "underline", fontWeight: 500, fontSize: "1rem" }}
+                >
+                  Go here
+                </a>
+                {" "}to fill out our form. Thanks!
               </Typography>
             </Box>
           </Paper>
@@ -119,6 +137,9 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
           <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
             Keck I
           </Typography>
+          <Typography variant="caption" sx={{ display: "block", mb: 1, color: "text.secondary" }}>
+            Instrument availability for the night of {formattedDate} HST
+          </Typography>
             {keckI.length > 0 ? renderTable(keckI) : <div>Loading Keck I...</div>}
           </Item>
         </Grid>
@@ -128,6 +149,9 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
           <Item>
           <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
             Keck II
+          </Typography>
+          <Typography variant="caption" sx={{ display: "block", mb: 1, color: "text.secondary" }}>
+            Instrument availability for the night of {formattedDate} HST
           </Typography>
             {keckII.length > 0 ? renderTable(keckII) : <div>Loading Keck II...</div>}
           </Item>
@@ -141,8 +165,8 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
               flexDirection: "column",
               justifyContent: "space-between",
               height: "100%",
-              minHeight: 388, 
-              maxHeight: 388,
+              minHeight: 416.5, 
+              maxHeight: 400,
             }}
           >
             <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>

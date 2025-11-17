@@ -120,9 +120,10 @@ export interface TelescopeSchedApiResponse {
 
 /**
  * Fetches the instrument status for the current shifted date for main page telSchedule.
+ * For instruments that are "TDA Ready" or "Scheduled", also fetches their real-time ready state.
  */
 export function scheduleApi() {
-  const [data, setData] = useState<TelescopeSchedApiResponse[] | null>(null);
+  const [data, setData] = useState<(TelescopeSchedApiResponse & { ReadyState?: string })[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -137,11 +138,9 @@ export function scheduleApi() {
         const statesMap = result[0]; // instrument status data
 
         // Map the instruments into a list with name, TelNr, and State
-        const instrumentsWithState: TelescopeSchedApiResponse[] = Object.entries(statesMap).map(
-          ([instrumentName, instState]: any) => {
+        let instrumentsWithState: (TelescopeSchedApiResponse & { ReadyState?: string })[] = await Promise.all(
+          Object.entries(statesMap).map(async ([instrumentName, instState]: any) => {
             let stateLabel = "Unknown";
-            
-            // Calculate state based on Available and Scheduled fields
             if (instState) {
               if (instState.Available === 0) {
                 stateLabel = "Not Available";
@@ -152,12 +151,30 @@ export function scheduleApi() {
               }
             }
 
+            let readyState: string | undefined = undefined;
+            // If TDA Ready or Scheduled, fetch the real-time ready state
+            if (stateLabel === "TDA Ready" || stateLabel === "Scheduled") {
+              try {
+                const readyRes = await fetch(
+                  `${urls.SCHEDULE_API}/getInstrumentReadyState?instrument=${encodeURIComponent(instrumentName)}`
+                );
+                if (readyRes.ok) {
+                  const readyJson = await readyRes.json();
+                  readyState = readyJson.State || undefined;
+                  console.log(readyState, 'ready state json')
+                }
+              } catch {
+                // ignore error, leave readyState undefined
+              }
+            }
+
             return {
               Instrument: instrumentName,
               TelNr: instState?.TelNr ?? 0,
               State: stateLabel,
+              ReadyState: readyState,
             };
-          }
+          })
         );
 
         setData(instrumentsWithState);
