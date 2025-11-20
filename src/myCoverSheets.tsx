@@ -28,6 +28,8 @@ type Program = {
 export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: MyCoverSheetsProps) {
   const obsid = user?.Id;
   //const obsid = 1521; // for testing
+  //const obsid = 4718
+
 
 
   const [data, setData] = useState<any>(null);
@@ -41,6 +43,7 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
 
   // Add state for newest semester
   const [newestSemester, setNewestSemester] = useState<string>("");
+
 
   // Check if user is a Keck employee
   const [isKeckEmployee, setIsKeckEmployee] = useState(false);
@@ -91,9 +94,10 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
         }
 
         // get all programs for obsid
-        const response = await fetch(`${urls.PROPOSALS_API}/getProgramIDs?obsid=${obsid}`);
+        const response = await fetch(`${urls.PROPOSALS_DEV_API}/getAllProposals?obsid=${obsid}&type=pi`);
         if (!response.ok) throw new Error(`${response.status}`);
         const data = await response.json();
+        //console.log("Programs data:", data);
         // Filter programs by selected semester
         const programs = (data.programs || []).filter((p: Program) =>
           p.semid && p.semid.includes(selectedSemester)
@@ -113,7 +117,7 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                 };
               }
             } catch (err) {
-              console.warn(`Failed to fetch cover info for ${program.semid}`, err);
+              //console.warn(`Failed to fetch cover info for ${program.semid}`, err);
             }
             return program; // fallback
           })
@@ -171,28 +175,67 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                       <TableCell sx={{ width: 160 }}><b>KTN / SemID</b></TableCell>
                       <TableCell sx={{ width: 300 }}><b>Program Title</b></TableCell>
                       <TableCell sx={{ width: 140 }}><b>Type</b></TableCell>
-                      <TableCell sx={{ width: 120 }}><b>Action</b></TableCell>
+                      <TableCell sx={{ width: 120 }}><b>View</b></TableCell>
+                      <TableCell sx={{ width: 120 }}><b>Edit</b></TableCell>
+                      <TableCell sx={{ width: 120 }}><b>Copy</b></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                  {(data?.programs as Program[]).map((program: Program, idx: number) => (
-                      <TableRow key={idx}>
-                        <TableCell>{program.semid}</TableCell>
-                        <TableCell>{program.title || "—"}</TableCell>
-                        <TableCell>{program.type || "—"}</TableCell>
-                        <TableCell>
-                          <Link
-                            href={`${urls.SERVE_COVER_SHEET}ktn=${program.semid}&access=PDF`}
-                            target="_blank"
-                            rel="noopener"
-                            underline="hover"
-                            sx={{ fontWeight: 600, cursor: "pointer" }}
-                          >
-                            View PDF
-                          </Link>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {(data?.programs as Program[]).map((program: Program, idx: number) => {
+                      // Check if this row should show Edit
+                      const isNewest = selectedSemester === newestSemester;
+                      const isCurrentOrNewest = [currentSemester, newestSemester].includes(selectedSemester);
+                      const hasE = program.semid.startsWith(`${selectedSemester}_E`);
+
+                      const showEdit =
+                        isNewest ||
+                        (isCurrentOrNewest && hasE);
+
+                      console.log({selectedSemester, currentSemester, newestSemester, semid: program.semid, hasE, showEdit});
+
+                      return (
+                        <TableRow key={idx}>
+                          <TableCell>{program.semid}</TableCell>
+                          <TableCell>{program.title || "—"}</TableCell>
+                          <TableCell>{program.type || "—"}</TableCell>
+                          <TableCell>
+                            <Link
+                              href={`${urls.SERVE_COVER_SHEET}ktn=${program.semid}&access=PDF`}
+                              target="_blank"
+                              rel="noopener"
+                              underline="hover"
+                              sx={{ fontWeight: 600, cursor: "pointer" }}
+                            >
+                              View PDF
+                            </Link>
+                          </TableCell>
+                          <TableCell>
+                            {showEdit && (
+                              <Link
+                                href={`${urls.EDIT_COVER_SHEET}ktn=${program.semid}&access=edit`}
+                                target="_blank"
+                                rel="noopener"
+                                underline="hover"
+                                sx={{ fontWeight: 600, cursor: "pointer" }}
+                              >
+                                Edit
+                              </Link>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Link
+                              href={`${urls.COPY_COVER_SHEET}ktn=${program.semid}&access=copy`}
+                              target="_blank"
+                              rel="noopener"
+                              underline="hover"
+                              sx={{ fontWeight: 600, cursor: "pointer" }}
+                            >
+                              Copy to {newestSemester}
+                            </Link>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </TableContainer>
