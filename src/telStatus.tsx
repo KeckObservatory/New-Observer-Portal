@@ -30,25 +30,29 @@ export function renderTable(
         {/* --- Body --- */}
         <TableBody>
           {instruments.map((inst, idx) => {
-            // "isReady" controls the row color
-            const isReady = inst.State === "Scheduled" || inst.State === "TDA Ready";
+            const isAvaiable = inst.State === "Scheduled" || inst.State === "TDA Ready";
+            const isReady = isAvaiable && inst.ReadyState === "Ready";
 
-            const readyColor = isReady
-              ? (theme.palette.mode === "dark" ? "#234d2c" : "#95EFA3")
-              : (theme.palette.mode === "dark" ? "#4d2323" : "#f8d7da");
+            // Orange for "Scheduled"/"TDA Ready", green for "Ready", red for not ready
+            let rowColor = theme.palette.mode === "dark" ? "#4d2323" : "#f8d7da"; // default: not ready (red)
+            if (isAvaiable) {
+              rowColor = theme.palette.mode === "dark" ? "#a35c2e" : "#ffcc99"; // orange
+            }
+            if (isReady) {
+              rowColor = theme.palette.mode === "dark" ? "#234d2c" : "#95EFA3"; // green
+            }
 
             return (
               <TableRow
                 key={idx}
                 sx={{
-                  backgroundColor: readyColor, // green if ready, red/pink if not
+                  backgroundColor: rowColor,
                   height: 40,
                 }}
               >
-                {/* Show the instrument name and state */}
                 <TableCell>{inst.Instrument}</TableCell>
                 <TableCell>{inst.State || "Unknown"}</TableCell>
-                <TableCell>{inst.ReadyState || ""}</TableCell> {/* Show real-time state */}
+                <TableCell>{inst.ReadyState || ""}</TableCell>
               </TableRow>
             );
           })}
@@ -58,17 +62,3 @@ export function renderTable(
   );
 }
 
-export function renderKeckI(keckI: (TelescopeSchedApiResponse & { ReadyState?: string })[], formattedDate: string) {
-  return (
-    <Grid>
-        <Typography variant="h5" sx={{ mb: 1, fontWeight: 600 }}>
-          Keck I
-        </Typography>
-        {/* Add this below the title */}
-        <Typography variant="caption" sx={{ display: "block", mb: 1, color: "text.secondary" }}>
-          Instrument availability for the night of {formattedDate} HST
-        </Typography>
-        {keckI.length > 0 ? renderTable(keckI) : <div>Loading Keck I...</div>}
-    </Grid>
-  );
-}
