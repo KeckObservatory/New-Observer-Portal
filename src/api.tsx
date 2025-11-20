@@ -9,24 +9,31 @@ import { differenceInCalendarDays } from "date-fns";
  * Returns the current shifted date as YYYY-MM-DD.
  * If before 8am HST (18:00 UTC), returns yesterday's date.
  */
-export function getShiftedDate() {
-  const now = new Date();
+export function getShiftedDates() {
+  const nowUtc = new Date(); // THIS is always UTC internally
 
-  // Hawaii is UTC-10, so 8:00 AM HST = 18:00 UTC
-  const hawaiiDayBoundaryUTC = new Date(Date.UTC(
-    now.getUTCFullYear(),
-    now.getUTCMonth(),
-    now.getUTCDate(),
-    18, 0, 0 // 18:00 UTC
-  ));
+  // Convert UTC → HST by subtracting 10 hours
+  const hstNow = new Date(nowUtc.getTime() - 10 * 60 * 60 * 1000);
 
-  // If the current time is before 18:00 UTC, use yesterday’s date
-  if (now < hawaiiDayBoundaryUTC) {
-    hawaiiDayBoundaryUTC.setUTCDate(hawaiiDayBoundaryUTC.getUTCDate() - 1);
+  // Determine shifted HST date
+  const shiftedHst = new Date(hstNow);
+
+  if (hstNow.getUTCHours() < 8) {
+    // Still before 8am HST
+    shiftedHst.setUTCDate(shiftedHst.getUTCDate() - 1);
   }
 
-  // Format as YYYY-MM-DD in UTC
-  return hawaiiDayBoundaryUTC.toISOString().split("T")[0];
+  // Format YYYY-MM-DD
+  const fmt = (d: Date) => d.toISOString().split("T")[0];
+
+  const hstDate = fmt(shiftedHst);
+
+  // Convert shifted HST midnight → UTC  
+  const utcEquivalent = new Date(shiftedHst.getTime() + 10 * 60 * 60 * 1000);
+  const utcDate = fmt(utcEquivalent);
+
+  return { hstDate, utcDate };
+  
 }
 
 /**
@@ -94,10 +101,10 @@ useEffect(() => {
     const fetchData = async () => {
       try {
         // Get current date with shift
-        const formattedDate = getShiftedDate();
+        const {utcDate} = getShiftedDates();
 
         // Fetch metrics list
-        const timeList = await fetch(urls.METRICS_API + `date=${formattedDate}&column=COLUMN&output=OUTPUT`);
+        const timeList = await fetch(urls.METRICS_API + `date=${utcDate}&column=COLUMN&output=OUTPUT`);
         const timeMetrics: metricsApiResponse[] = await timeList.json();
 
       setData(timeMetrics);
@@ -128,11 +135,10 @@ export function scheduleApi() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const formattedDate = getShiftedDate();
-
+        const {hstDate} = getShiftedDates();
         // Fetch only instrument status
         const response = await fetch(
-          `${urls.SCHEDULE_API}/getInstrumentStatus?date=${formattedDate}&numdays=1`
+          `${urls.SCHEDULE_API}/getInstrumentStatus?date=${hstDate}&numdays=1`
         );
         const result = await response.json();
         const statesMap = result[0]; // instrument status data
@@ -298,11 +304,11 @@ export function useCombinedSchedule(obsid: number) {
         setError(null);
 
         // Step 1: Get the observer’s schedule
-        const formattedDate = getShiftedDate();
-        const endDate = getDateSixMonthsLater(formattedDate);
+        const {hstDate} = getShiftedDates();
+        const endDate = getDateSixMonthsLater(hstDate);
 
         const scheduleRes = await fetch(
-          `${urls.SCHEDULE_API}/getScheduleByUser?obsid=${obsid}&startdate=${formattedDate}&enddate=${endDate}`
+          `${urls.SCHEDULE_API}/getScheduleByUser?obsid=${obsid}&startdate=${hstDate}&enddate=${endDate}`
         );
         if (!scheduleRes.ok) throw new Error("Failed to fetch schedule");
         const schedule: obsScheduleApiResponse[] = await scheduleRes.json();
@@ -396,8 +402,8 @@ export function getCurrentSemester() {
     async function fetchCurrent() {
       try {
         // get formatted HST date
-        const formattedDate = getShiftedDate();
-        const res = await fetch(urls.SCHEDULE_API + `/getSemester?date=${formattedDate}`);
+        const {hstDate} = getShiftedDates();
+        const res = await fetch(urls.SCHEDULE_API + `/getSemester?date=${hstDate}`);
         const json = await res.json(); // { semester: "2025B" }
         const current = json.semester;
         setSemester(current);

@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import { ObserverInfoBannerWithSchedule } from './observerInfo';
 import type { userInfoApiResponse } from './api';
 import { Main } from './theme';
+import { getShiftedDates } from './api';
+
 
 import StandardPatch from './assets/StandardPatch.png';
 import urls from './urls.json'
@@ -59,9 +61,15 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
   const keckI = telescopeSchedData?.filter(item => item.TelNr === 1) || [];
   const keckII = telescopeSchedData?.filter(item => item.TelNr === 2) || [];
 
-  const now = new Date();
-  const hstDate = new Date(now.getTime() - 10 * 60 * 60 * 1000);
-  const formattedDate = hstDate.toISOString().slice(0, 10);
+  const {hstDate} = getShiftedDates();
+
+  // console.log("Shifted HST:", hstDate);
+  // console.log("Shifted UTC:", utcDate);
+
+  // console.log("Now Local:", new Date());
+  // console.log("Now UTC:", new Date().toISOString());
+
+
 
   return (
     <Main open={open}>
@@ -138,7 +146,7 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
             Keck I
           </Typography>
           <Typography variant="caption" sx={{ display: "block", mb: 1, color: "text.secondary" }}>
-            Instrument availability for the night of {formattedDate} HST
+            Instrument availability for the night of {hstDate} HST
           </Typography>
             {keckI.length > 0 ? renderTable(keckI) : <div>Loading Keck I...</div>}
           </Item>
@@ -151,7 +159,7 @@ export default function MainContent({ open, user, setSelectedPage, setSelectedUr
             Keck II
           </Typography>
           <Typography variant="caption" sx={{ display: "block", mb: 1, color: "text.secondary" }}>
-            Instrument availability for the night of {formattedDate} HST
+            Instrument availability for the night of {hstDate} HST
           </Typography>
             {keckII.length > 0 ? renderTable(keckII) : <div>Loading Keck II...</div>}
           </Item>

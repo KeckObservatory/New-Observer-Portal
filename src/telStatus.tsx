@@ -23,7 +23,7 @@ export function renderTable(
           <TableRow>
             <TableCell>Instrument</TableCell>
             <TableCell>Avalibility</TableCell>
-            <TableCell>Ready</TableCell>
+            <TableCell>State</TableCell>
           </TableRow>
         </TableHead>
 

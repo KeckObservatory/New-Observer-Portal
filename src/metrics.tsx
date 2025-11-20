@@ -6,7 +6,7 @@ import React from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import type { metricsApiResponse } from "./api";
-import { getShiftedDate } from './api';
+import { getShiftedDates } from './api';
 
 
 /**
@@ -47,7 +47,7 @@ function MetricItem({
 
 export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }) {
   if (!data) return null;
-  const shiftedDate = getShiftedDate();
+  const {hstDate} = getShiftedDates();
 
 
   return (
@@ -64,7 +64,7 @@ export function OrderedNightMetricsStrip({ data }: { data?: metricsApiResponse }
       {/* Night of shifted date */}
         <Box sx={{ minWidth: 0, px: 1, textAlign: "right" }}>
           <Typography variant="subtitle1" fontWeight="bold">
-            Night of {shiftedDate} UT
+            Night of {hstDate} HST
           </Typography>
         </Box>
         
