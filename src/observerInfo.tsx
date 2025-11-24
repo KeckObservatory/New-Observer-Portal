@@ -236,7 +236,7 @@ export function ObserverInfoBannerWithSchedule({ user, setSelectedPage, setSelec
               <Collapse in={!!openDays[idx]} sx={{ width: "100%" }}>
                 <Box sx={{ pl: 5, pr: 2, pt: 1 }}>
                   <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    Please look over your observing checklist:
+                    Please look over your observing tasks:
                   </Typography>
                   <List dense sx={{ py: 0 }}>
                     {getInstrumentCategories(night.Instrument).map((category) => (

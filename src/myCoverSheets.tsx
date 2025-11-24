@@ -242,6 +242,9 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
             )}
           </Box>
 
+          {/* //  //{ text: "Instrument Avalibility and Announcements", url: urls.SEMESTER_INFO, newtab: false }, */}
+
+
           {/* Helpful Links Section */}
           <Box sx={{ p: 2, borderTop: 2, borderColor: "divider" }}>
             <Typography variant="h6">Helpful Links:</Typography>
@@ -261,6 +264,23 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                   }
                 >
                   Coversheet Submission
+                </Link>
+              </ListItem>
+                            <ListItem>
+                <Link
+                  component="button"
+                  variant="h6"
+                  underline="hover"
+                  sx={{ cursor: "pointer", fontSize: "1.15rem", fontWeight: 600 }}
+                  onClick={() =>
+                    handleUrlClick(
+                      { text: "Instrument Avalibility and Announcements", url: urls.SEMESTER_INFO, newtab: false },
+                      setSelectedPage,
+                      setSelectedUrl
+                    )
+                  }
+                >
+                  2026A Instrument Avalibility and Announcements
                 </Link>
               </ListItem>
               <ListItem>
