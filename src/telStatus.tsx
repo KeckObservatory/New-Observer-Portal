@@ -28,17 +28,31 @@ export function renderTable(
         {/* --- Body --- */}
         <TableBody>
           {instruments.map((inst, idx) => {
-            const isAvaiable = inst.State === "Scheduled" || inst.State === "TDA Ready";
-            const isReady = isAvaiable && inst.ReadyState === "Ready";
+            // Special case for NIRSPEC: never show TDA Ready
+            const isNirspec = inst.Instrument === "NIRSPEC";
+            
+            // For NIRSPEC: only "Scheduled" is valid, ignore "TDA Ready"
+            const isAvailable = isNirspec 
+              ? inst.State === "Scheduled"
+              : inst.State === "Scheduled" || inst.State === "TDA Ready";
+            
+            const isReady = isAvailable && inst.ReadyState === "Ready";
 
-            // Orange for "Scheduled"/"TDA Ready", green for "Ready", red for not ready
-            let rowColor = theme.palette.mode === "dark" ? "#4d2323" : "#f8d7da"; // default: not ready (red)
-            if (isAvaiable) {
-              rowColor = theme.palette.mode === "dark" ? "#a35c2e" : "#ffcc99"; // orange
+            // Color logic
+            let rowColor = theme.palette.mode === "dark" ? "#4d2323" : "#f8d7da"; // red (not available)
+            if (isAvailable) {
+              rowColor = theme.palette.mode === "dark" ? "#a35c2e" : "#ffcc99"; // orange (scheduled)
             }
             if (isReady) {
-              rowColor = theme.palette.mode === "dark" ? "#234d2c" : "#95EFA3"; // green
+              rowColor = theme.palette.mode === "dark" ? "#234d2c" : "#95EFA3"; // green (ready)
             }
+
+            // For NIRSPEC: hide state if it's "TDA Ready", only show if "Scheduled"
+            const displayState = isNirspec && inst.State === "TDA Ready" 
+              ? "Not Available" 
+              : isAvailable 
+                ? (inst.State || "Unknown")
+                : "Not Available";
 
             return (
               <TableRow
@@ -49,8 +63,8 @@ export function renderTable(
                 }}
               >
                 <TableCell>{inst.Instrument}</TableCell>
-                <TableCell>{inst.State || "Unknown"}</TableCell>
-                <TableCell>{inst.ReadyState || ""}</TableCell>
+                <TableCell>{displayState}</TableCell>
+                <TableCell>{isAvailable ? (inst.ReadyState || "") : ""}</TableCell>
               </TableRow>
             );
           })}
