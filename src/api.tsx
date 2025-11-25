@@ -443,3 +443,29 @@ export async function getNewestSemester(): Promise<string> {
     return "";
   }
 }
+
+export interface myRequestsApiResponse {
+  FromDate: string;
+  Instrument: string;
+  Principal: string;
+  ProjCode: string;
+  ReqNo: number;
+  Status: string;
+  Telescope: string;
+  observer_names: string;
+  observers: string;
+  semester: string;
+  NumNights: number;
+  Id: number;
+}
+
+
+export async function getMyRequests (obsid: number): Promise<myRequestsApiResponse[]> {
+    try {
+    const res = await fetch(urls.REQUESTS_DEV + `obsid=${obsid}`);
+    const json = await res.json(); 
+    return json.requests;
+  } catch {
+    return [];
+  }
+}

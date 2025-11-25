@@ -94,7 +94,7 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
         }
 
         // get all programs for obsid
-        const response = await fetch(`${urls.PROPOSALS_DEV_API}/getAllProposals?obsid=${obsid}&type=pi`);
+        const response = await fetch(`${urls.PROPOSALS_DEV_API}/getAllProposals?obsid=${obsid}&type=coversheet`);
         if (!response.ok) throw new Error(`${response.status}`);
         const data = await response.json();
         //console.log("Programs data:", data);
