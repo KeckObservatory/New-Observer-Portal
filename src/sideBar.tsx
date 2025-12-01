@@ -161,7 +161,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "SSH Key Management", url: urls.SSH_KEY_MANAGEMENT, newtab: false },
         { text: "My Observing Schedule"},
         { text: "My Observing Logs"},
-        { text: "My Observing Requests (to add)"},
+        { text: "My Observing Requests"},
         { text: "My Cover Sheets"},
       ]
     },

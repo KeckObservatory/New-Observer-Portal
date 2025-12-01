@@ -462,7 +462,7 @@ export interface myRequestsApiResponse {
 
 export async function getMyRequests (obsid: number): Promise<myRequestsApiResponse[]> {
     try {
-    const res = await fetch(urls.REQUESTS_DEV + `obsid=${obsid}`);
+    const res = await fetch(urls.OBSERVING_DEV_API + `/getObsRequests?obsid=${obsid}`);
     const json = await res.json(); 
     return json.requests;
   } catch {
