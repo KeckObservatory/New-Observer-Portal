@@ -362,8 +362,9 @@ export interface obsLogApiResponse {
 
 /**
  * Fetches observing logs for a given observer and semester.
+ * If semester is "All Logs", fetches logs from multiple semesters.
  */
-export function useObsLogApi(obsid: number, semester: string) {
+export function useObsLogApi(obsid: number, semester: string, currentSemester: string) {
   const [data, setData] = useState<obsLogApiResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -371,26 +372,50 @@ export function useObsLogApi(obsid: number, semester: string) {
     async function fetchLogs() {
       setLoading(true);
       try {
-        const response = await fetch(
-          `${urls.PROPOSALS_API}/getObsLogInfo?obsid=${obsid}&semester=${semester}`
-        );
-        const json = await response.json();
-        //console.log("Fetched Obs Logs:", json);
-        setData(json);
+        // need to call api call differently for "All Logs"
+        if (semester === "All Logs") {
+          const semesters = [currentSemester, ...getLastSemesters(currentSemester, 10)];
+          
+          const allLogsPromises = semesters.map(async (sem) => {
+            try {
+              const response = await fetch(
+                `${urls.PROPOSALS_API}/getObsLogInfo?obsid=${obsid}&semester=${sem}`
+              );
+              const json = await response.json();
+              return json.logs || [];
+            } catch (err) {
+              //console.error(`Error fetching logs for ${sem}:`, err);
+              return [];
+            }
+          });
+
+          const allLogsArrays = await Promise.all(allLogsPromises);
+          const allLogs = allLogsArrays.flat();
+          
+          setData({ logs: allLogs });
+        } else {
+          // Fetch logs for specific semester
+          const response = await fetch(
+            `${urls.PROPOSALS_API}/getObsLogInfo?obsid=${obsid}&semester=${semester}`
+          );
+          const json = await response.json();
+          setData(json);
+        }
       } catch (err) {
-        console.error(err);
+        //console.error(err);
         setData({ logs: [] });
       } finally {
         setLoading(false);
       }
     }
 
-    fetchLogs();
-  }, [obsid, semester]);
+    if (semester && currentSemester) { // Make sure we have currentSemester
+      fetchLogs();
+    }
+  }, [obsid, semester, currentSemester]);
 
   return { data, loading };
 }
-
 
 /**
  * Fetches the current semester based on the shifted date.
@@ -437,7 +462,7 @@ export async function getNewestSemester(): Promise<string> {
   try {
     const res = await fetch(urls.PROPOSALS_DEV_API + `/getNewestSemester`);
     const json = await res.json(); // { semester: "2025B" }
-    //console.log(json, 'newest semester api response')
+    console.log(json, 'newest semester api response')
     return json.semester;
   } catch {
     return "";

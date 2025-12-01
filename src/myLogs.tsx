@@ -25,23 +25,20 @@ interface MyLogsProps  {
  */
 export function MyObsLogs({ open, user }: MyLogsProps) {
   const obsid = user?.Id
-  //const obsid = 1521; // for testing
+  //const obsid = 1521
   const currentSemester = getCurrentSemester();
-  const availableSemesters = ["All Semesters", currentSemester, ...getLastSemesters(currentSemester, 15)]; 
+  const availableSemesters = ["All Logs", currentSemester, ...getLastSemesters(currentSemester, 15)]; 
 
-  // to quickly get current semester right when the api returns above
+  const [semester, setSemester] = useState(currentSemester);
+
   useEffect(() => {
     if (currentSemester) {
       setSemester(currentSemester);
     }
   }, [currentSemester]);
 
-  // Drop down will auto go to current semester
-  const [semester, setSemester] = useState(currentSemester);
-
-
-  // api call to get logs (or loading state)
-  const { data, loading } = useObsLogApi(obsid, semester); 
+  // Pass currentSemester to the hook
+  const { data, loading } = useObsLogApi(obsid, semester, currentSemester); 
   const logs = data?.logs ?? [];
   const hasLogs = logs.length > 0;
 
@@ -54,7 +51,7 @@ export function MyObsLogs({ open, user }: MyLogsProps) {
     return cols;
   }
 
-  // Number of columns (adjust as needed or make responsive)
+  // Number of columns 
   const numColumns = 3;
   const logColumns = splitIntoColumns(logs, numColumns);
 

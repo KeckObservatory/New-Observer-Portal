@@ -81,8 +81,8 @@ function App() {
                 />
               ) : selectedPage === "My Observing Logs" ? (
                 <MyObsLogs open={open} user={userData} />
-              ) : selectedPage === "My Observing Requests (to add)" ? (
-                <MyRequests open={open} />
+              ) : selectedPage === "My Observing Requests" ? (
+                <MyRequests open={open} user={userData} />
               ) : selectedPage === "My Cover Sheets" ? (
                 <MyCoverSheets
                   open={open}
