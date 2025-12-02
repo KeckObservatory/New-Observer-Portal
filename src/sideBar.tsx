@@ -191,18 +191,15 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
             { text: "Slitmask Submission", url: urls.SLITMASK_SUBMISSION , newtab: true },
           ]
         },
-        { text: "Target Planning",
+        { text: "Target Planning/Submission",
           subItems: [
-            { text: "Target List Management", url: urls.TARGET_LIST_MANAGEMENT, newtab: false},
             { text: "Planning Tool", url: urls.PLANNING_TOOL, newtab: true },
+            { text: "Target List Management", url: urls.TARGET_LIST_MANAGEMENT, newtab: false},
+            { text: "Starlist Formatting", url: urls.NON_AO_STARLIST, newtab: false},
+            { text: "AO Starlist Formatting", url: urls.AO_STARLIST, newtab: false },
           ]
         },
-        { text: "Starlists",
-          subItems: [
-            { text: "Starlist", url: urls.NON_AO_STARLIST, newtab: false},
-            { text: "AO Starlist", url: urls.AO_STARLIST, newtab: false },
-          ]
-        },
+        
         { text: "HQ and Remote Observing",
           subItems: [
             { text: "Observing Request", url: urls.OBSERVING_REQUEST, newtab: false},
@@ -232,7 +229,7 @@ export function PersistentSideBar({ open, handleDrawerClose, setSelectedPage, se
         { text: "Keck Observatory Archive", url: urls.KOA, newtab: true},
         { text: "Data Discovery Service", url: urls.DDS, newtab: true },
         { text: "Observers\' Data Access Portal", url: urls.ODAP, newtab: true},
-        { text: "My KOA Data (to add)"},
+        { text: "Grant Data Access", url: urls.GRANT_DATA_ACCESS, newtab: true}
       ]
     },
     { text: "Weather Conditions", icon: <AcUnitIcon />, 
