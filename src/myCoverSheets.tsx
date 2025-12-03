@@ -191,7 +191,7 @@ export function MyCoverSheets({ open, user, setSelectedPage, setSelectedUrl }: M
                         isNewest ||
                         (isCurrentOrNewest && hasE);
 
-                      console.log({selectedSemester, currentSemester, newestSemester, semid: program.semid, hasE, showEdit});
+                      //console.log({selectedSemester, currentSemester, newestSemester, semid: program.semid, hasE, showEdit});
 
                       return (
                         <TableRow key={idx}>

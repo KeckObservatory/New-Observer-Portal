@@ -167,7 +167,7 @@ export function scheduleApi() {
                 if (readyRes.ok) {
                   const readyJson = await readyRes.json();
                   readyState = readyJson.State || undefined;
-                  console.log(readyState, 'ready state json')
+                  //console.log(readyState, 'ready state json')
                 }
               } catch {
                 // ignore error, leave readyState undefined
@@ -462,7 +462,7 @@ export async function getNewestSemester(): Promise<string> {
   try {
     const res = await fetch(urls.PROPOSALS_DEV_API + `/getNewestSemester`);
     const json = await res.json(); // { semester: "2025B" }
-    console.log(json, 'newest semester api response')
+    //console.log(json, 'newest semester api response')
     return json.semester;
   } catch {
     return "";
@@ -492,5 +492,23 @@ export async function getMyRequests (obsid: number): Promise<myRequestsApiRespon
     return json.requests;
   } catch {
     return [];
+  }
+}
+
+
+export async function getMyPhoto(obsid: number): Promise<string | null> {
+  try {
+    const res = await fetch(
+      urls.OBSERVING_DEV_API + `/getObserverPhoto?obsid=${obsid}`
+    );
+
+    const json = await res.json();
+
+    if (!json.thumbnail) return null;
+    return json.thumbnail;
+
+  } catch (err) {
+    //console.error("Error fetching photo:", err);
+    return null;
   }
 }

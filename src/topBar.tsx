@@ -16,6 +16,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import UserTable from './observerInfo'; // Import your UserTable component
+import { getMyPhoto } from './api';
 
 const drawerWidth = 240;
 
@@ -83,6 +84,18 @@ export default function TopBar({
   // State to control profile dialog open/close
   const [profileOpen, setProfileOpen] = useState(false);
 
+    // State for the observer photo
+  const [obsPhoto, setObsPhoto] = useState<string | null>(null);
+
+  // Fetch observer photo once
+  useEffect(() => {
+    if (user?.Id) {
+      getMyPhoto(user.Id)
+        .then((photoUrl) => setObsPhoto(photoUrl))
+        .catch((err) => console.error("Error fetching photo:", err));
+    }
+  }, [user?.Id]);
+
   return (
     <StyledAppBar position="fixed" open={open}>
       <Toolbar>
@@ -129,7 +142,7 @@ export default function TopBar({
             <IconButton sx={{ p: 0 }} onClick={() => setProfileOpen(true)}>
               <Avatar
                 alt={user?.FirstName ?? "User"}
-                src={user?.ProfilePictureURL || undefined}
+                src={`data:image/jpeg;base64,${obsPhoto}`} // full data URL or fallback
                 sx={{ width: 40, height: 40 }}
               >
                 {(user?.FirstName?.[0] ?? "").toUpperCase()}
@@ -143,6 +156,29 @@ export default function TopBar({
       <Dialog open={profileOpen} onClose={() => setProfileOpen(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Your Information</DialogTitle>
         <DialogContent>
+          {/* Add larger avatar at the top */}
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center',
+            mb: 3,
+            mt: 1
+          }}>
+            <Avatar
+              alt={user?.FirstName ?? "User"}
+              src={`data:image/jpeg;base64,${obsPhoto}`}
+              sx={{ 
+                width: 120, 
+                height: 120,
+                border: '3px solid',
+                borderColor: 'primary.main',
+                fontSize: '3rem'
+              }}
+            >
+              {(user?.FirstName?.[0] ?? "").toUpperCase()}
+            </Avatar>
+          </Box>
+          
           <UserTable
             user={user}
             setSelectedPage={(page) => {
